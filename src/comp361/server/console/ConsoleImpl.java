@@ -10,13 +10,12 @@ import java.io.PrintStream;
 public class ConsoleImpl implements Console {
 
 	@Override
-	public InputStream in() {
-		return System.in;
+	public void print(String string) {
+		System.out.print(string);
 	}
 
 	@Override
-	public PrintStream out() {
-		return System.out;
+	public void println(String string) {
+		System.out.println(string);
 	}
-
 }

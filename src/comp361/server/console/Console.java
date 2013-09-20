@@ -10,8 +10,16 @@ import java.io.PrintStream;
  */
 public interface Console {
 
-	public InputStream in();
-
-	public PrintStream out();
+	/**
+	 * Prints a string to the console.
+	 * @param string the string to print.
+	 */
+	public void print(String string);
+	
+	/**
+	 * Prints a string followed by a newline character.
+	 * @param string the string to print.
+	 */
+	public void println(String string);
 
 }

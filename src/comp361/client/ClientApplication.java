@@ -1,14 +1,18 @@
 package comp361.client;
 
-import java.io.IOException;
-import java.net.Socket;
+import javax.swing.SwingUtilities;
 
 public class ClientApplication {
 
-	public static void main(String[] args) throws InterruptedException, IOException {
-		Socket socket = new Socket("localhost", 5000);
-		Thread.sleep(5000);
-		socket.close();
+	public static void main(String[] args) {
+		// Show the start window!
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				StartWindow startWindow = new StartWindow();
+				startWindow.setVisible(true);
+			}
+		});
 	}
-	
+
 }
