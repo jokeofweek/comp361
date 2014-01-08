@@ -11,4 +11,4 @@ tmp/**/*
 
 
 # data files
-data/server/accounts/*.ini*
+data/server/accounts/*.properties*

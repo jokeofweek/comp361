@@ -50,7 +50,7 @@ public class GameServer {
 		}
 		server.start();
 
-		console.println("Listening for connections...");
+		console.println("Listening for connections on port " + port + "...");
 	}
 
 	/**

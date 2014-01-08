@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import comp361.shared.Constants;
+
 public class StartWindow extends JFrame {
 
 	private static final long serialVersionUID = -4930439165369237418L;
@@ -49,8 +51,10 @@ public class StartWindow extends JFrame {
 
 		JPanel fieldsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 		hostTextField = new JTextField(40);
-		fieldsPanel.add(hostTextField);
+		hostTextField.setText("127.0.0.1");
 		portTextField = new JTextField(40);
+		portTextField.setText(Constants.PORT + "");
+		fieldsPanel.add(hostTextField);
 		fieldsPanel.add(portTextField);
 
 		return fieldsPanel;
@@ -72,7 +76,7 @@ public class StartWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Validate date (sort of...)
 				String host = hostTextField.getText();
-				int port = 4000;
+				int port = Constants.PORT;
 				try {
 					port = Integer.parseInt(portTextField.getText());
 				} catch (NumberFormatException ex) {

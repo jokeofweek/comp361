@@ -1,11 +1,12 @@
 package comp361.server;
 
 import comp361.server.console.ConsoleImpl;
+import comp361.shared.Constants;
 
 public class ServerApplication {
 
 	public static void main(String[] args) {
-		new GameServer(new ConsoleImpl(), 5000);
+		new GameServer(new ConsoleImpl(), Constants.PORT);
 	}
 
 }
