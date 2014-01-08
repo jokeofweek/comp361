@@ -1,7 +1,5 @@
 package comp361.server.console;
 
-import java.io.InputStream;
-import java.io.PrintStream;
 
 /**
  * This interface represents some kind of console that the server can output to.

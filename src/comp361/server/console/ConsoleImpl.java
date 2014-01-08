@@ -1,7 +1,5 @@
 package comp361.server.console;
 
-import java.io.InputStream;
-import java.io.PrintStream;
 
 /**
  * Implementation of {@link Console} which uses the standard Java System

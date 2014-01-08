@@ -1,7 +1,6 @@
 package comp361.client.network.handlers;
 
 import comp361.client.GameClient;
-import comp361.client.network.ClientPacketHandler;
 import comp361.shared.packets.shared.MessagePacket;
 
 /**

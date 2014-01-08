@@ -1,7 +1,6 @@
 package comp361.server.network.handlers;
 
 import comp361.server.GameServer;
-import comp361.server.network.ServerPacketHandler;
 import comp361.server.session.Session;
 import comp361.shared.packets.shared.MessagePacket;
 

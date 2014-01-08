@@ -9,6 +9,7 @@ import com.esotericsoftware.kryonet.Listener;
 import comp361.server.GameServer;
 import comp361.server.ServerApplication;
 import comp361.server.network.handlers.MessagePacketHandler;
+import comp361.server.network.handlers.ServerPacketHandler;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.packets.shared.MessagePacket;

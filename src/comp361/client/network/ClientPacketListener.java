@@ -6,6 +6,7 @@ import java.util.Map;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.client.GameClient;
+import comp361.client.network.handlers.ClientPacketHandler;
 import comp361.client.network.handlers.MessagePacketHandler;
 import comp361.shared.packets.shared.MessagePacket;
 

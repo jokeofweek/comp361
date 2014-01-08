@@ -1,4 +1,4 @@
-package comp361.client.network;
+package comp361.client.network.handlers;
 
 import comp361.client.GameClient;
 
