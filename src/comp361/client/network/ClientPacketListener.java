@@ -7,7 +7,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.client.GameClient;
 import comp361.client.network.handlers.ClientPacketHandler;
-import comp361.client.network.handlers.MessagePacketHandler;
+import comp361.client.network.handlers.GenericPublishPacketHandler;
+import comp361.shared.packets.server.RegisterResult;
 import comp361.shared.packets.shared.MessagePacket;
 
 /**
@@ -26,7 +27,8 @@ public class ClientPacketListener extends Listener {
 
 	private Map<Class, ClientPacketHandler> setupPacketHandlers() {
 		Map<Class, ClientPacketHandler> handlers = new HashMap<Class, ClientPacketHandler>();
-		handlers.put(MessagePacket.class, new MessagePacketHandler());
+		handlers.put(MessagePacket.class, new GenericPublishPacketHandler());
+		handlers.put(RegisterResult.class, new GenericPublishPacketHandler());
 		return handlers;
 	}
 

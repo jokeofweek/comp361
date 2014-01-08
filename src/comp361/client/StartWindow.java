@@ -90,7 +90,7 @@ public class StartWindow extends JFrame {
 					// If successful, hide this window and show the lobby
 					// window.
 					window.setVisible(false);
-					new LobbyWindow(gameClient).setVisible(true);
+					new LoginWindow(gameClient).setVisible(true);
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(null,
 							"An error occured connecting to the server.");

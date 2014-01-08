@@ -18,22 +18,19 @@ import javax.swing.JTextField;
 
 import comp361.shared.packets.shared.MessagePacket;
 
-public class LobbyWindow extends JFrame implements Observer {
+public class LobbyWindow extends ClientJFrame {
 
 	private static final long serialVersionUID = 7525404399381734980L;
-
-	private GameClient gameClient;
 
 	private JTextArea chatTextArea;
 	private JTextField inputTextField;
 
 	public LobbyWindow(GameClient gameClient) {
-		this.gameClient = gameClient;
+		super(gameClient);
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(getChatPanel(), BorderLayout.CENTER);
 		mainPanel.add(getInputPanel(), BorderLayout.SOUTH);
-		addWindowListener(getWindowListener());
 		add(mainPanel);
 
 		setTitle("Battleships Lobby");
@@ -74,7 +71,7 @@ public class LobbyWindow extends JFrame implements Observer {
 				if (inputTextField.getText().length() > 0) {
 					MessagePacket packet = new MessagePacket();
 					packet.message = inputTextField.getText();
-					gameClient.getClient().sendTCP(packet);
+					getGameClient().getClient().sendTCP(packet);
 					inputTextField.setText("");
 					inputTextField.requestFocus();
 					// Add the message directly to our own screen
@@ -84,20 +81,6 @@ public class LobbyWindow extends JFrame implements Observer {
 		});
 
 		return panel;
-	}
-
-	/**
-	 * @return the window listener.
-	 */
-	private WindowListener getWindowListener() {
-		return new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				// Shut down the client on window closing.
-				gameClient.getClient().stop();
-			}
-		};
-
 	}
 
 	@Override

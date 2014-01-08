@@ -2,6 +2,9 @@ package comp361.shared.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+
+import comp361.shared.packets.client.RegisterPacket;
+import comp361.shared.packets.server.RegisterResult;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class NetworkManager {
@@ -16,6 +19,8 @@ public class NetworkManager {
 	public static void register(EndPoint endPoint) {
 		Kryo kryo = endPoint.getKryo();
 		kryo.register(MessagePacket.class);
+		kryo.register(RegisterPacket.class);
+		kryo.register(RegisterResult.class);
 	}
 
 	private NetworkManager() {

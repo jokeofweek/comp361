@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import comp361.server.console.Console;
+import comp361.server.data.store.AccountDataStore;
 import comp361.server.network.ServerPacketListener;
 import comp361.server.session.Session;
 import comp361.shared.network.NetworkManager;
@@ -14,6 +15,7 @@ public class GameServer {
 
 	private Server server;
 	private Console console;
+	private AccountDataStore accountDataStore;
 
 	/**
 	 * Gets a server application up and running.
@@ -22,9 +24,11 @@ public class GameServer {
 	 *            The console to use.
 	 * @param port
 	 *            The port to use.
+	 * @param accountDataStore The account data store to use.
 	 */
-	public GameServer(final Console console, int port) {
+	public GameServer(final Console console, int port, AccountDataStore accountDataStore) {
 		this.console = console;
+		this.accountDataStore = accountDataStore;
 
 		// Set up the server to create a new Session object on connection.
 		server = new Server() {
@@ -65,5 +69,12 @@ public class GameServer {
 	 */
 	public Server getServer() {
 		return server;
+	}
+	
+	/**
+	 * @return the data store for the accounts.
+	 */
+	public AccountDataStore getAccountDataStore() {
+		return accountDataStore;
 	}
 }

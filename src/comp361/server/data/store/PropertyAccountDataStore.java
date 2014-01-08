@@ -1,20 +1,23 @@
 package comp361.server.data.store;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.util.Properties;
 
+import comp361.server.data.Account;
 import comp361.shared.Constants;
 
 /**
  * This data store stores accounts in Java properties files.
  */
-public class PropertyAccountDataStore implements AccountDataStore {
+public class PropertyAccountDataStore extends AccountDataStore {
 
 	private static final String ACCOUNTS_PATH = Constants.SERVER_DATA_PATH + "accounts/";
-	
-	@Override
-	public boolean accountExists(String accountName) {
-		return new File(getAccountPath(accountName)).exists();
-	}
+	private static final String FIELD_PASSWORD = "password";
 	
 	/**
 	 * Builds the path to the file for a given account.
@@ -25,5 +28,64 @@ public class PropertyAccountDataStore implements AccountDataStore {
 		return ACCOUNTS_PATH + accountName + ".properties";
 	}
 	
+	@Override
+	public boolean accountExists(String accountName) {
+		return new File(getAccountPath(accountName)).exists();
+	}
+	
+	@Override
+	protected Account innerLoadAccount(String accountName) throws DataStoreException {
+		
+		Properties properties = new Properties();
+		Reader fileReader = null;
+		
+		try {
+			// Try to load the properties file.
+			fileReader = new FileReader(getAccountPath(accountName)); 
+			properties.load(fileReader);
+		} catch (IOException e) {
+			// Wrap the exception in a data store exception.
+			throw new DataStoreException("An error occured loading the account.", e);
+		} finally {
+			if (fileReader != null) {
+				try {
+					fileReader.close();
+				} catch (IOException e) {}
+			}
+		}
+		
+		// Create the account and load in the properties
+		Account account = new Account();
+		account.setName(accountName);
+		account.setPassword(properties.getProperty(FIELD_PASSWORD));
+		
+		return account;
+	}
+
+	@Override
+	public void saveAccount(Account account) throws DataStoreException {
+		Properties properties = new Properties();
+		
+		// Convert the account data to properties
+		properties.put(FIELD_PASSWORD, account.getPassword());
+		
+		// Save the properties
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(getAccountPath(account.getName()));
+			properties.store(out, null);
+		}
+		catch (IOException e) {
+			// Wrap the exception
+			throw new DataStoreException("An error occured saving the account.", e);
+		}
+		finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {}
+			}
+		}
+	}
 	
 }
