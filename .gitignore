@@ -9,3 +9,6 @@ tmp/**/*
 .loadpath
 .externalToolBuilders/
 
+
+# data files
+data/server/accounts/*.ini*
