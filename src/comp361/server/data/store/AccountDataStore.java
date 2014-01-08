@@ -1,4 +1,4 @@
-package comp361.server.data;
+package comp361.server.data.store;
 
 public interface AccountDataStore {
 
