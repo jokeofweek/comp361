@@ -6,11 +6,13 @@ import java.util.Map;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.server.GameServer;
+import comp361.server.network.handlers.LoginPacketHandler;
 import comp361.server.network.handlers.MessagePacketHandler;
 import comp361.server.network.handlers.RegisterPacketHandler;
 import comp361.server.network.handlers.ServerPacketHandler;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
+import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.shared.MessagePacket;
 
@@ -52,6 +54,7 @@ public class ServerPacketListener extends Listener {
 		// Associate all handlers here.
 		handlers.put(MessagePacket.class, new MessagePacketHandler());
 		handlers.put(RegisterPacket.class, new RegisterPacketHandler());
+		handlers.put(LoginPacket.class, new LoginPacketHandler());
 		return handlers;
 	}
 
