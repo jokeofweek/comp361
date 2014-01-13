@@ -14,6 +14,8 @@ import javax.swing.JFrame;
  */
 public abstract class ClientJFrame extends JFrame implements Observer {
 
+	private static final long serialVersionUID = -7223752548249858973L;
+
 	private GameClient gameClient;
 
 	public ClientJFrame(GameClient client) {

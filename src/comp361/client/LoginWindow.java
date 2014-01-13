@@ -1,16 +1,16 @@
 package comp361.client;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import comp361.shared.packets.client.RegisterPacket;
@@ -20,6 +20,8 @@ public class LoginWindow extends ClientJFrame {
 
 	private static final long serialVersionUID = 7525404399381734980L;
 
+	private JTextField registerUsernameField;
+	private JTextField registerPasswordField;	
 
 	public LoginWindow(GameClient gameClient) {
 		super(gameClient);
@@ -39,16 +41,32 @@ public class LoginWindow extends ClientJFrame {
 	}
 	
 	private JPanel getRegisterPanel() {
-		JPanel registerPanel = new JPanel();
-		JButton test = new JButton("Test Register");
-		final JFrame self = this;
+		JPanel registerPanel = new JPanel(new GridLayout(0, 1));
+		
+		registerPanel.add(new JLabel("Username:"));
+		registerUsernameField = new JTextField();
+		registerPanel.add(registerUsernameField);
+		
+		registerPanel.add(new JLabel("Password:"));
+		registerPasswordField = new JPasswordField();
+		registerPanel.add(registerPasswordField);		
+		
+		JButton test = new JButton("Register");
 		test.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegisterPacket packet = new RegisterPacket();
-				packet.accountName = "dominic";
-				packet.password = "charley";
-				getGameClient().getClient().sendTCP(packet);				
+				// Make sure we have valid input
+				if (registerUsernameField.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "You must provide a username in order to register.");
+				} else if (registerPasswordField.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "You must provide a password in order to register.");
+				} else {
+					// Input has been validated, so send the register packet.
+					RegisterPacket packet = new RegisterPacket();
+					packet.accountName = registerUsernameField.getText();
+					packet.password = registerPasswordField.getText();
+					getGameClient().getClient().sendTCP(packet);
+				}				
 			}
 		});
 		registerPanel.add(test);
@@ -57,10 +75,9 @@ public class LoginWindow extends ClientJFrame {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof RegisterResult) {
-			
+		if (arg instanceof RegisterResult) {			
 			RegisterResult result = (RegisterResult) arg;
-			// If the registration wasn't succesful, show an error message
+			// If the registration wasn't successful, show an error message
 			if (result != RegisterResult.SUCCESS) {
 				JOptionPane.showMessageDialog(null, result);
 			} else {
@@ -74,8 +91,7 @@ public class LoginWindow extends ClientJFrame {
 					}
 				});
 			}
-		}
-		JOptionPane.showMessageDialog(null, arg);	
+		}	
 	}
 	
 }

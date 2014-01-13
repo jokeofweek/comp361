@@ -13,7 +13,7 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 	public void handle(Session session, GameServer gameServer,
 			RegisterPacket object) {
 		AccountDataStore store = gameServer.getAccountDataStore();
-		
+
 		if (store.accountExists(object.accountName)) {
 			session.sendTCP(RegisterResult.ACCOUNT_ALREADY_EXISTS);
 		} else {
