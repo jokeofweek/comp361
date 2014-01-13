@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import comp361.server.console.Console;
+import comp361.server.data.AccountManager;
 import comp361.server.data.store.AccountDataStore;
 import comp361.server.network.ServerPacketListener;
 import comp361.server.session.Session;
@@ -14,6 +15,7 @@ public class GameServer {
 
 	private Server server;
 	private Console console;
+	private AccountManager accountManager;
 	private AccountDataStore accountDataStore;
 
 	/**
@@ -28,14 +30,16 @@ public class GameServer {
 	public GameServer(final Console console, int port, AccountDataStore accountDataStore) {
 		this.console = console;
 		this.accountDataStore = accountDataStore;
+		this.accountManager = new AccountManager();
 
 		// Set up the server. The newConnection callback is called every time a
 		// connection is detected and allows us to wrap a connection object
 		// in our own custom Session class.
+		final GameServer self = this;
 		server = new Server() {
 			protected Connection newConnection() {
 				console.println("Connection established.");
-				return new Session();
+				return new Session(self);
 			};
 		};
 
@@ -77,5 +81,12 @@ public class GameServer {
 	 */
 	public AccountDataStore getAccountDataStore() {
 		return accountDataStore;
+	}
+	
+	/**
+	 * @return the account manager.
+	 */
+	public AccountManager getAccountManager() {
+		return accountManager;
 	}
 }

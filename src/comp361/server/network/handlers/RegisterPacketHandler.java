@@ -5,6 +5,7 @@ import comp361.server.data.Account;
 import comp361.server.data.store.AccountDataStore;
 import comp361.server.data.store.DataStoreException;
 import comp361.server.session.Session;
+import comp361.server.session.SessionType;
 import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.server.RegisterResult;
 
@@ -17,19 +18,26 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 		if (store.accountExists(object.accountName)) {
 			session.sendTCP(RegisterResult.ACCOUNT_ALREADY_EXISTS);
 		} else {
-			// For now we simply create the account here.
-			// TODO: Put this in an actual class.
+			// Create the account
 			Account account = new Account();
 			account.setName(object.accountName);
 			account.setPassword(object.password);
 			
-			// Try to save the account, sending the appropriate result.
+			// Try to save the account, sending the appropriate result or
+			// returning if there was an error
 			try {
 				store.saveAccount(account);
-				session.sendTCP(RegisterResult.SUCCESS);
 			} catch (DataStoreException e) {
 				session.sendTCP(RegisterResult.SAVE_ERROR);
+				return;
 			}
+			
+			// Once the account was saved, we can update the player and change
+			// their session type.
+			session.setAccount(account);
+			session.setSessionType(SessionType.LOBBY);
+
+			session.sendTCP(RegisterResult.SUCCESS);
 		}
 		
 	}

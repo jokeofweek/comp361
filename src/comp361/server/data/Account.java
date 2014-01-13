@@ -27,6 +27,9 @@ public class Account {
 		this.password = password;
 	}
 	
-	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}	
 	
 }

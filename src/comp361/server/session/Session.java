@@ -1,12 +1,17 @@
 package comp361.server.session;
 
 import com.esotericsoftware.kryonet.Connection;
+import comp361.server.GameServer;
+import comp361.server.data.Account;
 
 public class Session extends Connection {
 
+	private GameServer gameServer;
+	private Account account;
 	private SessionType sessionType;
 
-	public Session() {
+	public Session(GameServer gameServer) {
+		this.gameServer = gameServer;
 		// Set the session type to anonymous at connection time.
 		this.sessionType = SessionType.ANONYMOUS;
 	}
@@ -29,11 +34,38 @@ public class Session extends Connection {
 	}
 
 	/**
+	 * @return the Account associated with the Session, or null if there is none
+	 */
+	public Account getAccount() {
+		return account;
+	}
+
+	/**
+	 * Updates the account associated with this session
+	 * 
+	 * @param account
+	 */
+	public void setAccount(Account account) {
+		// If there was an old account, notify the account manager.
+		if (this.account != null) {
+			this.gameServer.getAccountManager().removeAccount(
+					this.account.getName());
+		}
+		this.account = account;
+		// If there is a new account, notify the account manager.
+		if (this.account != null) {
+			this.gameServer.getAccountManager().addAccount(this.account);
+		}
+	}
+
+	/**
 	 * Effectively disconnects the session, changing the session type and
 	 * performing any required processing.
 	 */
 	public void disconnect() {
 		// Update the session type.
 		this.setSessionType(SessionType.DISCONNECTED);
+		// Update the account to be null (removing it from the manager)
+		this.setAccount(null);
 	}
 }
