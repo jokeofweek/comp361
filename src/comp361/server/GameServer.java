@@ -10,7 +10,6 @@ import comp361.server.network.ServerPacketListener;
 import comp361.server.session.Session;
 import comp361.shared.network.NetworkManager;
 
-
 public class GameServer {
 
 	private Server server;
@@ -30,7 +29,9 @@ public class GameServer {
 		this.console = console;
 		this.accountDataStore = accountDataStore;
 
-		// Set up the server to create a new Session object on connection.
+		// Set up the server. The newConnection callback is called every time a
+		// connection is detected and allows us to wrap a connection object
+		// in our own custom Session class.
 		server = new Server() {
 			protected Connection newConnection() {
 				console.println("Connection established.");
