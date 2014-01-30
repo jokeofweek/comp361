@@ -63,6 +63,18 @@ public class CoralPanel extends JPanel implements Observer {
 			g.fillRect(0, (y + baseOffset) * Constants.TILE_SIZE, 
 					Constants.TILE_SIZE, Constants.TILE_SIZE);
 		}
+		
+		// Draw the squares where a ship can be placed
+		g.setColor(Color.blue);
+		g.fillRect(0, (-1 + baseOffset) * Constants.TILE_SIZE, 
+				Constants.TILE_SIZE, Constants.TILE_SIZE);
+		g.fillRect(0, (Constants.BASE_HEIGHT + baseOffset) * Constants.TILE_SIZE, 
+				Constants.TILE_SIZE, Constants.TILE_SIZE);
+		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
+			g.fillRect(Constants.TILE_SIZE, (y + baseOffset) * Constants.TILE_SIZE, 
+					Constants.TILE_SIZE, Constants.TILE_SIZE);
+		}
+		
 	}
 	
 	@Override
