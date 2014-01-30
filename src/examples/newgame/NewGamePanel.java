@@ -6,25 +6,31 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class NewGamePanel extends JPanel {
 
 	private CoralReefGenerator reefGenerator;
-	private RegenerateCoralAction regenerateCoralAction;
 	
-	private static final int CORAL_PANEL_SPACING = 10;
+	private RegenerateCoralAction regenerateCoralAction;
+	private ReadyAction readyAction;
+	
+	private static final int PANEL_SPACING = 10;
 	
 	public NewGamePanel() {
 		super(new BorderLayout());
 		
 		this.reefGenerator = new CoralReefGenerator();
 		this.regenerateCoralAction = new RegenerateCoralAction(reefGenerator);
+		this.readyAction = new ReadyAction(regenerateCoralAction);
 		
 		// Setup the UI
-		this.buildUI();
+		this.add(this.buildCoralUI(), BorderLayout.WEST);
+		this.add(this.buildOptionsUI());
 	}
 	
-	private void buildUI() {
+	private JPanel buildCoralUI() {
 		// Wrap the coral panel in another panel so that we can put a border on
 		JPanel coralContainer = new JPanel(new BorderLayout());
 		
@@ -40,14 +46,39 @@ public class NewGamePanel extends JPanel {
 		// Wrap the coral panel container with spacing since apparently
 		// you can't put a border on CoralPanel?
 		coralContainer.setBorder(BorderFactory.createEmptyBorder(
-				CORAL_PANEL_SPACING,
-				CORAL_PANEL_SPACING,
-				0,
-				CORAL_PANEL_SPACING));
-		this.add(coralContainer, BorderLayout.WEST);
+				PANEL_SPACING,
+				PANEL_SPACING,
+				PANEL_SPACING,
+				PANEL_SPACING));
+		return coralContainer;
+	}
+	
+	private JPanel buildOptionsUI() {
+		JPanel optionsContainer = new JPanel(new BorderLayout());
 		
+		optionsContainer.add(buildChatUI());
 		
-		this.add(new JLabel("ABC"));
+		// Build the ready button
+		JButton readyButton = new JButton(readyAction);
+		readyButton.setText("Ready");
+		optionsContainer.add(readyButton, BorderLayout.SOUTH);
+
+		optionsContainer.setBorder(BorderFactory.createEmptyBorder(
+				PANEL_SPACING,
+				PANEL_SPACING,
+				PANEL_SPACING,
+				PANEL_SPACING));
+		
+		return optionsContainer;
+	}
+	
+	private JPanel buildChatUI() {
+		JPanel chatContainer = new JPanel(new BorderLayout());
+		
+		chatContainer.add(new JTextArea());
+		chatContainer.add(new JTextField(), BorderLayout.SOUTH);
+		
+		return chatContainer;
 	}
 
 	
