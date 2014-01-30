@@ -50,4 +50,18 @@ public class Statistics
 			this.addStatistic(descriptions[i], data[i]);
 		}
 	}
+	
+	/**
+	 * Make up some other random stats
+	 */
+	public void initialiseOtherStatistics()
+	{
+		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ration" };
+		Object[] data = { "Landlubber", 1, 0, 2, 1, 0.005 };
+		
+		for(int i = 0; i < descriptions.length; i++)
+		{
+			this.addStatistic(descriptions[i], data[i]);
+		}
+	}
 }
