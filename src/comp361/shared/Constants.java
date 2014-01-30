@@ -12,7 +12,17 @@ public class Constants {
 	public static final int SCREEN_WIDTH = 800;
 	public static final int SCREEN_HEIGHT = 600;
 	
-	// Tile sizes
-	public static final int TILE_WIDTH = 24;
-	public static final int TILE_HEIGHT = 24;
+	// Tile constants
+	public static final int TILE_SIZE = 20;
+	
+	// Map shape constants
+
+	public static final int MAP_WIDTH = 30;
+	public static final int MAP_HEIGHT = 30;
+	public static final int CORAL_WIDTH = 10;
+	public static final int CORAL_HEIGHT = 24;
+	public static final int CORAL_X_OFFSET = 10;
+	public static final int CORAL_Y_OFFSET = 3;
+	public static final int BASE_HEIGHT = 10;
+	public static final int BASE_Y_OFFSET = 10;
 }
