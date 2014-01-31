@@ -7,6 +7,8 @@ import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
 
+import examples.newgame.NewGamePanel;
+
 public class FullScreenTest extends JFrame {
 	public FullScreenTest() {
 		Dimension d = new Dimension(800, 600);
@@ -20,6 +22,9 @@ public class FullScreenTest extends JFrame {
 		this.setResizable(false);
 		device.setFullScreenWindow(this);
 		device.setDisplayMode(new DisplayMode(800, 600, 32, DisplayMode.REFRESH_RATE_UNKNOWN));
+		
+		this.add(new NewGamePanel());
+		this.setVisible(true);
 	}
 	
 	public static void main(String[] args) {
