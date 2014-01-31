@@ -12,3 +12,4 @@ tmp/**/*
 
 # data files
 data/server/accounts/*.properties*
+/bin
