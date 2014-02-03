@@ -18,6 +18,7 @@ import comp361.shared.packets.shared.MessagePacket;
  * This class is responsible for mapping all packets that a client receives to
  * the appropriate {@link ClientPacketHandler} class.
  */
+@SuppressWarnings("rawtypes")
 public class ClientPacketListener extends Listener {
 
 	private Map<Class, ClientPacketHandler> handlers;

@@ -7,6 +7,10 @@ import java.util.Set;
 
 import comp361.client.data.Player;
 
+/**
+ * This class is used by the client to keep track of all connected
+ * player's information.
+ */
 public class PlayerManager extends Observable {
 
 	private Map<String, Player> players;
