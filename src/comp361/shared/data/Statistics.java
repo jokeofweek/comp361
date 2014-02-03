@@ -1,4 +1,4 @@
-package statisticsUI;
+package comp361.shared.data;
 
 import java.util.HashMap;
 

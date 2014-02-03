@@ -11,6 +11,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import comp361.shared.data.Statistics;
+
 public class StatisticsPanel extends JPanel
 {
 	private JTable aMainTable;
