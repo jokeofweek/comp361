@@ -1,4 +1,4 @@
-package comp361.client;
+package comp361.client.ui;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import comp361.client.GameClient;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.server.LoginResult;

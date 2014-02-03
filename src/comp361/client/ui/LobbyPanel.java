@@ -1,4 +1,4 @@
-package comp361.client;
+package comp361.client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import comp361.client.GameClient;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class LobbyPanel extends ClientPanel {

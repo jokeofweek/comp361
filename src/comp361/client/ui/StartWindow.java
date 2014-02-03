@@ -1,4 +1,4 @@
-package comp361.client;
+package comp361.client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import comp361.client.GameClient;
 import comp361.shared.Constants;
 
 /**

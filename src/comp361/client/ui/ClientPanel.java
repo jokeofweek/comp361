@@ -1,9 +1,11 @@
-package comp361.client;
+package comp361.client.ui;
 
 import java.awt.LayoutManager;
 import java.util.Observer;
 
 import javax.swing.JPanel;
+
+import comp361.client.GameClient;
 
 /**
  * All panels which will appear in the client window should extend this class.

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Observable;
 
 import com.esotericsoftware.kryonet.Client;
+
+import comp361.client.data.PlayerManager;
 import comp361.client.network.ClientPacketListener;
 import comp361.shared.network.NetworkManager;
 

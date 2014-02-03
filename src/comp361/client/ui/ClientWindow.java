@@ -1,4 +1,4 @@
-package comp361.client;
+package comp361.client.ui;
 
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
@@ -10,6 +10,7 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import comp361.client.GameClient;
 import comp361.shared.Constants;
 
 /**
