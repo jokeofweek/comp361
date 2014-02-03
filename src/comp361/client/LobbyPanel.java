@@ -13,28 +13,17 @@ import javax.swing.JTextField;
 
 import comp361.shared.packets.shared.MessagePacket;
 
-public class LobbyWindow extends ClientJFrame {
+public class LobbyPanel extends ClientPanel {
 
 	private static final long serialVersionUID = 7525404399381734980L;
 
 	private JTextArea chatTextArea;
 	private JTextField inputTextField;
 
-	public LobbyWindow(GameClient gameClient) {
-		super(gameClient);
-
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.add(getChatPanel(), BorderLayout.CENTER);
-		mainPanel.add(getInputPanel(), BorderLayout.SOUTH);
-		add(mainPanel);
-
-		setTitle("Battleships Lobby");
-		pack();
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		// Subscribe to the game client
-		gameClient.addObserver(this);
+	public LobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
+		super(gameClient, clientWindow, new BorderLayout());
+		this.add(getChatPanel(), BorderLayout.CENTER);
+		this.add(getInputPanel(), BorderLayout.SOUTH);
 	}
 
 	/**
@@ -42,7 +31,7 @@ public class LobbyWindow extends ClientJFrame {
 	 */
 	private JPanel getChatPanel() {
 		JPanel panel = new JPanel();
-		chatTextArea = new JTextArea(30, 80);
+		chatTextArea = new JTextArea(30, 60);
 		panel.add(chatTextArea);
 		return panel;
 	}

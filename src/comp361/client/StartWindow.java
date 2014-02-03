@@ -15,6 +15,9 @@ import javax.swing.JTextField;
 
 import comp361.shared.Constants;
 
+/**
+ * This window sets up the connection between the client and the server.
+ */
 public class StartWindow extends JFrame {
 
 	private static final long serialVersionUID = -4930439165369237418L;
@@ -90,7 +93,11 @@ public class StartWindow extends JFrame {
 					// If successful, hide this window and show the lobby
 					// window.
 					window.setVisible(false);
-					new LoginWindow(gameClient).setVisible(true);
+					
+					ClientWindow clientWindow = new ClientWindow(gameClient);
+					// Create the login window
+					clientWindow.setPanel(new LoginPanel(gameClient, clientWindow));
+
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(null,
 							"An error occured connecting to the server.");

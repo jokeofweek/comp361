@@ -18,7 +18,7 @@ import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.server.LoginResult;
 import comp361.shared.packets.server.RegisterResult;
 
-public class LoginWindow extends ClientJFrame {
+public class LoginPanel extends ClientPanel {
 
 	private static final long serialVersionUID = 7525404399381734980L;
 
@@ -28,17 +28,11 @@ public class LoginWindow extends ClientJFrame {
 	private JTextField registerPasswordField;
 	private JTextField registerConfirmPasswordField;
 
-	public LoginWindow(GameClient gameClient) {
-		super(gameClient);
-		JPanel mainPanel = new JPanel(new GridLayout(1, 2));
-		mainPanel.add(getLoginPanel());
-		mainPanel.add(getRegisterPanel());
-		add(mainPanel);
+	public LoginPanel(GameClient gameClient, ClientWindow clientWindow) {
+		super(gameClient, clientWindow, new GridLayout(1, 2));
+		this.add(getLoginPanel());
+		this.add(getRegisterPanel());
 
-		setTitle("Battleships");
-		pack();
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 	/**
@@ -137,14 +131,7 @@ public class LoginWindow extends ClientJFrame {
 	 * Helper function which shows the lobby screen and hides the login window.
 	 */
 	private void showLobby() {
-		final LoginWindow self = this;
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new LobbyWindow(getGameClient()).setVisible(true);
-				self.setVisible(false);
-			}
-		});
+		getClientWindow().setPanel(new LobbyPanel(getGameClient(), getClientWindow()));
 	}
 
 	@Override
