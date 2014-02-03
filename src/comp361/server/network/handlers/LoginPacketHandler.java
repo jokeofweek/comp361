@@ -9,8 +9,10 @@ import comp361.server.data.store.AccountDataStore;
 import comp361.server.data.store.DataStoreException;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
+import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.server.LoginResult;
+import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterResult;
 
 public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
@@ -47,7 +49,12 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 			session.setAccount(account);
 			session.setSessionType(SessionType.LOBBY);
 			session.sendTCP(LoginResult.SUCCESS);
+			
+			// Send the login to all other players
+			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
+			updatePacket.name = account.getName();
+			updatePacket.status = PlayerUpdateStatus.LOGGED_IN;
+			gameServer.getServer().sendToAllTCP(updatePacket);
 		}
-		
 	}
 }

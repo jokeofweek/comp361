@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.Observable;
 
 import com.esotericsoftware.kryonet.Client;
-
 import comp361.client.network.ClientPacketListener;
 import comp361.shared.network.NetworkManager;
 
 public class GameClient extends Observable {
 
 	private Client client;
-
+	private PlayerManager playerManager;
+	
 	/**
 	 * Creates a new client for a given host and port.
 	 * 
@@ -26,6 +26,9 @@ public class GameClient extends Observable {
 		this.client = new Client();
 		client.start();
 
+		// Create the player manager
+		this.playerManager = new PlayerManager();
+		
 		// For consistency, the classes to be sent over the network are
 		// registered by the same method for both the client and server.
 		NetworkManager.register(client);
@@ -33,7 +36,7 @@ public class GameClient extends Observable {
 		client.addListener(new ClientPacketListener(this));
 
 		client.connect(5000 /* timeout */, host, port);
-
+		
 	}
 
 	/**
@@ -54,4 +57,8 @@ public class GameClient extends Observable {
 		notifyObservers(message);
 	}
 
+	public PlayerManager getPlayerManager() {
+		return playerManager;
+	}
+	
 }

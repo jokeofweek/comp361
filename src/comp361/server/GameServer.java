@@ -40,7 +40,7 @@ public class GameServer {
 			protected Connection newConnection() {
 				console.println("Connection established.");
 				return new Session(self);
-			};
+			};			
 		};
 
 		// For consistency, the classes to be sent over the network are

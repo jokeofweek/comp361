@@ -2,8 +2,12 @@ package comp361.shared.data;
 
 import java.util.HashMap;
 
-public class Statistics 
-{
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoSerializable;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+
+public class Statistics implements KryoSerializable {
 	private HashMap<String, Object> aStatistics;
 	
 	public Statistics()
@@ -63,5 +67,16 @@ public class Statistics
 		{
 			this.addStatistic(descriptions[i], data[i]);
 		}
+	}
+
+	@Override
+	public void read(Kryo kryo, Input input) {
+		aStatistics = kryo.readObject(input, HashMap.class);
+	}
+
+	@Override
+	public void write(Kryo kryo, Output output) {
+		kryo.writeObject(output, aStatistics);
+		
 	}
 }

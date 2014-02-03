@@ -3,6 +3,8 @@ package comp361.server.session;
 import com.esotericsoftware.kryonet.Connection;
 import comp361.server.GameServer;
 import comp361.server.data.Account;
+import comp361.shared.data.PlayerUpdateStatus;
+import comp361.shared.packets.server.PlayerUpdatePacket;
 
 public class Session extends Connection {
 
@@ -63,9 +65,19 @@ public class Session extends Connection {
 	 * performing any required processing.
 	 */
 	public void disconnect() {
+		// Notify all other players
+		if (this.getAccount() != null) {
+			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
+			updatePacket.name = account.getName();
+			updatePacket.status = PlayerUpdateStatus.LOGGED_OUT;
+			gameServer.getServer().sendToAllExceptTCP(this.getID(), updatePacket);
+		}
+		
 		// Update the session type.
 		this.setSessionType(SessionType.DISCONNECTED);
 		// Update the account to be null (removing it from the manager)
 		this.setAccount(null);
+		
+		
 	}
 }
