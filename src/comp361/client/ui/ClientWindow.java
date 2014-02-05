@@ -25,7 +25,6 @@ public class ClientWindow extends JFrame {
 
 	public ClientWindow(GameClient client) {
 		this.gameClient = client;
-
 		
 		Dimension dimensions = new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 		this.setSize(dimensions);
@@ -44,6 +43,7 @@ public class ClientWindow extends JFrame {
 		});
 		
 
+		setPanel(new LoadingPanel(client, this));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setVisible(true);

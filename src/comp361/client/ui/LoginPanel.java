@@ -1,17 +1,22 @@
 package comp361.client.ui;
 
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
 import comp361.shared.packets.client.LoginPacket;
@@ -21,113 +26,87 @@ import comp361.shared.packets.server.RegisterResult;
 
 public class LoginPanel extends ClientPanel {
 
-	private static final long serialVersionUID = 7525404399381734980L;
+	private static final int LOGIN_PANEL_WIDTH = 400;
+	private static final int LOGIN_PANEL_HEIGHT = 600;
 
-	private JTextField loginUsernameField;
-	private JTextField loginPasswordField;
-	private JTextField registerUsernameField;
-	private JTextField registerPasswordField;
-	private JTextField registerConfirmPasswordField;
+	private JLabel loginLabel;
+	private JLabel usernameLabel;
+	private JLabel passwordLabel;
+	private JTextField usernameField;
+	private JPasswordField passwordField;
+	private JButton loginButton;
+	private JButton registerButton;
 
 	public LoginPanel(GameClient gameClient, ClientWindow clientWindow) {
-		super(gameClient, clientWindow, new GridLayout(1, 2));
-		this.add(getLoginPanel());
-		this.add(getRegisterPanel());
-
+		super(gameClient, clientWindow, new BorderLayout());
+		build();
 	}
 
-	/**
-	 * @return the panel containing the login fields.
-	 */
-	private JPanel getLoginPanel() {
-		JPanel loginPanel = new JPanel(new GridLayout(0, 1));
+	private void build() {
+		JPanel container = new JPanel(new BorderLayout());
+		SwagFactory.style(container);
 
-		loginPanel.add(new JLabel("Username:"));
-		loginUsernameField = new JTextField();
-		loginPanel.add(loginUsernameField);
+		// Add the logo
+		JLabel logoLabel = new JLabel(new ImageIcon(SwagFactory.LOGO_IMAGE));
+		Dimension logoSize = new Dimension(SwagFactory.LOGO_IMAGE.getWidth(),
+				SwagFactory.LOGO_IMAGE.getHeight());
+		logoLabel.setSize(logoSize);
+		logoLabel.setMinimumSize(logoSize);
+		logoLabel.setMaximumSize(logoSize);
+		container.add(logoLabel, BorderLayout.NORTH);
 
-		loginPanel.add(new JLabel("Password:"));
-		loginPasswordField = new JPasswordField();
-		loginPanel.add(loginPasswordField);
+		container.add(Box.createHorizontalStrut(LOGIN_PANEL_WIDTH / 4),
+				BorderLayout.EAST);
+		container.add(Box.createHorizontalStrut(LOGIN_PANEL_WIDTH / 4),
+				BorderLayout.WEST);
+
+		// Create the actual menu panel
+		JPanel loginPanel = new JPanel();
+		SwagFactory.style(loginPanel);
+		loginPanel.setSize(LOGIN_PANEL_WIDTH, LOGIN_PANEL_HEIGHT);
+
+		// instantiate all widgets
+		loginLabel = new JLabel("Welcome to BattleShips!");
+		usernameField = new JTextField();
+		usernameLabel = new JLabel("Username");
+		passwordField = new JPasswordField();
+		passwordLabel = new JLabel("Password");
 		
-		// Waste space...
-		loginPanel.add(new JLabel());
-		loginPanel.add(new JLabel());
+		loginButton = new JButton("Login");
+		loginButton.addActionListener(new LoginActionListener());
+		
+		registerButton = new JButton("Register");
+		registerButton.addActionListener(new RegisterActionListener());
 
-		JButton button = new JButton("Login");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Make sure we have valid input
-				if (loginUsernameField.getText().isEmpty()) {
-					JOptionPane
-							.showMessageDialog(null,
-									"You must provide a username in order to login.");
-				} else if (loginPasswordField.getText().isEmpty()) {
-					JOptionPane
-							.showMessageDialog(null,
-									"You must provide a password in order to login.");
-				} else {
-					// Input has been validated, so send the login packet.
-					LoginPacket packet = new LoginPacket();
-					packet.accountName = loginUsernameField.getText();
-					packet.password = loginPasswordField.getText();
-					getGameClient().getClient().sendTCP(packet);
-				}
-			}
-		});
-		loginPanel.add(button);
-		return loginPanel;
+		// add everything to the panel
+		loginPanel.add(loginLabel);
+		loginPanel.add(usernameLabel);
+		loginPanel.add(usernameField);
+		loginPanel.add(passwordLabel);
+		loginPanel.add(passwordField);
+		loginPanel.add(Box.createVerticalBox());
+		loginPanel.add(loginButton);
+		loginPanel.add(Box.createVerticalBox());
+		loginPanel.add(registerButton);
+
+		// add some style
+		setBackground(Color.WHITE);
+		for (Component c : loginPanel.getComponents()) {
+			SwagFactory.style((JComponent) c);
+			c.setMaximumSize(new Dimension(LOGIN_PANEL_WIDTH - 40, 30));
+			c.setMinimumSize(new Dimension(LOGIN_PANEL_WIDTH - 40, 30));
+			c.setPreferredSize(new Dimension(LOGIN_PANEL_WIDTH - 40, 30));
+		}
+		SwagFactory.style(loginButton);
+		SwagFactory.style(registerButton);
+		loginLabel.setFont(SwagFactory.FONT.deriveFont(20));
+		loginLabel.setForeground(Color.BLUE);
+
+		container.add(loginPanel, BorderLayout.CENTER);
+
+		add(container);
 	}
 
-	/**
-	 * @return the panel containing the registration fields.
-	 */
-	private JPanel getRegisterPanel() {
-		JPanel registerPanel = new JPanel(new GridLayout(0, 1));
-
-		registerPanel.add(new JLabel("Username:"));
-		registerUsernameField = new JTextField();
-		registerPanel.add(registerUsernameField);
-
-		registerPanel.add(new JLabel("Password:"));
-		registerPasswordField = new JPasswordField();
-		registerPanel.add(registerPasswordField);
-
-		registerPanel.add(new JLabel("Confirm Password:"));
-		registerConfirmPasswordField = new JPasswordField();
-		registerPanel.add(registerConfirmPasswordField);
-
-		JButton button = new JButton("Register");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Make sure we have valid input
-				if (registerUsernameField.getText().isEmpty()) {
-					JOptionPane
-							.showMessageDialog(null,
-									"You must provide a username in order to register.");
-				} else if (registerPasswordField.getText().isEmpty()) {
-					JOptionPane
-							.showMessageDialog(null,
-									"You must provide a password in order to register.");
-				} else if (!registerPasswordField.getText().equals(
-						registerConfirmPasswordField.getText())) {
-					JOptionPane.showMessageDialog(null,
-							"The passwords didn't match.");
-				} else {
-					// Input has been validated, so send the register packet.
-					RegisterPacket packet = new RegisterPacket();
-					packet.accountName = registerUsernameField.getText();
-					packet.password = registerPasswordField.getText();
-					getGameClient().getClient().sendTCP(packet);
-				}
-			}
-		});
-		registerPanel.add(button);
-		return registerPanel;
-	}
-	
 	/**
 	 * Helper function which shows the lobby screen and hides the login window.
 	 */
@@ -155,5 +134,48 @@ public class LoginPanel extends ClientPanel {
 			}
 		}
 	}
-
+	
+	private class LoginActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Make sure we have valid input
+			if (usernameField.getText().isEmpty()) {
+				JOptionPane
+						.showMessageDialog(null,
+								"You must provide a username in order to login.");
+			} else if (passwordField.getPassword().length == 0) {
+				JOptionPane
+						.showMessageDialog(null,
+								"You must provide a password in order to login.");
+			} else {
+				// Input has been validated, so send the login packet.
+				LoginPacket packet = new LoginPacket();
+				packet.accountName = usernameField.getText();
+				packet.password = new String(passwordField.getPassword());
+				getGameClient().getClient().sendTCP(packet);
+			}
+		}
+	}
+	
+	private class RegisterActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Make sure we have valid input
+			if (usernameField.getText().isEmpty()) {
+				JOptionPane
+						.showMessageDialog(null,
+								"You must provide a username in order to register.");
+			} else if (passwordField.getPassword().length == 0) {
+				JOptionPane
+						.showMessageDialog(null,
+								"You must provide a password in order to register.");
+			} else {
+				// Input has been validated, so send the register packet.
+				RegisterPacket packet = new RegisterPacket();
+				packet.accountName = usernameField.getText();
+				packet.password = new String(passwordField.getPassword());
+				getGameClient().getClient().sendTCP(packet);
+			}
+		}
+	}
 }
