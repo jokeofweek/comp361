@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class ChatPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -23,14 +24,19 @@ public class ChatPanel extends JPanel {
 		String[] playerNames = {"Alexander the Great"};
 		
 		JList<String> openChats = new JList<String>(playerNames);
+		JPanel openChatsPanel = new JPanel(new BorderLayout());
+		openChatsPanel.add(openChats, BorderLayout.CENTER);
+		openChatsPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 40, 0));
 		
 		JTextArea conversation = new JTextArea();
+		conversation.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
 		JPanel conversationPanel = new JPanel(new BorderLayout());
 		conversationPanel.add(new JLabel("Chat"), BorderLayout.NORTH);
 		conversationPanel.add(conversation, BorderLayout.CENTER);
-		conversationPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		conversationPanel.add(new JTextField(), BorderLayout.SOUTH);
 		
-		add(openChats, BorderLayout.WEST);
+		add(openChatsPanel, BorderLayout.WEST);
 		add(conversationPanel, BorderLayout.CENTER);
 	}
 }
