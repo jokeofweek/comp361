@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 public class PlayersPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -26,16 +25,10 @@ public class PlayersPanel extends JPanel {
 		headerPanel.add(new JLabel("Online Players"), BorderLayout.WEST);
 		headerPanel.add(new JTextField("search"), BorderLayout.EAST);
 		
-		DefaultTableModel tableModel = new DefaultTableModel() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public boolean isCellEditable(int row, int col) {
-				return false;
-			}
-		};
-		
 		JTable playersTable = new JTable(players, columnNames);
-		//playersTable.setModel(tableModel);
+		playersTable.setModel(new PlayersTableModel(players));
+		
+		System.out.println(playersTable);
 		
 		JPanel playersTablePanel = new JPanel(new BorderLayout());
 		playersTablePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));

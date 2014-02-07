@@ -1,5 +1,7 @@
 package examples.lobby;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -8,6 +10,8 @@ public class LobbyFrame extends JFrame {
 
 	public LobbyFrame() {
 		add(new LobbyPanel());
+		setBackground(Color.WHITE);
+		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		pack();
