@@ -6,7 +6,6 @@ import javax.swing.table.AbstractTableModel;
 
 public class StatisticsTableModel extends AbstractTableModel
 {
-	
 	/**
 	 * The column names
 	 */

@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import comp361.client.data.Player;
+import comp361.shared.data.Statistics;
+
 public class StatisticsExampleFrame extends JFrame
 {
 	private JPanel container;
@@ -16,7 +19,10 @@ public class StatisticsExampleFrame extends JFrame
 	{
 		container = new JPanel(new BorderLayout());
 		
-		container.add(new StatisticsPanel(), BorderLayout.CENTER);
+		Player bob = new Player("Bob");
+		bob.getStatistics().initialiseStatisticExample();
+		
+		container.add(new StatisticsPanel(bob), BorderLayout.CENTER);
 		
 		add(container);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
