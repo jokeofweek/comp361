@@ -59,7 +59,6 @@ public class ChatPanel extends JPanel {
 		chatEditorPane.setEditable(false);		
 	    chatEditorPane.setEditorKit(kit);
 	    chatEditorPane.setDocument(doc);
-	    
 	    try {
 	    	kit.insertHTML(doc, doc.getLength(), "<b>Welcome to Battleships!</b>", 0, 0, null);
 	    } catch (Exception e) {}
@@ -85,8 +84,10 @@ public class ChatPanel extends JPanel {
 		
 		SwagFactory.style(messagePanel);
 		
+		SendChatAction action = new SendChatAction();
+		
 		// Build the send button
-		JButton sendButton = new JButton(new SendChatAction());
+		JButton sendButton = new JButton(action);
 		sendButton.setText("Send");
 		SwagFactory.style(sendButton);
 		
@@ -98,6 +99,7 @@ public class ChatPanel extends JPanel {
 		
 		// Create the message field
 		messageField = new JTextField();
+		messageField.setAction(action);
 		
 		messagePanel.add(messageField, BorderLayout.CENTER);
 		messagePanel.add(sendButton, BorderLayout.EAST);
