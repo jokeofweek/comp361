@@ -117,6 +117,8 @@ public class LoginPanel extends ClientPanel {
 	 * Helper function which shows the lobby screen and hides the login window.
 	 */
 	private void showLobby() {
+		// Update the game client to have the logged in player's name
+		getGameClient().setPlayerName(usernameField.getText());
 		getClientWindow().setPanel(new LobbyPanel(getGameClient(), getClientWindow()));
 	}
 

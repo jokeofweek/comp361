@@ -13,6 +13,7 @@ public class GameClient extends Observable {
 
 	private Client client;
 	private PlayerManager playerManager;
+	private String playerName;
 	
 	/**
 	 * Creates a new client for a given host and port.
@@ -61,6 +62,14 @@ public class GameClient extends Observable {
 
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+	
+	public String getPlayerName() {
+		return playerName;
+	}
+	
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 	
 }

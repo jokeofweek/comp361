@@ -2,5 +2,6 @@ package comp361.shared.packets.shared;
 
 
 public class MessagePacket {
-	public String message;	
+	public String senderName;
+	public String message;
 }

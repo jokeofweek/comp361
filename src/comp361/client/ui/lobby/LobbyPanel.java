@@ -12,6 +12,7 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.shared.packets.shared.MessagePacket;
 
 public class LobbyPanel extends ClientPanel {
 	private static final long serialVersionUID = 1L;
@@ -19,6 +20,8 @@ public class LobbyPanel extends ClientPanel {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final int COMPONENT_SPACING = 5;
+	
+	private ChatPanel chatPanel;
 	
 	public LobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
@@ -44,13 +47,18 @@ public class LobbyPanel extends ClientPanel {
 		
 		container.add(new JLabel("Buttons go here"), BorderLayout.NORTH);
 		container.add(new PlayersPanel(), BorderLayout.EAST);
-		container.add(new ChatPanel(), BorderLayout.CENTER);
+		
+		chatPanel = new ChatPanel(getGameClient());
+		container.add(chatPanel, BorderLayout.CENTER);
 		add(container, BorderLayout.CENTER);
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		System.out.println("Received: " + arg);
+		if (arg instanceof MessagePacket) {
+			chatPanel.publishChatMessage((MessagePacket) arg);
+		}
 		
 	}
 }

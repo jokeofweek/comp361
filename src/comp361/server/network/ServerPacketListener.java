@@ -52,7 +52,6 @@ public class ServerPacketListener extends Listener {
 	private Map<Class, ServerPacketHandler> setupAnonymousPacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		// Associate all handlers here.
-		handlers.put(MessagePacket.class, new MessagePacketHandler());
 		handlers.put(RegisterPacket.class, new RegisterPacketHandler());
 		handlers.put(LoginPacket.class, new LoginPacketHandler());
 		return handlers;
@@ -66,6 +65,7 @@ public class ServerPacketListener extends Listener {
 	 */
 	private Map<Class, ServerPacketHandler> setupLobbyPacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
+		handlers.put(MessagePacket.class, new MessagePacketHandler());
 		return handlers;
 	}
 
@@ -98,7 +98,7 @@ public class ServerPacketListener extends Listener {
 		Map<Class, ServerPacketHandler> handlers = sessionTypePacketHandlers
 				.get(session.getSessionType());
 		ServerPacketHandler handler = handlers.get(object.getClass());
-		System.out.println("Received " + object.getClass() + " from " + session);
+		// System.out.println("Received " + object.getClass() + " from " + session);
 		// Make sure we have a handler before calling
 		if (handler != null) {
 			handler.handle(session, gameServer, object);

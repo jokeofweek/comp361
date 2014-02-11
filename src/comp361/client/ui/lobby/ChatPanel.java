@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -20,55 +21,61 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
+import comp361.shared.packets.shared.MessagePacket;
 
 public class ChatPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int CHAT_BOX_SPACING = LobbyPanel.COMPONENT_SPACING;
 	
-	private final JScrollPane chatScrollPane;
-	private final JEditorPane chatEditorPane;
-	private final HTMLEditorKit kit;
-	private final HTMLDocument doc;
+	private JScrollPane chatScrollPane;
+	private JEditorPane chatEditorPane;
+	private JTextField messageField;
+	private HTMLEditorKit kit;
+	private HTMLDocument doc;
 	
-	public ChatPanel() {
+	private GameClient gameClient;
+	
+	public ChatPanel(GameClient gameClient) {
 		super(new BorderLayout());
 		SwagFactory.style(this);
 		
+		this.gameClient = gameClient;
+				
+	    // Create the panel for sending a message
+	    add(getChatPanel(), BorderLayout.CENTER);
+	    add(getMessagePanel(), BorderLayout.SOUTH);
+	}
+	
+	private JComponent getChatPanel() {
 		// Create the text field
 	    kit = new HTMLEditorKit();
 	    doc = new HTMLDocument();
 		chatEditorPane = new JEditorPane();
-		chatEditorPane.setEditable(false);
-		
+		chatEditorPane.setEditable(false);		
 	    chatEditorPane.setEditorKit(kit);
 	    chatEditorPane.setDocument(doc);
+	    
 	    try {
-	    	kit.insertHTML(doc, doc.getLength(), "<b>Dominic:</b> Hello, world!<br/>Test", 0, 0, null);
-	    	kit.insertHTML(doc, doc.getLength(), "<br/><b>Alex:</b> Stahp. pls.", 0, 0, null);
+	    	kit.insertHTML(doc, doc.getLength(), "<b>Welcome to Battleships!</b>", 0, 0, null);
 	    } catch (Exception e) {}
 
-	    new Timer(500, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				publishChatMessage("<b>Time:</b>" + System.currentTimeMillis() + " It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).");
-			}
-		}).start();
-	    
+
 	    // Wrap the editor pane in a scroll pane
 	    chatScrollPane = new JScrollPane(chatEditorPane, 
 	    		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 	    		JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 	    JPanel container = new JPanel(new BorderLayout());
-	    SwagFactory.style(container);
+	    SwagFactory.style(container);	    
 	    container.add(chatScrollPane);
 	    container.setBorder(BorderFactory.createEmptyBorder(CHAT_BOX_SPACING, CHAT_BOX_SPACING, 0, CHAT_BOX_SPACING));
-	   
-	    // Create the panel for sending a message
-	    add(container, BorderLayout.CENTER);
-	    add(getMessagePanel(), BorderLayout.SOUTH);
+	    
+	    return container;
 	}
 	
 	private JComponent getMessagePanel() {
@@ -79,7 +86,8 @@ public class ChatPanel extends JPanel {
 		SwagFactory.style(messagePanel);
 		
 		// Build the send button
-		JButton sendButton = new JButton("Send");
+		JButton sendButton = new JButton(new SendChatAction());
+		sendButton.setText("Send");
 		SwagFactory.style(sendButton);
 		
 		Dimension d = new Dimension(80, SwagFactory.BUTTON_HEIGHT);
@@ -88,18 +96,28 @@ public class ChatPanel extends JPanel {
 		sendButton.setPreferredSize(d);
 		sendButton.setSize(d);
 		
-		messagePanel.add(new JTextField(), BorderLayout.CENTER);
+		// Create the message field
+		messageField = new JTextField();
+		
+		messagePanel.add(messageField, BorderLayout.CENTER);
 		messagePanel.add(sendButton, BorderLayout.EAST);
 		
 		return messagePanel;
 	}
 	
-	private void publishChatMessage(final String message) {
+	public void publishChatMessage(final MessagePacket packet) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				String message = "";
+				// Add the sender if it's there.
+				if (packet.senderName != null) {
+					message += "<b>" + StringEscapeUtils.escapeHtml4(packet.senderName) + "</b>: ";
+				}
+				message += StringEscapeUtils.escapeHtml4(packet.message);
 				// Insert the message then scroll to the bottom.
 				try {
+					
 					kit.insertHTML(doc, doc.getLength(), message, 0, 0, null);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
@@ -110,5 +128,32 @@ public class ChatPanel extends JPanel {
 				chatEditorPane.setCaretPosition(chatEditorPane.getDocument().getLength());
 			}
 		});
+	}
+	
+	private class SendChatAction extends AbstractAction {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// If we have a message, we want to send it
+			
+			if (!messageField.getText().isEmpty()) {
+				// Send the message
+				MessagePacket messagePacket = new MessagePacket();
+				messagePacket.message = messageField.getText();
+				messagePacket.senderName = gameClient.getPlayerName();
+				gameClient.getClient().sendTCP(messagePacket);
+				publishChatMessage(messagePacket);
+				
+				// Clear the message field
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						messageField.setText("");
+						messageField.requestFocusInWindow();
+					}
+				});
+			}
+		}
+		
 	}
 }
