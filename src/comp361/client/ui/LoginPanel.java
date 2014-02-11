@@ -19,6 +19,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import comp361.client.GameClient;
+import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.server.LoginResult;

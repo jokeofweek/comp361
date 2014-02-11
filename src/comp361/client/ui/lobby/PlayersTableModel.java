@@ -1,4 +1,4 @@
-package examples.lobby;
+package comp361.client.ui.lobby;
 
 import javax.swing.table.AbstractTableModel;
 

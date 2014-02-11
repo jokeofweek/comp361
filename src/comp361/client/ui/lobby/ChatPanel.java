@@ -1,4 +1,4 @@
-package examples.lobby;
+package comp361.client.ui.lobby;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

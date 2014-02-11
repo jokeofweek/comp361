@@ -14,14 +14,14 @@ import javax.swing.JTextField;
 import comp361.client.GameClient;
 import comp361.shared.packets.shared.MessagePacket;
 
-public class LobbyPanel extends ClientPanel {
+public class OldLobbyPanel extends ClientPanel {
 
 	private static final long serialVersionUID = 7525404399381734980L;
 
 	private JTextArea chatTextArea;
 	private JTextField inputTextField;
 
-	public LobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
+	public OldLobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
 		this.add(getChatPanel(), BorderLayout.CENTER);
 		this.add(getInputPanel(), BorderLayout.SOUTH);
