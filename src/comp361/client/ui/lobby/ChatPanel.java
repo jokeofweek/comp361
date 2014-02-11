@@ -107,11 +107,20 @@ public class ChatPanel extends JPanel {
 		return messagePanel;
 	}
 	
+	public JTextField getMessageField() {
+		return messageField;
+	}
+	
 	public void publishChatMessage(final MessagePacket packet) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				String message = "";
+				
+				// We have to escape both the sender name and the message just to make sure there's
+				// no HTML in there that shouldn't be there. This will make it so <b> gets shown as 
+				// is instead of bolding text.
+				
 				// Add the sender if it's there.
 				if (packet.senderName != null) {
 					message += "<b>" + StringEscapeUtils.escapeHtml4(packet.senderName) + "</b>: ";
@@ -131,6 +140,8 @@ public class ChatPanel extends JPanel {
 			}
 		});
 	}
+	
+	
 	
 	private class SendChatAction extends AbstractAction {
 

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.util.Observable;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -53,6 +54,12 @@ public class LobbyPanel extends ClientPanel {
 		add(container, BorderLayout.CENTER);
 	}
 
+	@Override
+	public JComponent getStartingFocus() {
+		// By default focus on the message field
+		return chatPanel.getMessageField();
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("Received: " + arg);
