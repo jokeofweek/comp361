@@ -4,10 +4,14 @@ import javax.swing.table.AbstractTableModel;
 
 public class PlayersTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
+	
+	private String[] headers;
+	
 	public String[][] playerInfo;
 	
-	public PlayersTableModel(String[][] playerInfo) {
+	public PlayersTableModel(String[][] playerInfo, String[] headers) {
 		this.playerInfo = playerInfo;
+		this.headers = headers;
 	}
 
 	@Override
@@ -22,6 +26,11 @@ public class PlayersTableModel extends AbstractTableModel {
 		} else {
 			return 0;
 		}
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return headers[column];
 	}
 
 	@Override

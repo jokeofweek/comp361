@@ -18,11 +18,22 @@ import javax.swing.JPanel;
 public class SwagFactory {
 
 	public static final Font FONT = new Font("Consolas", Font.PLAIN, 16);
+	
 	public static BufferedImage LOGO_IMAGE;
+	public static BufferedImage SMALL_LOGO_IMAGE;
+	
+	public static final int BUTTON_HEIGHT = 30;
 	
 	static {
 		try {
 			LOGO_IMAGE = ImageIO.read(new File("images/logo.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
+		try {
+			SMALL_LOGO_IMAGE = ImageIO.read(new File("images/logo_small.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
