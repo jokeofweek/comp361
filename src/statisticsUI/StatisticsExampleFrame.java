@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import comp361.client.data.Player;
-import comp361.shared.data.Statistics;
+import comp361.client.data.PlayerManager;
 
 public class StatisticsExampleFrame extends JFrame
 {
@@ -22,7 +22,14 @@ public class StatisticsExampleFrame extends JFrame
 		Player bob = new Player("Bob");
 		bob.getStatistics().initialiseStatisticExample();
 		
-		container.add(new StatisticsPanel(bob), BorderLayout.CENTER);
+		Player rob = new Player("Rob");
+		rob.getStatistics().initialiseOtherStatistics();
+		
+		PlayerManager players = new PlayerManager();
+		players.addPlayer(bob);
+		players.addPlayer(rob);
+		
+		container.add(new ViewPanel(bob, players), BorderLayout.CENTER);
 		
 		add(container);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

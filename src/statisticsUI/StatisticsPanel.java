@@ -34,13 +34,7 @@ public class StatisticsPanel extends JPanel
 		
 		aMainPlayerModel = new StatisticsTableModel();
 		
-		int i = 0;
-		for(String string : aMain.getStatistics().getStatistics().keySet())
-		{
-			aMainPlayerModel.addNewData(string, aMain.getStatistics().getStatistics().values().toArray()[i]);
-			i++;
-		}
-		
+		addPlayer(aMain);
 
 		//Set up the look for the main player table
 		aMainTable = new JTable(aMainPlayerModel);
@@ -63,7 +57,20 @@ public class StatisticsPanel extends JPanel
  
         //Add the scroll pane to this panel.
         add(mainScrollPane, BorderLayout.CENTER);
-
+	}
+	
+	/**
+	 * @param pPlayer player to add to model
+	 * Utility method to add statistics.
+	 */
+	public void addPlayer(Player pPlayer)
+	{
+		int i = 0;
+		for(String string : pPlayer.getStatistics().getStatistics().keySet())
+		{
+			aMainPlayerModel.addNewData(string, pPlayer.getStatistics().getStatistics().values().toArray()[i]);
+			i++;
+		}
 	}
 	
 }

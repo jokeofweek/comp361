@@ -24,6 +24,11 @@ public class PlayerManager extends Observable {
 		notifyObservers();
 	}
 	
+	public Map<String, Player> getMap()
+	{
+		return players;
+	}
+	
 	public Set<String> getPlayers() {
 		return players.keySet();
 	}	
