@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.util.Observer;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import comp361.client.GameClient;
@@ -40,8 +41,6 @@ public abstract class ClientPanel extends JPanel implements Observer {
 		this.setMaximumSize(dimensions);
 		this.setMinimumSize(dimensions);
 		this.setPreferredSize(dimensions);
-		
-		
 	}
 	
 	public GameClient getGameClient() {
@@ -52,4 +51,7 @@ public abstract class ClientPanel extends JPanel implements Observer {
 		return clientWindow;
 	}
 	
+	public JComponent getStartingFocus() {
+		return null;
+	}
 }

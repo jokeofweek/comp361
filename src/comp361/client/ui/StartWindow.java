@@ -24,7 +24,8 @@ public class StartWindow extends JFrame {
 	private static final long serialVersionUID = -4930439165369237418L;
 	private JTextField hostTextField;
 	private JTextField portTextField;
-
+	private JButton connectButton;
+	
 	public StartWindow() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(getLabelsPanel(), BorderLayout.WEST);
@@ -36,6 +37,8 @@ public class StartWindow extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		getRootPane().setDefaultButton(connectButton);
 	}
 
 	/**
@@ -69,7 +72,7 @@ public class StartWindow extends JFrame {
 	 */
 	private JPanel getButtonPanel() {
 		JPanel panel = new JPanel();
-		JButton connectButton = new JButton("Connect");
+		connectButton = new JButton("Connect");
 		panel.add(connectButton);
 
 		final StartWindow window = this;

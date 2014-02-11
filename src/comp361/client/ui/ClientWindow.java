@@ -70,6 +70,10 @@ public class ClientWindow extends JFrame {
 				self.getContentPane().add(panel);
 				self.revalidate();
 				self.gameClient.addObserver(panel);	
+				
+				if (panel.getStartingFocus() != null) {
+					panel.getStartingFocus().requestFocusInWindow();
+				}
 			}
 		});
 	}

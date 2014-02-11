@@ -107,6 +107,11 @@ public class LoginPanel extends ClientPanel {
 
 		add(container);
 	}
+	
+	@Override
+	public JComponent getStartingFocus() {
+		return usernameField;
+	}
 
 	/**
 	 * Helper function which shows the lobby screen and hides the login window.
