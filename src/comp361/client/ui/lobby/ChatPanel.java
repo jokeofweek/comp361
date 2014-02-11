@@ -1,7 +1,6 @@
 package comp361.client.ui.lobby;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,14 +10,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -29,18 +27,23 @@ public class ChatPanel extends JPanel {
 	
 	private static final int CHAT_BOX_SPACING = LobbyPanel.COMPONENT_SPACING;
 	
+	private final JScrollPane chatScrollPane;
+	private final JEditorPane chatEditorPane;
+	private final HTMLEditorKit kit;
+	private final HTMLDocument doc;
+	
 	public ChatPanel() {
 		super(new BorderLayout());
 		SwagFactory.style(this);
 		
 		// Create the text field
-	    final HTMLEditorKit kit = new HTMLEditorKit();
-	    final HTMLDocument doc = new HTMLDocument();
-		JEditorPane editorPane = new JEditorPane();
-		editorPane.setEditable(false);
+	    kit = new HTMLEditorKit();
+	    doc = new HTMLDocument();
+		chatEditorPane = new JEditorPane();
+		chatEditorPane.setEditable(false);
 		
-	    editorPane.setEditorKit(kit);
-	    editorPane.setDocument(doc);
+	    chatEditorPane.setEditorKit(kit);
+	    chatEditorPane.setDocument(doc);
 	    try {
 	    	kit.insertHTML(doc, doc.getLength(), "<b>Dominic:</b> Hello, world!<br/>Test", 0, 0, null);
 	    	kit.insertHTML(doc, doc.getLength(), "<br/><b>Alex:</b> Stahp. pls.", 0, 0, null);
@@ -49,25 +52,18 @@ public class ChatPanel extends JPanel {
 	    new Timer(500, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					kit.insertHTML(doc, doc.getLength(), "<b>Time:</b>" + System.currentTimeMillis() + " It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).", 0, 0, null);
-				} catch (BadLocationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				publishChatMessage("<b>Time:</b>" + System.currentTimeMillis() + " It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).");
 			}
 		}).start();
 	    
 	    // Wrap the editor pane in a scroll pane
-	    JScrollPane scrollPane = new JScrollPane(editorPane, 
+	    chatScrollPane = new JScrollPane(chatEditorPane, 
 	    		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 	    		JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
 	    JPanel container = new JPanel(new BorderLayout());
 	    SwagFactory.style(container);
-	    container.add(scrollPane);
+	    container.add(chatScrollPane);
 	    container.setBorder(BorderFactory.createEmptyBorder(CHAT_BOX_SPACING, CHAT_BOX_SPACING, 0, CHAT_BOX_SPACING));
 	   
 	    // Create the panel for sending a message
@@ -96,6 +92,23 @@ public class ChatPanel extends JPanel {
 		messagePanel.add(sendButton, BorderLayout.EAST);
 		
 		return messagePanel;
-		
+	}
+	
+	private void publishChatMessage(final String message) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				// Insert the message then scroll to the bottom.
+				try {
+					kit.insertHTML(doc, doc.getLength(), message, 0, 0, null);
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				// Temporary hack, could be better..
+				chatEditorPane.setCaretPosition(chatEditorPane.getDocument().getLength());
+			}
+		});
 	}
 }
