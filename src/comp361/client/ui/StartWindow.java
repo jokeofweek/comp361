@@ -81,7 +81,7 @@ public class StartWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Validate date (sort of...)
+				// Validate data (sort of...)
 				String host = hostTextField.getText();
 				int port = Constants.PORT;
 				try {
