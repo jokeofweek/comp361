@@ -62,4 +62,13 @@ public abstract class ClientPanel extends JPanel implements Observer {
 	 * when the player changes to another screen.
 	 */
 	public void exit(){}
+	
+	/**
+	 * This allows a client panel to specify a component that is rendered over
+	 * this panel (eg. pop ups which appear over the screen).
+	 * @return a component which will appear over the panel (or null)
+	 */
+	public JComponent getOverlayComponent() {
+		return null;
+	}
 }

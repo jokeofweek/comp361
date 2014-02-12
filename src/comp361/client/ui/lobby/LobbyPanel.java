@@ -1,10 +1,12 @@
 package comp361.client.ui.lobby;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Observable;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -77,7 +79,19 @@ public class LobbyPanel extends ClientPanel {
 		System.out.println("Received: " + arg);
 		if (arg instanceof MessagePacket) {
 			chatPanel.publishChatMessage((MessagePacket) arg);
-		}
-		
+		}		
+	}
+	
+	@Override
+	public JComponent getOverlayComponent() {
+		/*
+		JPanel panel = new JPanel();
+		panel.add(new JButton("ABC"));
+		panel.setOpaque(true);
+		panel.setBounds(25, 25, 200, 200);
+		panel.setBackground(Color.GREEN);
+		return panel;
+		*/
+		return null;
 	}
 }

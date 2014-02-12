@@ -7,7 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Observer;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
@@ -22,6 +24,7 @@ public class ClientWindow extends JFrame {
 
 	private GameClient gameClient;
 	private ClientPanel panel;
+	private JLayeredPane layeredPane;
 
 	public ClientWindow(GameClient client) {
 		this.gameClient = client;
@@ -31,6 +34,10 @@ public class ClientWindow extends JFrame {
 		this.setPreferredSize(dimensions);
 		this.setMaximumSize(dimensions);
 		this.setMinimumSize(dimensions);
+		
+		// Setup the layered pane
+		this.layeredPane = new JLayeredPane();
+		this.add(layeredPane);
 		
 		// Add a window listener for closing the socket.
 		addWindowListener(new WindowAdapter() {
@@ -67,8 +74,13 @@ public class ClientWindow extends JFrame {
 				}
 				
 				self.panel = panel;
-				self.getContentPane().removeAll();
-				self.getContentPane().add(panel);
+				layeredPane.removeAll();
+				layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
+				// Setup the overlay component
+				JComponent overlayComponent = panel.getOverlayComponent();
+				if (overlayComponent != null) {
+					layeredPane.add(overlayComponent, JLayeredPane.PALETTE_LAYER);
+				}
 				self.revalidate();
 				self.gameClient.addObserver(panel);	
 				self.panel.enter();
