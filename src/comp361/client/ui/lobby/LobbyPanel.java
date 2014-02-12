@@ -23,6 +23,7 @@ public class LobbyPanel extends ClientPanel {
 	public static final int COMPONENT_SPACING = 5;
 	
 	private ChatPanel chatPanel;
+	private PlayersPanel playersPanel;
 	
 	public LobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
@@ -47,7 +48,9 @@ public class LobbyPanel extends ClientPanel {
 		SwagFactory.style(container);
 		
 		container.add(new JLabel("Buttons go here"), BorderLayout.NORTH);
-		container.add(new PlayersPanel(), BorderLayout.EAST);
+		
+		playersPanel = new PlayersPanel(getGameClient());
+		container.add(playersPanel, BorderLayout.EAST);
 		
 		chatPanel = new ChatPanel(getGameClient());
 		container.add(chatPanel, BorderLayout.CENTER);
@@ -57,6 +60,16 @@ public class LobbyPanel extends ClientPanel {
 	@Override
 	public void enter() {
 		chatPanel.getMessageField().requestFocusInWindow();
+		// On enter, register the players table model as an observer
+		// of the player manager so that it can update.
+		getGameClient().getPlayerManager().addObserver(playersPanel.getTableModel());
+	}
+	
+	@Override
+	public void exit() {
+		// When we leave this screen, we don't want to receive updates
+		// from the player manager anymore.
+		getGameClient().getPlayerManager().deleteObserver(playersPanel.getTableModel());
 	}
 	
 	@Override

@@ -10,14 +10,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
 
 public class PlayersPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
-
-
-	public PlayersPanel() {
+	private PlayersTableModel tableModel;
+	
+	public PlayersPanel(GameClient gameClient) {
 		super(new BorderLayout());
 		SwagFactory.style(this);
 		setBorder(BorderFactory.createEmptyBorder(LobbyPanel.COMPONENT_SPACING, 0, 
@@ -40,9 +41,8 @@ public class PlayersPanel extends JPanel {
 		//headerPanel.add(new JTextField("search"), BorderLayout.EAST);
 		
 		JTable playersTable = new JTable(players, columnNames);
-		playersTable.setModel(new PlayersTableModel(players, columnNames));
-		
-		System.out.println(playersTable);
+		tableModel = new PlayersTableModel(gameClient.getPlayerManager(), columnNames);
+		playersTable.setModel(tableModel);
 		
 		JPanel playersTablePanel = new JPanel(new BorderLayout());
 		playersTablePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -51,5 +51,9 @@ public class PlayersPanel extends JPanel {
 		
 		add(headerPanel, BorderLayout.NORTH);
 		add(playersTablePanel, BorderLayout.CENTER);
+	}
+	
+	public PlayersTableModel getTableModel() {
+		return tableModel;
 	}
 }

@@ -7,7 +7,7 @@ import comp361.server.data.store.DataStoreException;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.packets.client.RegisterPacket;
-import comp361.shared.packets.server.RegisterResult;
+import comp361.shared.packets.server.RegisterError;
 
 public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket> {
 	@Override
@@ -16,7 +16,7 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 		AccountDataStore store = gameServer.getAccountDataStore();
 
 		if (store.accountExists(object.accountName)) {
-			session.sendTCP(RegisterResult.ACCOUNT_ALREADY_EXISTS);
+			session.sendTCP(RegisterError.ACCOUNT_ALREADY_EXISTS);
 		} else {
 			// Create the account
 			Account account = new Account();
@@ -28,7 +28,7 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 			try {
 				store.saveAccount(account);
 			} catch (DataStoreException e) {
-				session.sendTCP(RegisterResult.SAVE_ERROR);
+				session.sendTCP(RegisterError.SAVE_ERROR);
 				return;
 			}
 			
@@ -37,7 +37,8 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 			session.setAccount(account);
 			session.setSessionType(SessionType.LOBBY);
 
-			session.sendTCP(RegisterResult.SUCCESS);
+			// If successful, send the player list packet
+			session.sendTCP(gameServer.getAccountManager().getPlayerListPacket());
 		}
 		
 	}

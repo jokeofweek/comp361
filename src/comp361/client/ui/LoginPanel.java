@@ -22,8 +22,9 @@ import comp361.client.GameClient;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.RegisterPacket;
-import comp361.shared.packets.server.LoginResult;
-import comp361.shared.packets.server.RegisterResult;
+import comp361.shared.packets.server.LoginError;
+import comp361.shared.packets.server.PlayerListPacket;
+import comp361.shared.packets.server.RegisterError;
 
 public class LoginPanel extends ClientPanel {
 
@@ -124,22 +125,17 @@ public class LoginPanel extends ClientPanel {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof RegisterResult) {
-			RegisterResult result = (RegisterResult) arg;
+		if (arg instanceof RegisterError) {
 			// If the registration wasn't successful, show an error message
-			if (result != RegisterResult.SUCCESS) {
-				JOptionPane.showMessageDialog(null, result);
-			} else {
-				showLobby();
-			}
-		} else if (arg instanceof LoginResult) {
-			LoginResult result = (LoginResult) arg;
+			RegisterError result = (RegisterError) arg;
+			JOptionPane.showMessageDialog(null, result);
+		} else if (arg instanceof LoginError) {
 			// If the login wasn't successful, show an error message
-			if (result != LoginResult.SUCCESS) {
-				JOptionPane.showMessageDialog(null, result);
-			} else {
-				showLobby();
-			}
+			LoginError result = (LoginError) arg;
+			JOptionPane.showMessageDialog(null, result);
+		} else if (arg instanceof PlayerListPacket) {
+			// If our operation was succesful, we can show the lobby!
+			showLobby();
 		}
 	}
 	

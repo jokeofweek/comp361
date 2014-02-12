@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import comp361.client.data.Player;
 import comp361.client.data.PlayerManager;
+import comp361.shared.data.Player;
 
 public class StatisticsExampleFrame extends JFrame
 {

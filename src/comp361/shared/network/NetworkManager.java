@@ -1,14 +1,19 @@
 package comp361.shared.network;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-
+import comp361.shared.data.Player;
 import comp361.shared.data.PlayerUpdateStatus;
+import comp361.shared.data.Statistics;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.RegisterPacket;
-import comp361.shared.packets.server.LoginResult;
+import comp361.shared.packets.server.LoginError;
+import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
-import comp361.shared.packets.server.RegisterResult;
+import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class NetworkManager {
@@ -24,11 +29,16 @@ public class NetworkManager {
 		Kryo kryo = endPoint.getKryo();
 		kryo.register(MessagePacket.class);
 		kryo.register(RegisterPacket.class);
-		kryo.register(RegisterResult.class);
+		kryo.register(RegisterError.class);
 		kryo.register(LoginPacket.class);
-		kryo.register(LoginResult.class);
+		kryo.register(LoginError.class);
+		kryo.register(PlayerListPacket.class);
 		kryo.register(PlayerUpdatePacket.class);
 		kryo.register(PlayerUpdateStatus.class);
+		kryo.register(Statistics.class);
+		kryo.register(Player.class);
+		kryo.register(ArrayList.class);
+		kryo.register(HashMap.class);
 	}
 
 	private NetworkManager() {

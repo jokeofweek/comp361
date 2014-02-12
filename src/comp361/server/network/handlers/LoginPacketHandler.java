@@ -1,5 +1,7 @@
 package comp361.server.network.handlers;
 
+import java.util.Set;
+
 import com.esotericsoftware.minlog.Log;
 
 import comp361.server.GameServer;
@@ -10,10 +12,13 @@ import comp361.server.data.store.DataStoreException;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.data.PlayerUpdateStatus;
+import comp361.shared.data.Statistics;
 import comp361.shared.packets.client.LoginPacket;
-import comp361.shared.packets.server.LoginResult;
+import comp361.shared.packets.server.LoginError;
+import comp361.shared.packets.server.LoginError;
+import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
-import comp361.shared.packets.server.RegisterResult;
+import comp361.shared.packets.server.RegisterError;
 
 public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 	@Override
@@ -24,10 +29,10 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 		
 		// Check if the account exists
 		if (!store.accountExists(object.accountName)) {
-			session.sendTCP(LoginResult.NO_SUCH_ACCOUNT);
+			session.sendTCP(LoginError.NO_SUCH_ACCOUNT);
 		// Check if the account is in use
 		} else if (manager.isAccountConnected(object.accountName)) {
-			session.sendTCP(LoginResult.ACCOUNT_IN_USE);
+			session.sendTCP(LoginError.ACCOUNT_IN_USE);
 		} else {
 			// Try to load the account
 			Account account = null;
@@ -35,24 +40,26 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 				account = store.loadAccount(object.accountName);
 			} catch (DataStoreException e) {
 				// If any loading error occurs, exit.
-				session.sendTCP(LoginResult.LOAD_ERROR);
+				session.sendTCP(LoginError.LOAD_ERROR);
 				return;
 			}
 			
 			// Check credentials
 			if (!account.getPassword().equals(object.password)) {
-				session.sendTCP(LoginResult.INVALID_CREDENTIALS);
+				session.sendTCP(LoginError.INVALID_CREDENTIALS);
 				return;
 			}
 			
 			// We had valid credentials! The user is now logged in.
 			session.setAccount(account);
 			session.setSessionType(SessionType.LOBBY);
-			session.sendTCP(LoginResult.SUCCESS);
+			
+			// If successful, send the player list packet
+			session.sendTCP(manager.getPlayerListPacket());
 			
 			// Send the login to all other players
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
-			updatePacket.name = account.getName();
+			updatePacket.player = account.getPlayer();
 			updatePacket.status = PlayerUpdateStatus.LOGGED_IN;
 			gameServer.getServer().sendToAllTCP(updatePacket);
 		}

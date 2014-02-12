@@ -1,5 +1,7 @@
 package comp361.server.data;
 
+import comp361.shared.data.Player;
+
 /**
  * An account used for playing Battleships.
  */
@@ -25,6 +27,14 @@ public class Account {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	/**
+	 * @return a {@link Player} object which can be sent to the client.
+	 */
+	public Player getPlayer() {
+		// TODO: This is where statistics would be loaded to be sent to the client.
+		return new Player(name);
 	}
 	
 	@Override

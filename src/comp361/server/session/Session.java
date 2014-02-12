@@ -68,7 +68,7 @@ public class Session extends Connection {
 		// Notify all other players
 		if (this.getAccount() != null) {
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
-			updatePacket.name = account.getName();
+			updatePacket.player = account.getPlayer();
 			updatePacket.status = PlayerUpdateStatus.LOGGED_OUT;
 			gameServer.getServer().sendToAllExceptTCP(this.getID(), updatePacket);
 		}

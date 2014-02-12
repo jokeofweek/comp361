@@ -1,7 +1,6 @@
 package comp361.shared.packets.server;
 
-public enum LoginResult {
-	SUCCESS,
+public enum LoginError {
 	NO_SUCH_ACCOUNT,
 	INVALID_CREDENTIALS,
 	ACCOUNT_IN_USE,

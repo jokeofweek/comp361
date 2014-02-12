@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
 
+import comp361.shared.data.Player;
+import comp361.shared.packets.server.PlayerListPacket;
+
 
 /**
  * This class is used by the client to keep track of all connected
@@ -19,7 +22,7 @@ public class PlayerManager extends Observable {
 	}
 	
 	public void addPlayer(Player player) {
-		this.players.put(player.getName(), player);
+		internalAddPlayer(player);
 		setChanged();
 		notifyObservers();
 	}
@@ -43,4 +46,24 @@ public class PlayerManager extends Observable {
 		notifyObservers();
 	}
 	
+	/**
+	 * Helper method for inserting a player without notifying observers.
+	 * @param player The player to add.
+	 */
+	private void internalAddPlayer(Player player) {
+		this.players.put(player.getName(), player);		
+	}
+	
+	/**
+	 * Updates the list of players according to a {@link PlayerListPacket}, 
+	 * effectively adding all players at once.
+	 * @param packet
+	 */
+	public void updatePlayerList(PlayerListPacket packet) {
+		for (Player player : packet.players) {
+			internalAddPlayer(player);
+		}
+		setChanged();
+		notifyObservers();
+	}
 }

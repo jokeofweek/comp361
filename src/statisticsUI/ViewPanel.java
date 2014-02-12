@@ -8,8 +8,8 @@ import java.awt.event.ItemListener;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import comp361.client.data.Player;
 import comp361.client.data.PlayerManager;
+import comp361.shared.data.Player;
 
 public class ViewPanel extends JPanel implements ItemListener
 {

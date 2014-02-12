@@ -1,9 +1,7 @@
 package statisticsUI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,8 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import comp361.client.data.Player;
-import comp361.shared.data.Statistics;
+import comp361.shared.data.Player;
 
 public class StatisticsPanel extends JPanel
 {

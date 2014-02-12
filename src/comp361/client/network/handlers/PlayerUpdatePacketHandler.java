@@ -1,7 +1,6 @@
 package comp361.client.network.handlers;
 
 import comp361.client.GameClient;
-import comp361.client.data.Player;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.shared.MessagePacket;
 
@@ -13,15 +12,15 @@ public class PlayerUpdatePacketHandler implements ClientPacketHandler<PlayerUpda
 		MessagePacket message;
 		switch (object.status) {
 		case LOGGED_IN:
-			gameClient.getPlayerManager().addPlayer(new Player(object.name));
+			gameClient.getPlayerManager().addPlayer(object.player);
 			message = new MessagePacket();
-			message.message = object.name + " has connected.";
+			message.message = object.player.getName() + " has connected.";
 			gameClient.publishMessage(message);
 			break;
 		case LOGGED_OUT:
-			gameClient.getPlayerManager().removePlayer(object.name);
+			gameClient.getPlayerManager().removePlayer(object.player.getName());
 			message = new MessagePacket();
-			message.message = object.name + " has disconnected.";
+			message.message = object.player.getName() + " has disconnected.";
 			gameClient.publishMessage(message);
 			break;
 		case UPDATE:

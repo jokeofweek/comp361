@@ -1,7 +1,6 @@
 package comp361.shared.packets.server;
 
-public enum RegisterResult {
-	SUCCESS,
+public enum RegisterError {
 	ACCOUNT_ALREADY_EXISTS,
 	SAVE_ERROR	
 }
