@@ -51,7 +51,15 @@ public abstract class ClientPanel extends JPanel implements Observer {
 		return clientWindow;
 	}
 	
-	public JComponent getStartingFocus() {
-		return null;
-	}
+	/**
+	 * This callback can be overridden by ClientPanels and is executed
+	 * when the player enters the screen.
+	 */
+	public void enter() {}
+	
+	/**
+	 * This callback can be overridden by ClientPanels and is executed
+	 * when the player changes to another screen.
+	 */
+	public void exit(){}
 }

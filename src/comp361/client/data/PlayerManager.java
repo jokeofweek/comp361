@@ -33,6 +33,10 @@ public class PlayerManager extends Observable {
 		return players.keySet();
 	}	
 	
+	public Player getPlayer(String name) {
+		return this.players.get(name);
+	}
+	
 	public void removePlayer(String name) {
 		this.players.remove(name);
 		setChanged();

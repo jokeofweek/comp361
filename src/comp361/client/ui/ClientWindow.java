@@ -63,6 +63,7 @@ public class ClientWindow extends JFrame {
 				// Remove the old panel as a listener
 				if (self.panel != null) {
 					gameClient.deleteObserver(panel);
+					self.panel.exit();
 				}
 				
 				self.panel = panel;
@@ -70,10 +71,7 @@ public class ClientWindow extends JFrame {
 				self.getContentPane().add(panel);
 				self.revalidate();
 				self.gameClient.addObserver(panel);	
-				
-				if (panel.getStartingFocus() != null) {
-					panel.getStartingFocus().requestFocusInWindow();
-				}
+				self.panel.enter();
 			}
 		});
 	}

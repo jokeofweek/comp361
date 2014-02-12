@@ -53,11 +53,10 @@ public class LobbyPanel extends ClientPanel {
 		container.add(chatPanel, BorderLayout.CENTER);
 		add(container, BorderLayout.CENTER);
 	}
-
+	
 	@Override
-	public JComponent getStartingFocus() {
-		// By default focus on the message field
-		return chatPanel.getMessageField();
+	public void enter() {
+		chatPanel.getMessageField().requestFocusInWindow();
 	}
 	
 	@Override

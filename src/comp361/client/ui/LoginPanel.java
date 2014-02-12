@@ -107,10 +107,10 @@ public class LoginPanel extends ClientPanel {
 
 		add(container);
 	}
-	
+
 	@Override
-	public JComponent getStartingFocus() {
-		return usernameField;
+	public void enter() {
+		usernameField.requestFocusInWindow();
 	}
 
 	/**
