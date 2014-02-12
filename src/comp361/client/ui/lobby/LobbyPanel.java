@@ -11,10 +11,15 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
+import oracle.jrockit.jfr.tools.ConCatRepository;
+
 import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.shared.Constants;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class LobbyPanel extends ClientPanel {
@@ -26,6 +31,7 @@ public class LobbyPanel extends ClientPanel {
 	
 	private ChatPanel chatPanel;
 	private PlayersPanel playersPanel;
+	private InviteOverlayPanel inviteOverlayPanel;
 	
 	public LobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
@@ -57,6 +63,11 @@ public class LobbyPanel extends ClientPanel {
 		chatPanel = new ChatPanel(getGameClient());
 		container.add(chatPanel, BorderLayout.CENTER);
 		add(container, BorderLayout.CENTER);
+		
+		// Create the invite overlay panel
+		inviteOverlayPanel = new InviteOverlayPanel();
+		inviteOverlayPanel.setBounds(Constants.SCREEN_WIDTH - inviteOverlayPanel.getWidth(), 
+			0, inviteOverlayPanel.getWidth(), inviteOverlayPanel.getHeight());
 	}
 	
 	@Override
@@ -84,14 +95,7 @@ public class LobbyPanel extends ClientPanel {
 	
 	@Override
 	public JComponent getOverlayComponent() {
-		/*
-		JPanel panel = new JPanel();
-		panel.add(new JButton("ABC"));
-		panel.setOpaque(true);
-		panel.setBounds(25, 25, 200, 200);
-		panel.setBackground(Color.GREEN);
-		return panel;
-		*/
-		return null;
+		return inviteOverlayPanel;
+		//return null;
 	}
 }

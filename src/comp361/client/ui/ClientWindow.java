@@ -1,11 +1,8 @@
 package comp361.client.ui;
 
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Observer;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -30,13 +27,17 @@ public class ClientWindow extends JFrame {
 		this.gameClient = client;
 		
 		Dimension dimensions = new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-		this.setSize(dimensions);
-		this.setPreferredSize(dimensions);
-		this.setMaximumSize(dimensions);
-		this.setMinimumSize(dimensions);
+		this.getContentPane().setSize(dimensions);
+		this.getContentPane().setPreferredSize(dimensions);
+		this.getContentPane().setMaximumSize(dimensions);
+		this.getContentPane().setMinimumSize(dimensions);
 		
 		// Setup the layered pane
 		this.layeredPane = new JLayeredPane();
+		this.layeredPane.setSize(dimensions);
+		this.layeredPane.setPreferredSize(dimensions);
+		this.layeredPane.setMaximumSize(dimensions);
+		this.layeredPane.setMinimumSize(dimensions);
 		this.add(layeredPane);
 		
 		// Add a window listener for closing the socket.
@@ -54,6 +55,7 @@ public class ClientWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setVisible(true);
+		this.pack();
 		this.setLocationRelativeTo(null);
 	}
 
@@ -74,16 +76,20 @@ public class ClientWindow extends JFrame {
 				}
 				
 				self.panel = panel;
+
 				layeredPane.removeAll();
 				layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
+				
 				// Setup the overlay component
 				JComponent overlayComponent = panel.getOverlayComponent();
 				if (overlayComponent != null) {
 					layeredPane.add(overlayComponent, JLayeredPane.PALETTE_LAYER);
 				}
+
 				self.revalidate();
 				self.gameClient.addObserver(panel);	
 				self.panel.enter();
+
 			}
 		});
 	}
