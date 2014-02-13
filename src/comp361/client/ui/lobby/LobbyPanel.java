@@ -28,6 +28,7 @@ public class LobbyPanel extends ClientPanel {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final int COMPONENT_SPACING = 5;
+	public static final int OVERLAY_PADDING_RIGHT = 10;
 	
 	private ChatPanel chatPanel;
 	private PlayersPanel playersPanel;
@@ -66,7 +67,7 @@ public class LobbyPanel extends ClientPanel {
 		
 		// Create the invite overlay panel
 		inviteOverlayPanel = new InviteOverlayPanel();
-		inviteOverlayPanel.setBounds(Constants.SCREEN_WIDTH - inviteOverlayPanel.getWidth(), 
+		inviteOverlayPanel.setBounds(Constants.SCREEN_WIDTH - inviteOverlayPanel.getWidth() - OVERLAY_PADDING_RIGHT, 
 			0, inviteOverlayPanel.getWidth(), inviteOverlayPanel.getHeight());
 	}
 	

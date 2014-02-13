@@ -1,41 +1,40 @@
 package comp361.client.ui.lobby;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-import comp361.client.ui.SwagFactory;
+import comp361.shared.Constants;
 
 public class InviteOverlayPanel extends JPanel {
 	
 	public static final int WIDTH = 250;
-	public static final int HEIGHT = 400;
 	
 	public InviteOverlayPanel() {
-		Dimension d = new Dimension(WIDTH, HEIGHT);
+		Dimension d = new Dimension(WIDTH, Constants.SCREEN_HEIGHT);
 		setOpaque(false);
 		setSize(d);
 		setMinimumSize(d);
 		setMaximumSize(d);
 		setPreferredSize(d);
 		
+		final Queue<String> names = new LinkedList<>();
+		names.add("Dominic");
+		names.add("Alex");
+		names.add("Marc");
+		names.add("Mohamed");
+		
 		new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JButton b = new JButton(Math.random() * 1000 + "");
-				SwagFactory.style(b);
-				Dimension d = new Dimension(WIDTH, SwagFactory.BUTTON_HEIGHT);
-				b.setSize(d);
-				b.setMinimumSize(d);
-				b.setMaximumSize(d);
-				b.setPreferredSize(d);
-				add(b);
+				String name = names.remove();
+				names.add(name);
+				add(new InvitePanel(name));
 				revalidate();	
 			}
 		}).start();
