@@ -1,4 +1,4 @@
-package comp361.client.ui.lobby;
+package comp361.client.ui.lobby.chat;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class ChatPanel extends JPanel {
@@ -42,19 +43,20 @@ public class ChatPanel extends JPanel {
 	
 	public ChatPanel(GameClient gameClient) {
 		super(new BorderLayout());
+		SwagFactory.style(this);
 		
 		this.gameClient = gameClient;
 				
 	    // Create the panel for sending a message
 	    add(getChatPanel(), BorderLayout.CENTER);
 	    add(getMessagePanel(), BorderLayout.SOUTH);
-	    SwagFactory.style(this);
 	}
 	
 	private JComponent getChatPanel() {
 		// Create the text field
 	    kit = new HTMLEditorKit();
 	    doc = new HTMLDocument();
+	    SwagFactory.style(chatEditorPane);
 		chatEditorPane = new JEditorPane();
 		chatEditorPane.setEditable(false);		
 	    chatEditorPane.setEditorKit(kit);
@@ -62,16 +64,16 @@ public class ChatPanel extends JPanel {
 	    try {
 	    	kit.insertHTML(doc, doc.getLength(), "<b>Welcome to Battleships!</b>", 0, 0, null);
 	    } catch (Exception e) {}
-	    SwagFactory.style(chatEditorPane);
+
+
 	    // Wrap the editor pane in a scroll pane
 	    chatScrollPane = new JScrollPane(chatEditorPane, 
 	    		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 	    		JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-	    JPanel container = new JPanel(new BorderLayout());    
+	    JPanel container = new JPanel(new BorderLayout());
+	    SwagFactory.style(container);	    
 	    container.add(chatScrollPane);
-	    container.setBorder(BorderFactory.createEmptyBorder(CHAT_BOX_SPACING, CHAT_BOX_SPACING, 0, CHAT_BOX_SPACING));
-	    SwagFactory.style(container);	
 	    
 	    return container;
 	}
@@ -79,8 +81,9 @@ public class ChatPanel extends JPanel {
 	private JComponent getMessagePanel() {
 		JPanel messagePanel = new JPanel(new BorderLayout(CHAT_BOX_SPACING, 0));
 		messagePanel.setBorder(BorderFactory.createEmptyBorder(
-				CHAT_BOX_SPACING, CHAT_BOX_SPACING, CHAT_BOX_SPACING, CHAT_BOX_SPACING));
+				CHAT_BOX_SPACING, 0, 0, 0));
 		
+		SwagFactory.style(messagePanel);
 		
 		SendChatAction action = new SendChatAction();
 		
@@ -101,8 +104,6 @@ public class ChatPanel extends JPanel {
 		
 		messagePanel.add(messageField, BorderLayout.CENTER);
 		messagePanel.add(sendButton, BorderLayout.EAST);
-		
-		SwagFactory.style(messagePanel);
 		
 		return messagePanel;
 	}

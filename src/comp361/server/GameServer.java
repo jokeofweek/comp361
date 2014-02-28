@@ -6,9 +6,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import comp361.server.console.Console;
 import comp361.server.data.AccountManager;
+import comp361.server.data.GameDescriptorManager;
 import comp361.server.data.store.AccountDataStore;
 import comp361.server.network.ServerPacketListener;
 import comp361.server.session.Session;
+import comp361.shared.data.GameDescriptor;
 import comp361.shared.network.NetworkManager;
 
 public class GameServer {
@@ -17,6 +19,7 @@ public class GameServer {
 	private Console console;
 	private AccountManager accountManager;
 	private AccountDataStore accountDataStore;
+	private GameDescriptorManager gameDescriptorManager;
 
 	/**
 	 * Gets a server application up and running.
@@ -31,6 +34,7 @@ public class GameServer {
 		this.console = console;
 		this.accountDataStore = accountDataStore;
 		this.accountManager = new AccountManager();
+		this.gameDescriptorManager = new GameDescriptorManager();
 
 		// Set up the server. The newConnection callback is called every time a
 		// connection is detected and allows us to wrap a connection object
@@ -88,5 +92,12 @@ public class GameServer {
 	 */
 	public AccountManager getAccountManager() {
 		return accountManager;
+	}
+	
+	/**
+	 * @return the manager for the {@link GameDescriptor} objects.
+	 */
+	public GameDescriptorManager getGameDescriptorManager() {
+		return gameDescriptorManager;
 	}
 }

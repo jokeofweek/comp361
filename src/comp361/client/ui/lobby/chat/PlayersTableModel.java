@@ -1,4 +1,4 @@
-package comp361.client.ui.lobby;
+package comp361.client.ui.lobby.chat;
 
 import java.util.ArrayList;
 import java.util.Collections;
