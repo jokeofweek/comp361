@@ -1,23 +1,29 @@
 package comp361.client.ui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * Make things look baller.
  */
 public class SwagFactory {
 
-	public static final Font FONT = new Font("Consolas", Font.PLAIN, 16);
+	public static Font FONT;
 	
 	public static BufferedImage LOGO_IMAGE;
 	public static BufferedImage SMALL_LOGO_IMAGE;
@@ -38,9 +44,21 @@ public class SwagFactory {
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		File font_file = new File("fonts/SF Pixelate.ttf");
+		try {
+			FONT = Font.createFont(Font.TRUETYPE_FONT, font_file).deriveFont(18f);
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+			System.exit(1);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	private SwagFactory() {
+		
 	}
 
 	public static void style(JComponent component) {
@@ -50,11 +68,27 @@ public class SwagFactory {
 			stylePanel((JPanel) component);
 		} else if (component instanceof JLabel) {
 			styleLabel((JLabel) component);
-		} else {
-			// Do nothing for now
+		} else if(component instanceof JTextField) {
+			styleTextField((JTextField) component);
+		}
+		else if(component instanceof JEditorPane){
+			styleEditorPane((JEditorPane) component);
+		}
+		else {
+			//nothing for now
 		}
 	}
 
+	private static void styleEditorPane(JEditorPane pane)
+	{
+		Font font = new Font(FONT.getFontName(), Font.PLAIN, 12);
+		pane.setFont(FONT);
+	}
+	
+	private static void styleTextField(JTextField field) {
+		field.setFont(FONT);
+	}
+	
 	private static void styleButton(JButton button) {
 		button.setBackground(new Color(185, 225, 255));
 		button.setFont(FONT);

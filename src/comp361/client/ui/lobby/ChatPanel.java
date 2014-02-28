@@ -55,6 +55,7 @@ public class ChatPanel extends JPanel {
 		// Create the text field
 	    kit = new HTMLEditorKit();
 	    doc = new HTMLDocument();
+	    SwagFactory.style(chatEditorPane);
 		chatEditorPane = new JEditorPane();
 		chatEditorPane.setEditable(false);		
 	    chatEditorPane.setEditorKit(kit);
@@ -91,7 +92,7 @@ public class ChatPanel extends JPanel {
 		sendButton.setText("Send");
 		SwagFactory.style(sendButton);
 		
-		Dimension d = new Dimension(80, SwagFactory.BUTTON_HEIGHT);
+		Dimension d = new Dimension(120, SwagFactory.BUTTON_HEIGHT);
 		sendButton.setMaximumSize(d);
 		sendButton.setMinimumSize(d);
 		sendButton.setPreferredSize(d);
