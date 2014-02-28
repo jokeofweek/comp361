@@ -55,7 +55,6 @@ public class ChatPanel extends JPanel {
 		// Create the text field
 	    kit = new HTMLEditorKit();
 	    doc = new HTMLDocument();
-	    SwagFactory.style(chatEditorPane);
 		chatEditorPane = new JEditorPane();
 		chatEditorPane.setEditable(false);		
 	    chatEditorPane.setEditorKit(kit);
@@ -63,8 +62,7 @@ public class ChatPanel extends JPanel {
 	    try {
 	    	kit.insertHTML(doc, doc.getLength(), "<b>Welcome to Battleships!</b>", 0, 0, null);
 	    } catch (Exception e) {}
-
-
+	    SwagFactory.style(chatEditorPane);
 	    // Wrap the editor pane in a scroll pane
 	    chatScrollPane = new JScrollPane(chatEditorPane, 
 	    		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,

@@ -45,7 +45,7 @@ public class SwagFactory {
 			System.exit(1);
 		}
 		
-		File font_file = new File("fonts/SF Pixelate.ttf");
+		File font_file = new File("fonts/SF Pixelate Bold.ttf");
 		try {
 			FONT = Font.createFont(Font.TRUETYPE_FONT, font_file).deriveFont(18f);
 		} catch (FontFormatException e) {
