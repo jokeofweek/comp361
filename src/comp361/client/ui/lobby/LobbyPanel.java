@@ -3,6 +3,8 @@ package comp361.client.ui.lobby;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 
 import javax.swing.BorderFactory;
@@ -11,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
@@ -27,7 +30,15 @@ public class LobbyPanel extends ClientPanel {
 	public static final int COMPONENT_SPACING = 5;
 	public static final int OVERLAY_PADDING_RIGHT = 10;
 	
+	private JPanel contentContainer;
+	
+	// Chat panel and container
+	private JPanel chatContainer;
 	private ChatPanel chatPanel;
+	
+	// Games panel 
+	private JPanel gamesPanel;
+	
 	private PlayersPanel playersPanel;
 	private InviteOverlayPanel inviteOverlayPanel;
 	
@@ -53,13 +64,31 @@ public class LobbyPanel extends ClientPanel {
 		JPanel container = new JPanel(new BorderLayout());
 		SwagFactory.style(container);
 		
+		// Setup the  buttons
+		JButton chatButton = new JButton("Chat");
+		chatButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setContentPanel(chatContainer);
+			}
+		});
+		
+		JButton gamesButton = new JButton("Games");
+		gamesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setContentPanel(gamesPanel);
+			}
+		});
+		
 		JButton[] buttons = new JButton[] {
-			new JButton("Chat"),
-			new JButton("Games"),
+			chatButton,
+			gamesButton,
 			new JButton("Statistics"),
 			new JButton("New Game"),
 			new JButton("Load Game")
 		};
+		
 		
 		JPanel buttonContainer = new JPanel(new GridLayout(1, 5, COMPONENT_SPACING, 0));
 		buttonContainer.setBorder(BorderFactory.createEmptyBorder(0, COMPONENT_SPACING, 0, COMPONENT_SPACING));
@@ -79,19 +108,59 @@ public class LobbyPanel extends ClientPanel {
 			buttonContainer.add(button);
 		}
 		
+		
 		container.add(buttonContainer, BorderLayout.NORTH);
+				
+		// Create the content container
+		contentContainer = new JPanel(new BorderLayout());
+	
+		// Create the content panels
+		setupChatContainer();
+		setupGamesContainer();
 		
-		playersPanel = new PlayersPanel(getGameClient());
-		container.add(playersPanel, BorderLayout.EAST);
+		// Start at chat
+		setContentPanel(chatContainer);
 		
-		chatPanel = new ChatPanel(getGameClient());
-		container.add(chatPanel, BorderLayout.CENTER);
+		// Add the content container
+		container.add(contentContainer);
 		add(container, BorderLayout.CENTER);
 		
 		// Create the invite overlay panel
 		inviteOverlayPanel = new InviteOverlayPanel();
 		inviteOverlayPanel.setBounds(Constants.SCREEN_WIDTH - inviteOverlayPanel.getWidth() - OVERLAY_PADDING_RIGHT, 
 			0, inviteOverlayPanel.getWidth(), inviteOverlayPanel.getHeight());
+	}
+	
+	private void setupChatContainer() {
+		chatContainer = new JPanel(new BorderLayout());
+		
+		playersPanel = new PlayersPanel(getGameClient());
+		chatContainer.add(playersPanel, BorderLayout.EAST);
+		
+		chatPanel = new ChatPanel(getGameClient());
+		chatContainer.add(chatPanel, BorderLayout.CENTER);
+	}
+	
+	private void setupGamesContainer() {
+		gamesPanel = new JPanel(new BorderLayout());
+		gamesPanel.add(new JLabel("ABCDEF"));
+	}
+	
+	/**
+	 * Updates the content panel to a new panel
+	 * (eg. games view or chat view)
+	 * @param panel The panel to use as content.
+	 */
+	private void setContentPanel(final JPanel panel) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				contentContainer.removeAll();
+				contentContainer.add(panel, BorderLayout.CENTER);
+				revalidate();
+				repaint();
+			}
+		});
 	}
 	
 	@Override
