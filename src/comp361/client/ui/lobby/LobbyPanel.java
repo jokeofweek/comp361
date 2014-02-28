@@ -1,17 +1,13 @@
 package comp361.client.ui.lobby;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Observable;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;

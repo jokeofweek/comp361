@@ -10,9 +10,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
-import sun.java2d.loops.DrawRect;
 
 import comp361.shared.Constants;
 
