@@ -66,7 +66,6 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 	public void refreshData(GameDescriptorManager manager) {
 		this.manager = manager;
 
-		System.out.println("refreshData");
 		// Create a list of the descriptors IDs and sort them
 		descriptors = new ArrayList<>(manager.getGameDescriptorIds());
 		Collections.sort(descriptors);

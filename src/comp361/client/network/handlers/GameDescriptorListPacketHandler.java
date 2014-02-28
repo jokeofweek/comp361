@@ -8,7 +8,6 @@ public class GameDescriptorListPacketHandler implements
 
 	@Override
 	public void handle(GameClient gameClient, GameDescriptorListPacket packet) {
-		System.out.println("ABCCCC");
 		// Update the data in the descriptor manager
 		gameClient.getGameDescriptorManager().updateGameDescriptorList(packet);
 	}

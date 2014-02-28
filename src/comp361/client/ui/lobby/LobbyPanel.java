@@ -1,3 +1,4 @@
+
 package comp361.client.ui.lobby;
 
 import java.awt.BorderLayout;
@@ -176,7 +177,6 @@ public class LobbyPanel extends ClientPanel {
 
 	@Override
 	public void enter() {
-		System.out.println("enter");
 		chatPanel.getMessageField().requestFocusInWindow();
 		// On enter, register the players table model as an observer
 		// of the player manager so that it can update.
