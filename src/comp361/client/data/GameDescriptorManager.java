@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Observable;
 
 import comp361.shared.data.GameDescriptor;
+import comp361.shared.packets.server.GameDescriptorListPacket;
 
 public class GameDescriptorManager extends Observable {
 
@@ -17,7 +18,7 @@ public class GameDescriptorManager extends Observable {
 	}
 	
 	public void addDescriptor(GameDescriptor descriptor) {
-		this.gameDescriptors.put(descriptor.getId(), descriptor);
+		this.internalAddDescriptor(descriptor);
 		setChanged();
 		notifyObservers();
 	}
@@ -32,6 +33,28 @@ public class GameDescriptorManager extends Observable {
 	
 	public Collection<Integer> getGameDescriptorIds() {
 		return gameDescriptors.keySet();
+	}
+	
+	
+	/**
+	 * Helper method for inserting a player without notifying observers.
+	 * @param player The player to add.
+	 */
+	private void internalAddDescriptor(GameDescriptor descriptor) {
+		this.gameDescriptors.put(descriptor.getId(), descriptor);
+	}
+	
+	/**
+	 * Updates the list of game descriptors according to a {@link GameDescriptorListPacket}, 
+	 * effectively adding all descriptors at once.
+	 * @param packet
+	 */
+	public void updateGameDescriptorList(GameDescriptorListPacket packet) {
+		for (GameDescriptor descriptor : packet.descriptors) {
+			this.internalAddDescriptor(descriptor);
+		}
+		setChanged();
+		notifyObservers();
 	}
 	
 }

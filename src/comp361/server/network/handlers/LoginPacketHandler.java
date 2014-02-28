@@ -1,9 +1,5 @@
 package comp361.server.network.handlers;
 
-import java.util.Set;
-
-import com.esotericsoftware.minlog.Log;
-
 import comp361.server.GameServer;
 import comp361.server.data.Account;
 import comp361.server.data.AccountManager;
@@ -12,13 +8,9 @@ import comp361.server.data.store.DataStoreException;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.data.PlayerUpdateStatus;
-import comp361.shared.data.Statistics;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.server.LoginError;
-import comp361.shared.packets.server.LoginError;
-import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
-import comp361.shared.packets.server.RegisterError;
 
 public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 	@Override
@@ -54,8 +46,9 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 			session.setAccount(account);
 			session.setSessionType(SessionType.LOBBY);
 			
-			// If successful, send the player list packet
+			// If successful, send the initial data packets
 			session.sendTCP(manager.getPlayerListPacket());
+			session.sendTCP(gameServer.getGameDescriptorManager().getGameDescriptorListPacket());
 			
 			// Send the login to all other players
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();

@@ -55,7 +55,7 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		if (columnIndex == 0) {
 			return descriptor.getName();
 		} else {
-			if (descriptor.getPassword() != null) {
+			if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
 				return "✓";
 			} else {
 				return "";
@@ -63,8 +63,10 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		}
 	}
 
-	private void refreshData(GameDescriptorManager manager) {
+	public void refreshData(GameDescriptorManager manager) {
 		this.manager = manager;
+
+		System.out.println("refreshData");
 		// Create a list of the descriptors IDs and sort them
 		descriptors = new ArrayList<>(manager.getGameDescriptorIds());
 		Collections.sort(descriptors);

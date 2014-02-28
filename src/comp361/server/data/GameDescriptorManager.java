@@ -1,10 +1,13 @@
 package comp361.server.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
+import comp361.shared.packets.server.GameDescriptorListPacket;
 
 /**
  * This class handles all the {@link GameDescriptor} information on the server.
@@ -31,6 +34,17 @@ public class GameDescriptorManager {
 				packet.password, packet.maxPlayers);
 		gameDescriptors.put(descriptor.getId(), descriptor);
 		return descriptor;
+	}
+	
+	
+	/**
+	 * Build a packet containing all the {@link GameDescriptor}.
+	 * @return the packet.
+	 */
+	public GameDescriptorListPacket getGameDescriptorListPacket() {
+		GameDescriptorListPacket packet = new GameDescriptorListPacket();
+		packet.descriptors = new ArrayList<>(gameDescriptors.values());
+		return packet;
 	}
 	
 }

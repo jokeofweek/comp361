@@ -79,7 +79,7 @@ public class LobbyPanel extends ClientPanel {
 				setContentPanel(chatContainer);
 			}
 		});
-		
+
 		JButton gamesButton = new JButton("Games");
 		gamesButton.addActionListener(new ActionListener() {
 			@Override
@@ -88,8 +88,11 @@ public class LobbyPanel extends ClientPanel {
 			}
 		});
 
+		JButton newGameButton = new JButton("New Game");
+		newGameButton.addActionListener(new NewGameActionListener());
+
 		JButton[] buttons = new JButton[] { chatButton, gamesButton,
-				new JButton("Statistics"), new JButton("New Game"),
+				new JButton("Statistics"), newGameButton,
 				new JButton("Load Game") };
 
 		JPanel buttonContainer = new JPanel(new GridLayout(1, 5,
@@ -173,14 +176,19 @@ public class LobbyPanel extends ClientPanel {
 
 	@Override
 	public void enter() {
+		System.out.println("enter");
 		chatPanel.getMessageField().requestFocusInWindow();
 		// On enter, register the players table model as an observer
 		// of the player manager so that it can update.
 		getGameClient().getPlayerManager().addObserver(
 				playersPanel.getTableModel());
+		playersPanel.getTableModel().refreshData(
+				getGameClient().getPlayerManager());
 		// Same thing for the game descriptor manager
 		getGameClient().getGameDescriptorManager().addObserver(
 				gamesPanel.getTableModel());
+		gamesPanel.getTableModel().refreshData(
+				getGameClient().getGameDescriptorManager());
 	}
 
 	@Override
@@ -212,13 +220,14 @@ public class LobbyPanel extends ClientPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
-			
+
 			packet.name = JOptionPane.showInputDialog("Name of the game:");
-			packet.password = JOptionPane.showInputDialog("Password (leave empty for none):");
+			packet.password = JOptionPane
+					.showInputDialog("Password (leave empty for none):");
 			packet.maxPlayers = 2;
-			
+
 			getGameClient().getClient().sendTCP(packet);
-			
+
 		}
 	}
 }

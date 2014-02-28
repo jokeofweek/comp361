@@ -37,8 +37,9 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 			session.setAccount(account);
 			session.setSessionType(SessionType.LOBBY);
 
-			// If successful, send the player list packet
+			// If successful, send the initial data packets
 			session.sendTCP(gameServer.getAccountManager().getPlayerListPacket());
+			session.sendTCP(gameServer.getGameDescriptorManager().getGameDescriptorListPacket());
 		}
 		
 	}

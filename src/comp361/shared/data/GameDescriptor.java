@@ -15,6 +15,12 @@ public class GameDescriptor {
 	private int maxPlayers;
 	private boolean started;
 	
+	/**
+	 * This constructor should only be used by the Kryo serializer,
+	 * as the id cannot be changed after construction.
+	 */
+	public GameDescriptor(){}
+	
 	public GameDescriptor(int id, String name, String password, int maxPlayers) {
 		this.id = id;
 		this.name = name;
@@ -52,7 +58,6 @@ public class GameDescriptor {
 	
 	public void setStarted(boolean started) {
 		this.started = started;
-	}
-	
+	}	
 	
 }

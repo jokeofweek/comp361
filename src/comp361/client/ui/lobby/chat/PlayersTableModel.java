@@ -58,7 +58,7 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 		return false;
 	}
 	
-	private void refreshData(PlayerManager playerManager) {
+	public void refreshData(PlayerManager playerManager) {
 		this.playerManager = playerManager;
 		// Get the list of player names and sort them
 		playerNames = new ArrayList<String>(playerManager.getPlayers());

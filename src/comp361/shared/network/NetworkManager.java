@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.data.Player;
 import comp361.shared.data.PlayerUpdateStatus;
@@ -14,6 +13,7 @@ import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.server.GameDescriptorCreatedPacket;
+import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.LoginError;
 import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
@@ -46,6 +46,7 @@ public class NetworkManager {
 		kryo.register(GameDescriptor.class);
 		kryo.register(NewGameDescriptorPacket.class);
 		kryo.register(GameDescriptorCreatedPacket.class);
+		kryo.register(GameDescriptorListPacket.class);
 	}
 
 	private NetworkManager() {
