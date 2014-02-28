@@ -1,0 +1,34 @@
+<project name="COMP361" default="init" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="build" location="bin"/>
+  <property name="lib" value="lib" />
+
+  <path id="classpath">
+        <pathelement location="${lib}/commons-lang3-3.2.1.jar" />
+        <pathelement location="${lib}/kryonet-2.18-all.jar" />
+  </path>
+  
+  <target name="init" depends="clean">
+    <javac srcdir="${src}" 
+           destdir="${build}">
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+
+  <target name="run-server">
+    <java classname="comp361.server.ServerApplication" fork="true">
+      <classpath>
+        <pathelement location="${lib}/commons-lang3-3.2.1.jar" />
+        <pathelement location="${lib}/kryonet-2.18-all.jar" />
+        <pathelement path="${build}" />
+      </classpath>
+    </java>
+  </target>
+
+  <target name="clean">
+    <delete includeemptydirs="true">
+      <fileset dir="${build}" includes="**/*"/>
+    </delete>  
+  </target>
+</project>
