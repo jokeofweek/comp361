@@ -37,7 +37,7 @@ public class InviteOverlayPanel extends JPanel {
 				add(new InvitePanel(name));
 				revalidate();	
 			}
-		}).start();
+		});//.start();
 	}
 	
 }
