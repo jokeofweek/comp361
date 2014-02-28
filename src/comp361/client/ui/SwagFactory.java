@@ -61,7 +61,7 @@ public class SwagFactory {
 		
 	}
 
-	public static void style(JComponent component) {
+	public static void style(Component component) {
 		if (component instanceof JButton) {
 			styleButton((JButton) component);
 		} else if (component instanceof JPanel) {
@@ -96,6 +96,8 @@ public class SwagFactory {
 
 	private static void stylePanel(JPanel panel) {
 		panel.setBackground(Color.white);
+		for(Component c : panel.getComponents())
+			style(c);
 	}
 
 	private static void styleLabel(JLabel label) {

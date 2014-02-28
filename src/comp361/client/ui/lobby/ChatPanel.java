@@ -42,13 +42,13 @@ public class ChatPanel extends JPanel {
 	
 	public ChatPanel(GameClient gameClient) {
 		super(new BorderLayout());
-		SwagFactory.style(this);
 		
 		this.gameClient = gameClient;
 				
 	    // Create the panel for sending a message
 	    add(getChatPanel(), BorderLayout.CENTER);
 	    add(getMessagePanel(), BorderLayout.SOUTH);
+	    SwagFactory.style(this);
 	}
 	
 	private JComponent getChatPanel() {
@@ -70,10 +70,10 @@ public class ChatPanel extends JPanel {
 	    		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 	    		JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-	    JPanel container = new JPanel(new BorderLayout());
-	    SwagFactory.style(container);	    
+	    JPanel container = new JPanel(new BorderLayout());    
 	    container.add(chatScrollPane);
 	    container.setBorder(BorderFactory.createEmptyBorder(CHAT_BOX_SPACING, CHAT_BOX_SPACING, 0, CHAT_BOX_SPACING));
+	    SwagFactory.style(container);	
 	    
 	    return container;
 	}
@@ -83,7 +83,6 @@ public class ChatPanel extends JPanel {
 		messagePanel.setBorder(BorderFactory.createEmptyBorder(
 				CHAT_BOX_SPACING, CHAT_BOX_SPACING, CHAT_BOX_SPACING, CHAT_BOX_SPACING));
 		
-		SwagFactory.style(messagePanel);
 		
 		SendChatAction action = new SendChatAction();
 		
@@ -104,6 +103,8 @@ public class ChatPanel extends JPanel {
 		
 		messagePanel.add(messageField, BorderLayout.CENTER);
 		messagePanel.add(sendButton, BorderLayout.EAST);
+		
+		SwagFactory.style(messagePanel);
 		
 		return messagePanel;
 	}
