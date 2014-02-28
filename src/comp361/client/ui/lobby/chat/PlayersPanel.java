@@ -1,4 +1,4 @@
-package comp361.client.ui.lobby;
+package comp361.client.ui.lobby.chat;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.lobby.LobbyPanel;
 
 public class PlayersPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -21,8 +22,8 @@ public class PlayersPanel extends JPanel {
 	public PlayersPanel(GameClient gameClient) {
 		super(new BorderLayout());
 		SwagFactory.style(this);
-		setBorder(BorderFactory.createEmptyBorder(LobbyPanel.COMPONENT_SPACING, 0, 
-				LobbyPanel.COMPONENT_SPACING, LobbyPanel.COMPONENT_SPACING));
+		setBorder(BorderFactory.createEmptyBorder(LobbyPanel.COMPONENT_SPACING, LobbyPanel.COMPONENT_SPACING, 
+				0, 0));
 		
 		String[] columnNames = {"Name", "Games", "Wins"};
 		String[][] players = {

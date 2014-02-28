@@ -19,6 +19,9 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.lobby.chat.ChatPanel;
+import comp361.client.ui.lobby.chat.PlayersPanel;
+import comp361.client.ui.lobby.games.GamesPanel;
 import comp361.shared.Constants;
 import comp361.shared.packets.shared.MessagePacket;
 
@@ -37,7 +40,7 @@ public class LobbyPanel extends ClientPanel {
 	private ChatPanel chatPanel;
 	
 	// Games panel 
-	private JPanel gamesPanel;
+	private GamesPanel gamesPanel;
 	
 	private PlayersPanel playersPanel;
 	private InviteOverlayPanel inviteOverlayPanel;
@@ -113,6 +116,9 @@ public class LobbyPanel extends ClientPanel {
 				
 		// Create the content container
 		contentContainer = new JPanel(new BorderLayout());
+		contentContainer.setBorder(BorderFactory.createEmptyBorder(COMPONENT_SPACING, COMPONENT_SPACING,
+				COMPONENT_SPACING, COMPONENT_SPACING));
+		SwagFactory.style(contentContainer);
 	
 		// Create the content panels
 		setupChatContainer();
@@ -142,8 +148,7 @@ public class LobbyPanel extends ClientPanel {
 	}
 	
 	private void setupGamesContainer() {
-		gamesPanel = new JPanel(new BorderLayout());
-		gamesPanel.add(new JLabel("ABCDEF"));
+		gamesPanel = new GamesPanel();
 	}
 	
 	/**

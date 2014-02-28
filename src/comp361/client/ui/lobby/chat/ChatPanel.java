@@ -1,4 +1,4 @@
-package comp361.client.ui.lobby;
+package comp361.client.ui.lobby.chat;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class ChatPanel extends JPanel {
@@ -73,7 +74,6 @@ public class ChatPanel extends JPanel {
 	    JPanel container = new JPanel(new BorderLayout());
 	    SwagFactory.style(container);	    
 	    container.add(chatScrollPane);
-	    container.setBorder(BorderFactory.createEmptyBorder(CHAT_BOX_SPACING, CHAT_BOX_SPACING, 0, CHAT_BOX_SPACING));
 	    
 	    return container;
 	}
@@ -81,7 +81,7 @@ public class ChatPanel extends JPanel {
 	private JComponent getMessagePanel() {
 		JPanel messagePanel = new JPanel(new BorderLayout(CHAT_BOX_SPACING, 0));
 		messagePanel.setBorder(BorderFactory.createEmptyBorder(
-				CHAT_BOX_SPACING, CHAT_BOX_SPACING, CHAT_BOX_SPACING, CHAT_BOX_SPACING));
+				CHAT_BOX_SPACING, 0, 0, 0));
 		
 		SwagFactory.style(messagePanel);
 		
