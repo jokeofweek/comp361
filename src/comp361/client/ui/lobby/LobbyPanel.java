@@ -2,9 +2,12 @@ package comp361.client.ui.lobby;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.Observable;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,7 +53,33 @@ public class LobbyPanel extends ClientPanel {
 		JPanel container = new JPanel(new BorderLayout());
 		SwagFactory.style(container);
 		
-		container.add(new JLabel("Buttons go here"), BorderLayout.NORTH);
+		JButton[] buttons = new JButton[] {
+			new JButton("Chat"),
+			new JButton("Games"),
+			new JButton("Statistics"),
+			new JButton("New Game"),
+			new JButton("Load Game")
+		};
+		
+		JPanel buttonContainer = new JPanel(new GridLayout(1, 5, COMPONENT_SPACING, 0));
+		buttonContainer.setBorder(BorderFactory.createEmptyBorder(0, COMPONENT_SPACING, 0, COMPONENT_SPACING));
+		SwagFactory.style(buttonContainer);
+
+		for (JButton button : buttons) {
+			// Set up the button style.
+			SwagFactory.style(button);
+			
+			d = new Dimension(button.getWidth(), SwagFactory.BUTTON_HEIGHT);
+			button.setMaximumSize(d);
+			button.setMinimumSize(d);
+			button.setPreferredSize(d);
+			button.setSize(d);
+			
+			// Add it to the container
+			buttonContainer.add(button);
+		}
+		
+		container.add(buttonContainer, BorderLayout.NORTH);
 		
 		playersPanel = new PlayersPanel(getGameClient());
 		container.add(playersPanel, BorderLayout.EAST);
