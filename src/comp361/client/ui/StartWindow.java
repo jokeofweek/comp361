@@ -26,6 +26,9 @@ public class StartWindow extends JFrame {
 	private JTextField portTextField;
 	private JButton connectButton;
 	
+	private static final String REMOTE_IP = "107.170.48.190";
+	private static boolean USE_REMOTE = true;
+	
 	public StartWindow() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(getLabelsPanel(), BorderLayout.WEST);
@@ -59,6 +62,10 @@ public class StartWindow extends JFrame {
 		JPanel fieldsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 		hostTextField = new JTextField(40);
 		hostTextField.setText("127.0.0.1");
+		if (USE_REMOTE) {
+			hostTextField.setText(REMOTE_IP);
+		}
+		
 		portTextField = new JTextField(40);
 		portTextField.setText(Constants.PORT + "");
 		fieldsPanel.add(hostTextField);
