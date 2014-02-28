@@ -6,26 +6,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import comp361.client.GameClient;
+
 public class GamesPanel extends JPanel {
 
-	public GamesPanel() {
+	private GamesTableModel tableModel;
+	
+	public GamesPanel(GameClient gameClient) {
 		super(new BorderLayout());
 		
-		setup();
-	}
-	
-	private void setup() {
 		JPanel container = new JPanel(new BorderLayout());
 		
 		String[] headers  = {"Name", "Private?"};
-		Object[][] values = {
-			{"Mo's Palace", true},
-			{"Dom's Game", false}
-		};
-		
-		
-		JTable gamesTable = new JTable(values, headers);
-		GamesTableModel tableModel = new GamesTableModel(values, headers);
+				
+		JTable gamesTable = new JTable(null, headers);
+		tableModel = new GamesTableModel(gameClient.getGameDescriptorManager(), headers);
 		gamesTable.setModel(tableModel);
 		
 		JScrollPane scrollPane = new JScrollPane(gamesTable);
@@ -33,6 +28,10 @@ public class GamesPanel extends JPanel {
 		container.add(scrollPane);
 		
 		add(container);
+	}
+	
+	public GamesTableModel getTableModel() {
+		return tableModel;
 	}
 	
 }
