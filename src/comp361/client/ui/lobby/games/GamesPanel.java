@@ -17,7 +17,7 @@ public class GamesPanel extends JPanel {
 		
 		JPanel container = new JPanel(new BorderLayout());
 		
-		String[] headers  = {"Name", "Private?"};
+		String[] headers  = {"Name", "Players", "Private?"};
 				
 		JTable gamesTable = new JTable(null, headers);
 		tableModel = new GamesTableModel(gameClient.getGameDescriptorManager(), headers);

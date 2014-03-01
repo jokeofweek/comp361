@@ -14,7 +14,7 @@ import comp361.shared.data.GameDescriptor;
 
 public class GamesTableModel extends AbstractTableModel implements Observer {
 
-	public String[] headers  = {"Name", "Private?"};
+	public String[] headers;
 	
 	private GameDescriptorManager manager;
 	/**
@@ -36,7 +36,7 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public int getColumnCount() {
-		return 2;
+		return headers.length;
 	}
 	
 	@Override
@@ -54,13 +54,17 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		GameDescriptor descriptor = manager.getGameDescriptor(descriptors.get(rowIndex));
 		if (columnIndex == 0) {
 			return descriptor.getName();
-		} else {
+		} else if (columnIndex == 1) {
+			return descriptor.getCurrentPlayers() + " / " + descriptor.getMaxPlayers();
+		} else if (columnIndex == 2) {
 			if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
-				return "✓";
+				return "\u2713";
 			} else {
 				return "";
 			}
 		}
+		
+		throw new IndexOutOfBoundsException();
 	}
 
 	public void refreshData(GameDescriptorManager manager) {
