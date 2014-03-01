@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import comp361.server.GameServer;
 import comp361.server.data.Account;
 import comp361.shared.data.PlayerUpdateStatus;
+import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 
 public class Session extends Connection {
@@ -73,11 +74,20 @@ public class Session extends Connection {
 	 * Effectively disconnects the session, changing the session type and
 	 * performing any required processing.
 	 */
-	public void disconnect() {
-		// TODO: Handle player disconnecting during game setup.
+	public void disconnect() {	
 		
 		// Notify all other players
 		if (this.getAccount() != null) {
+			// Handle player disconnecting during game setup
+			if (sessionType == SessionType.GAME_SETUP) {
+				GameDescriptorPlayerUpdatePacket gdPacket = new GameDescriptorPlayerUpdatePacket();
+				gdPacket.id = gameDescriptorId;
+				gdPacket.name = getAccount().getName();
+				gdPacket.joined = false;
+				gameServer.getGameDescriptorManager().removePlayer(gdPacket.id, gdPacket.name);
+				gameServer.getServer().sendToAllExceptTCP(this.getID(), gdPacket);
+			}
+			
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
 			updatePacket.player = account.getPlayer();
 			updatePacket.status = PlayerUpdateStatus.LOGGED_OUT;

@@ -16,7 +16,7 @@ public class JoinGamePacketHandler implements
 		GameDescriptorManager manager = gameServer.getGameDescriptorManager();
 
 		// Try to join the game, errorring out if it is full
-		if (!manager.addPlayer(session.getAccount().getName(), object.id)) {
+		if (!manager.addPlayer(object.id, session.getAccount().getName())) {
 			session.sendTCP(GenericError.GAME_IS_FULL);
 			return;
 		}
