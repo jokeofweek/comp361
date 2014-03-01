@@ -1,10 +1,13 @@
 package comp361.client.ui.lobby.games;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
 import comp361.client.GameClient;
 
@@ -17,13 +20,11 @@ public class GamesPanel extends JPanel {
 		
 		JPanel container = new JPanel(new BorderLayout());
 		
-		String[] headers  = {"Name", "Players", "Private?"};
-				
-		JTable gamesTable = new JTable(null, headers);
-		tableModel = new GamesTableModel(gameClient.getGameDescriptorManager(), headers);
-		gamesTable.setModel(tableModel);
+		tableModel = new GamesTableModel(gameClient.getGameDescriptorManager());
+		GamesTable table = new GamesTable(tableModel);
 		
-		JScrollPane scrollPane = new JScrollPane(gamesTable);
+		
+		JScrollPane scrollPane = new JScrollPane(table);
 
 		container.add(scrollPane);
 		

@@ -1,20 +1,27 @@
 package comp361.client.ui.lobby.games;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import comp361.client.data.GameDescriptorManager;
+import comp361.client.ui.SwagFactory;
 import comp361.shared.data.GameDescriptor;
 
 public class GamesTableModel extends AbstractTableModel implements Observer {
 
-	public String[] headers;
+	public static final int JOIN_COLUMN = 3;
+	private static final String[] headers =  {"Name", "Players", "Private?", "Join"};
 	
 	private GameDescriptorManager manager;
 	/**
@@ -22,9 +29,8 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 	 */
 	public static List<Integer> descriptors;
 	
-	public GamesTableModel(GameDescriptorManager manager, String[] headers) {
+	public GamesTableModel(GameDescriptorManager manager) {
 		this.manager = manager;
-		this.headers = headers;
 		
 		refreshData(manager);
 	}
@@ -35,6 +41,12 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 	}
 
 	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		return super.getColumnClass(columnIndex);
+		
+	}
+	
+	@Override
 	public int getColumnCount() {
 		return headers.length;
 	}
@@ -43,10 +55,14 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 	public String getColumnName(int column) {
 		return headers[column];
 	}
+	
+	public String[] getHeaders() {
+		return headers;
+	}
 
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		return false;
+		return col == JOIN_COLUMN;
 	}
 	
 	@Override
@@ -62,6 +78,12 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 			} else {
 				return "";
 			}
+		} else if (columnIndex == 3) {
+			
+			
+			return (descriptor.isStarted() ? "Observe" : "Join");
+			
+			
 		}
 		
 		throw new IndexOutOfBoundsException();
