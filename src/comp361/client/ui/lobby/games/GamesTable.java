@@ -6,8 +6,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
-import com.sun.corba.se.impl.logging.OMGSystemException;
-
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.util.ButtonColumn;
