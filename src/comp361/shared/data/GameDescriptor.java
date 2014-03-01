@@ -1,5 +1,8 @@
 package comp361.shared.data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import comp361.client.ui.lobby.games.GamesPanel;
 
 /**
@@ -11,7 +14,7 @@ public class GameDescriptor {
 	private int id;
 	private String name;
 	private String password;
-	private int currentPlayers;
+	private Set<String> players;
 	private int maxPlayers;
 	private boolean started;
 	
@@ -25,6 +28,7 @@ public class GameDescriptor {
 		this.id = id;
 		this.name = name;
 		this.password = password;
+		this.players = new HashSet<>();
 		this.maxPlayers = maxPlayers;
 	}
 	
@@ -40,12 +44,16 @@ public class GameDescriptor {
 		return password;
 	}
 
-	public int getCurrentPlayers() {
-		return currentPlayers;
+	public Set<String> getPlayers() {
+		return new HashSet<>(players);
+	}
+
+	public void addPlayer(String name) {
+		players.add(name);
 	}
 	
-	public void setCurrentPlayers(int currentPlayers) {
-		this.currentPlayers = currentPlayers;
+	public void removePlayer(String name) {
+		players.remove(name);
 	}
 	
 	public int getMaxPlayers() {

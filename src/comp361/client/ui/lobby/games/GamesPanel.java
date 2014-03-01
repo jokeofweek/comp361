@@ -21,7 +21,7 @@ public class GamesPanel extends JPanel {
 		JPanel container = new JPanel(new BorderLayout());
 		
 		tableModel = new GamesTableModel(gameClient.getGameDescriptorManager());
-		GamesTable table = new GamesTable(tableModel);
+		GamesTable table = new GamesTable(gameClient, tableModel);
 		
 		
 		JScrollPane scrollPane = new JScrollPane(table);

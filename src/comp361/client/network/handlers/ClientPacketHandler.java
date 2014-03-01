@@ -17,9 +17,9 @@ public interface ClientPacketHandler<K> {
 	 * 
 	 * @param gameClient
 	 *            The client object.
-	 * @param object
+	 * @param packet
 	 *            The object.
 	 */
-	public void handle(GameClient gameClient, K object);
+	public void handle(GameClient gameClient, K packet);
 
 }

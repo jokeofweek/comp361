@@ -16,8 +16,8 @@ import comp361.shared.packets.server.GameDescriptorListPacket;
  */
 public class GameDescriptorManager {
 
-	public Map<Integer, GameDescriptor> gameDescriptors;
-	public int currentId;
+	private Map<Integer, GameDescriptor> gameDescriptors;
+    private int currentId;
 	
 	public GameDescriptorManager(){
 		this.gameDescriptors = new HashMap<>();
@@ -35,7 +35,31 @@ public class GameDescriptorManager {
 		gameDescriptors.put(descriptor.getId(), descriptor);
 		return descriptor;
 	}
+
+	/**
+	 * Checks whether there is space for an extra player in a game.
+	 * @param id The ID of the descriptor.
+	 * @return True if there are less players in the game.
+	 */
+	public boolean gameHasSpace(int id) {
+		return gameDescriptors.get(id).getPlayers().size() < gameDescriptors.get(id).getMaxPlayers();
+	}
 	
+	/**
+	 * This adds a player to a given game descriptor
+	 * @param name The name of the player
+	 * @param id The id
+	 * @return True if the player was added, or false if there was no space.
+	 */
+	public boolean addPlayer(String name, int id) {
+		if (!gameHasSpace(id)) {
+			return false;
+		}
+		
+		gameDescriptors.get(id).addPlayer(name);
+		
+		return true;
+	}
 	
 	/**
 	 * Build a packet containing all the {@link GameDescriptor}.

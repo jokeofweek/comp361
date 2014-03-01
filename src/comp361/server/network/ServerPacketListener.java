@@ -6,6 +6,7 @@ import java.util.Map;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.server.GameServer;
+import comp361.server.network.handlers.JoinGamePacketHandler;
 import comp361.server.network.handlers.LoginPacketHandler;
 import comp361.server.network.handlers.MessagePacketHandler;
 import comp361.server.network.handlers.NewGameDescriptorPacketHandler;
@@ -13,6 +14,7 @@ import comp361.server.network.handlers.RegisterPacketHandler;
 import comp361.server.network.handlers.ServerPacketHandler;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
+import comp361.shared.packets.client.JoinGamePacket;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
@@ -39,6 +41,8 @@ public class ServerPacketListener extends Listener {
 				setupAnonymousPacketHandlers());
 		this.sessionTypePacketHandlers.put(SessionType.LOBBY,
 				setupLobbyPacketHandlers());
+		this.sessionTypePacketHandlers.put(SessionType.GAME_SETUP,
+				setupGameSetupPacketHandlers());
 		this.sessionTypePacketHandlers.put(SessionType.GAME,
 				setupGamePacketHandlers());
 		this.sessionTypePacketHandlers.put(SessionType.DISCONNECTED,
@@ -69,9 +73,21 @@ public class ServerPacketListener extends Listener {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		handlers.put(MessagePacket.class, new MessagePacketHandler());
 		handlers.put(NewGameDescriptorPacket.class, new NewGameDescriptorPacketHandler());
+		handlers.put(JoinGamePacket.class, new JoinGamePacketHandler());
 		return handlers;
 	}
 
+	/**
+	 * @return a map which maps java classes to their appropriate packet
+	 *         handlers which should be called when a session receives this
+	 *         packet and is in an {@link SessionType#GAME_SETUP} state.
+	 * 
+	 */
+	private Map<Class, ServerPacketHandler> setupGameSetupPacketHandlers() {
+		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
+		return handlers;
+	}
+	
 	/**
 	 * @return a map which maps java classes to their appropriate packet
 	 *         handlers which should be called when a session receives this

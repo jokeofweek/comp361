@@ -21,9 +21,9 @@ public interface ServerPacketHandler<K> {
 	 *            The session that sent the packet.
 	 * @param gameServer
 	 *            The gameServer object.
-	 * @param object
+	 * @param client
 	 *            The packet.
 	 */
-	public void handle(Session session, GameServer gameServer, K object);
+	public void handle(Session session, GameServer gameServer, K client);
 
 }

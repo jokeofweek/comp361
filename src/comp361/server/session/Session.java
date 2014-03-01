@@ -11,6 +11,7 @@ public class Session extends Connection {
 	private GameServer gameServer;
 	private Account account;
 	private SessionType sessionType;
+	private int gameDescriptorId;
 
 	public Session(GameServer gameServer) {
 		this.gameServer = gameServer;
@@ -59,12 +60,22 @@ public class Session extends Connection {
 			this.gameServer.getAccountManager().addAccount(this.account);
 		}
 	}
+	
+	public int getGameDescriptorId() {
+		return gameDescriptorId;
+	}
+	
+	public void setGameDescriptorId(int gameDescriptorId) {
+		this.gameDescriptorId = gameDescriptorId;
+	}
 
 	/**
 	 * Effectively disconnects the session, changing the session type and
 	 * performing any required processing.
 	 */
 	public void disconnect() {
+		// TODO: Handle player disconnecting during game setup.
+		
 		// Notify all other players
 		if (this.getAccount() != null) {
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();

@@ -26,6 +26,7 @@ import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
 import comp361.shared.Constants;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
+import comp361.shared.packets.server.GenericError;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class LobbyPanel extends ClientPanel {
@@ -204,9 +205,10 @@ public class LobbyPanel extends ClientPanel {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("Received: " + arg);
 		if (arg instanceof MessagePacket) {
 			chatPanel.publishChatMessage((MessagePacket) arg);
+		} else if (arg instanceof GenericError) {
+			JOptionPane.showMessageDialog(null, arg);
 		}
 	}
 

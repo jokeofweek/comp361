@@ -65,13 +65,17 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		return col == JOIN_COLUMN;
 	}
 	
+	public GameDescriptor getGameDescriptor(int row) {
+		return manager.getGameDescriptor(descriptors.get(row));
+	}
+	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		GameDescriptor descriptor = manager.getGameDescriptor(descriptors.get(rowIndex));
 		if (columnIndex == 0) {
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
-			return descriptor.getCurrentPlayers() + " / " + descriptor.getMaxPlayers();
+			return descriptor.getPlayers().size() + " / " + descriptor.getMaxPlayers();
 		} else if (columnIndex == 2) {
 			if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
 				return "\u2713";

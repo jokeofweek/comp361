@@ -7,6 +7,7 @@ import java.util.Observable;
 
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.server.GameDescriptorListPacket;
+import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 
 public class GameDescriptorManager extends Observable {
 
@@ -52,6 +53,20 @@ public class GameDescriptorManager extends Observable {
 	public void updateGameDescriptorList(GameDescriptorListPacket packet) {
 		for (GameDescriptor descriptor : packet.descriptors) {
 			this.internalAddDescriptor(descriptor);
+		}
+		setChanged();
+		notifyObservers();
+	}
+	
+	/**
+	 * Updates a game descriptor based on a {@link GameDescriptorPlayerUpdatePacket}
+	 * @param packet the packet in question
+	 */
+	public void updateGameDescriptor(GameDescriptorPlayerUpdatePacket packet) {
+		if (packet.joined) {
+			gameDescriptors.get(packet.id).addPlayer(packet.name);
+		} else {
+			gameDescriptors.get(packet.id).removePlayer(packet.name);
 		}
 		setChanged();
 		notifyObservers();
