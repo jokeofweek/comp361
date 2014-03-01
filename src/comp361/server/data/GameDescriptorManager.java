@@ -80,6 +80,10 @@ public class GameDescriptorManager {
 	 */
 	public void removePlayer(int id, String name) {
 		gameDescriptors.get(id).removePlayer(name);
+		// Remove the descriptor if no players left
+		if (!gameDescriptors.get(id).hasPlayers()) {
+			gameDescriptors.remove(id);
+		}
 	}
 
 	/**

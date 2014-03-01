@@ -66,6 +66,13 @@ public class GameDescriptor {
 	
 	public void setStarted(boolean started) {
 		this.started = started;
+	}
+
+	/**
+	 * @return true if the game descriptor has players, else false.
+	 */
+	public boolean hasPlayers() {
+		return players.size() > 0;
 	}	
 	
 }
