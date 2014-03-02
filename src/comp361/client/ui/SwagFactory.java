@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 public class SwagFactory {
 
 	public static Font FONT;
+	public static float FONT_SIZE = 18f;
 	
 	public static BufferedImage LOGO_IMAGE;
 	public static BufferedImage SMALL_LOGO_IMAGE;
@@ -48,7 +49,7 @@ public class SwagFactory {
 		
 		File font_file = new File("fonts/SF Pixelate Bold.ttf");
 		try {
-			FONT = Font.createFont(Font.TRUETYPE_FONT, font_file).deriveFont(18f);
+			FONT = Font.createFont(Font.TRUETYPE_FONT, font_file).deriveFont(FONT_SIZE);
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 			System.exit(1);
