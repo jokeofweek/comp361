@@ -5,7 +5,7 @@ import comp361.server.session.Session;
 import comp361.shared.packets.client.UpdateReadyPacket;
 import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
 
-public class UpdaterReadyPacketHandler implements
+public class UpdateReadyPacketHandler implements
 		ServerPacketHandler<UpdateReadyPacket> {
 	@Override
 	public void handle(Session session, GameServer gameServer,

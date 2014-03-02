@@ -14,7 +14,7 @@ import comp361.server.network.handlers.MessagePacketHandler;
 import comp361.server.network.handlers.NewGameDescriptorPacketHandler;
 import comp361.server.network.handlers.RegisterPacketHandler;
 import comp361.server.network.handlers.ServerPacketHandler;
-import comp361.server.network.handlers.UpdaterReadyPacketHandler;
+import comp361.server.network.handlers.UpdateReadyPacketHandler;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.packets.client.JoinGamePacket;
@@ -94,7 +94,7 @@ public class ServerPacketListener extends Listener {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		handlers.put(LeaveGamePacket.class, new LeaveGamePacketHandler());
 		handlers.put(ChangeSeedPacket.class, new ChangeSeedPacketHandler());
-		handlers.put(UpdateReadyPacket.class, new UpdaterReadyPacketHandler());
+		handlers.put(UpdateReadyPacket.class, new UpdateReadyPacketHandler());
 		return handlers;
 	}
 
