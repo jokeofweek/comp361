@@ -14,7 +14,7 @@ public class LeaveGamePacketHandler implements
 			LeaveGamePacket packet) {
 		int descriptorId = session.getGameDescriptorId();
 		// If the game hasn't started, it's simple
-		if (!gameServer.getGameDescriptorManager().gameHasStarted(descriptorId)) {
+		if (!gameServer.getGameDescriptorManager().hasStarted(descriptorId)) {
 			gameServer.getGameDescriptorManager().removePlayer(descriptorId, session.getAccount().getName());
 			
 			// Set the session back to lobby

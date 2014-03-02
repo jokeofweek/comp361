@@ -1,8 +1,6 @@
 package comp361.server.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +46,7 @@ public class GameDescriptorManager {
 	 *            The ID of the descriptor.
 	 * @return True if there are less players in the game.
 	 */
-	public boolean gameHasSpace(int id) {
+	public boolean hasSpace(int id) {
 		return gameDescriptors.get(id).getPlayers().size() < gameDescriptors
 				.get(id).getMaxPlayers();
 	}
@@ -60,8 +58,20 @@ public class GameDescriptorManager {
 	 *            The id of the descriptor.
 	 * @return True if the game has started.
 	 */
-	public boolean gameHasStarted(int id) {
+	public boolean hasStarted(int id) {
 		return gameDescriptors.get(id).isStarted();
+	}
+
+	/**
+	 * Checks whether the game is ready to start (all players are ready).
+	 * 
+	 * @param id
+	 *            The id of the descriptor.
+	 * @return True if the game is ready.a
+	 */
+	public boolean canStart(int id) {
+		return gameDescriptors.get(id).getReadyPlayers().size() == gameDescriptors
+				.get(id).getMaxPlayers();
 	}
 
 	/**
@@ -74,7 +84,7 @@ public class GameDescriptorManager {
 	 * @return True if the player was added, or false if there was no space.
 	 */
 	public boolean addPlayer(int id, String name) {
-		if (!gameHasSpace(id)) {
+		if (!hasSpace(id)) {
 			return false;
 		}
 
@@ -96,6 +106,21 @@ public class GameDescriptorManager {
 		// Remove the descriptor if no players left
 		if (!gameDescriptors.get(id).hasPlayers()) {
 			gameDescriptors.remove(id);
+		}
+	}
+
+	/**
+	 * Updates a player's ready status in a game.
+	 * 
+	 * @param id
+	 * @param name
+	 * @param ready
+	 */
+	public void setReadyStatus(int id, String name, boolean ready) {
+		if (ready) {
+			gameDescriptors.get(id).addReadyPlayer(name);
+		} else {
+			gameDescriptors.get(id).removeReadyPlayer(name);
 		}
 	}
 

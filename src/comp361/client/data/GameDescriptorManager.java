@@ -8,7 +8,7 @@ import java.util.Observable;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
-import comp361.shared.packets.shared.ChangeSeedPacket;
+import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
 
 public class GameDescriptorManager extends Observable {
 
@@ -81,6 +81,24 @@ public class GameDescriptorManager extends Observable {
 					gameDescriptors.remove(packet.id);
 				}
 			}
+		}
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Updates a game descriptor based on a
+	 * {@link GameDescriptorReadyUpdatePacket}
+	 * 
+	 * @param packet
+	 *            the packet in question
+	 */
+	public void updateGameDescriptor(GameDescriptorReadyUpdatePacket packet) {
+		GameDescriptor descriptor = gameDescriptors.get(packet.id);
+		if (packet.ready) {
+			descriptor.addReadyPlayer(packet.name);
+		} else {
+			descriptor.removeReadyPlayer(packet.name);
 		}
 		setChanged();
 		notifyObservers();
