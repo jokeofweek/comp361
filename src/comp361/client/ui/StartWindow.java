@@ -27,7 +27,7 @@ public class StartWindow extends JFrame {
 	private JButton connectButton;
 	
 	private static final String REMOTE_IP = "107.170.48.190";
-	private static boolean USE_REMOTE = false;
+	private static boolean USE_REMOTE = true;
 	
 	public StartWindow() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
