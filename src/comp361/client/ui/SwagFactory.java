@@ -2,6 +2,7 @@ package comp361.client.ui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
@@ -79,6 +80,14 @@ public class SwagFactory {
 		}
 	}
 
+	public static void styleButtonHeight(JComponent button, int width) {
+		Dimension d = new Dimension(width, SwagFactory.BUTTON_HEIGHT);
+		button.setMaximumSize(d);
+		button.setMinimumSize(d);
+		button.setPreferredSize(d);
+		button.setSize(d);
+	}
+	
 	private static void styleEditorPane(JEditorPane pane)
 	{
 		Font font = new Font(FONT.getFontName(), Font.PLAIN, 12);
@@ -92,6 +101,7 @@ public class SwagFactory {
 	private static void styleButton(JButton button) {
 		button.setBackground(new Color(185, 225, 255));
 		button.setFont(FONT);
+		styleButtonHeight(button, button.getWidth());
 	}
 
 	private static void stylePanel(JPanel panel) {

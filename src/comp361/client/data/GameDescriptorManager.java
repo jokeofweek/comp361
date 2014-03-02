@@ -66,11 +66,13 @@ public class GameDescriptorManager extends Observable {
 		if (packet.joined) {
 			gameDescriptors.get(packet.id).addPlayer(packet.name);
 		} else {
-			gameDescriptors.get(packet.id).removePlayer(packet.name);
-			
-			// If it was the last player, remove the game.
-			if (!gameDescriptors.get(packet.id).hasPlayers()) {
-				gameDescriptors.remove(packet.id);
+			if (gameDescriptors.get(packet.id) != null) {
+				gameDescriptors.get(packet.id).removePlayer(packet.name);
+				
+				// If it was the last player, remove the game.
+				if (!gameDescriptors.get(packet.id).hasPlayers()) {
+					gameDescriptors.remove(packet.id);
+				}
 			}
 		}
 		setChanged();

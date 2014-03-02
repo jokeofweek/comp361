@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.server.GameServer;
 import comp361.server.network.handlers.JoinGamePacketHandler;
+import comp361.server.network.handlers.LeaveGamePacketHandler;
 import comp361.server.network.handlers.LoginPacketHandler;
 import comp361.server.network.handlers.MessagePacketHandler;
 import comp361.server.network.handlers.NewGameDescriptorPacketHandler;
@@ -15,6 +16,7 @@ import comp361.server.network.handlers.ServerPacketHandler;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.packets.client.JoinGamePacket;
+import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
@@ -85,6 +87,7 @@ public class ServerPacketListener extends Listener {
 	 */
 	private Map<Class, ServerPacketHandler> setupGameSetupPacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
+		handlers.put(LeaveGamePacket.class, new LeaveGamePacketHandler());
 		return handlers;
 	}
 	

@@ -52,6 +52,15 @@ public class GameDescriptorManager {
 	}
 
 	/**
+	 * Checks whether the game has started or not.
+	 * @param id The id of the descriptor.
+	 * @return True if the game has started.
+	 */
+	public boolean gameHasStarted(int id) {
+		return gameDescriptors.get(id).isStarted();
+	}
+
+	/**
 	 * This adds a player to a given game descriptor
 	 * 
 	 * @param id

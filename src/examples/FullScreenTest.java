@@ -7,7 +7,8 @@ import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
 
-import examples.newgame.NewGamePanel;
+import comp361.client.ui.setup.NewGamePanel;
+
 
 public class FullScreenTest extends JFrame {
 	public FullScreenTest() {
@@ -23,7 +24,7 @@ public class FullScreenTest extends JFrame {
 		device.setFullScreenWindow(this);
 		device.setDisplayMode(new DisplayMode(800, 600, 32, DisplayMode.REFRESH_RATE_UNKNOWN));
 		
-		this.add(new NewGamePanel());
+		//this.add(new NewGamePanel());
 		this.setVisible(true);
 	}
 	

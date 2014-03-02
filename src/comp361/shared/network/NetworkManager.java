@@ -11,6 +11,7 @@ import comp361.shared.data.Player;
 import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.data.Statistics;
 import comp361.shared.packets.client.JoinGamePacket;
+import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
@@ -55,6 +56,7 @@ public class NetworkManager {
 		kryo.register(GameDescriptorListPacket.class);
 		kryo.register(GameDescriptorPlayerUpdatePacket.class);
 		kryo.register(JoinGamePacket.class);
+		kryo.register(LeaveGamePacket.class);
 	}
 
 	private NetworkManager() {

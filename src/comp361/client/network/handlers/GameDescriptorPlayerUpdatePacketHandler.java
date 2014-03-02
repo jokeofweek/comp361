@@ -10,6 +10,7 @@ public class GameDescriptorPlayerUpdatePacketHandler implements
 			GameDescriptorPlayerUpdatePacket packet) {
 		// Send the message to the manager
 		gameClient.getGameDescriptorManager().updateGameDescriptor(packet);
-
+		// Dispatch the message
+		gameClient.publishMessage(packet);
 	}
 }

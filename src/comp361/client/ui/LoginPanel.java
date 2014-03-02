@@ -95,9 +95,7 @@ public class LoginPanel extends ClientPanel {
 		setBackground(Color.WHITE);
 		for (Component c : loginPanel.getComponents()) {
 			SwagFactory.style((JComponent) c);
-			c.setMaximumSize(new Dimension(LOGIN_PANEL_WIDTH - 40, SwagFactory.BUTTON_HEIGHT));
-			c.setMinimumSize(new Dimension(LOGIN_PANEL_WIDTH - 40, SwagFactory.BUTTON_HEIGHT));
-			c.setPreferredSize(new Dimension(LOGIN_PANEL_WIDTH - 40, SwagFactory.BUTTON_HEIGHT));
+			SwagFactory.styleButtonHeight((JComponent) c, LOGIN_PANEL_WIDTH - 40);
 		}
 		SwagFactory.style(loginButton);
 		SwagFactory.style(registerButton);

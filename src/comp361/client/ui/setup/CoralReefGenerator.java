@@ -1,4 +1,4 @@
-package examples.newgame;
+package comp361.client.ui.setup;
 
 import java.util.Observable;
 import java.util.Random;

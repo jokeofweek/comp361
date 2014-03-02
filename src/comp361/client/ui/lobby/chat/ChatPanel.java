@@ -92,12 +92,6 @@ public class ChatPanel extends JPanel {
 		sendButton.setText("Send");
 		SwagFactory.style(sendButton);
 		
-		Dimension d = new Dimension(120, SwagFactory.BUTTON_HEIGHT);
-		sendButton.setMaximumSize(d);
-		sendButton.setMinimumSize(d);
-		sendButton.setPreferredSize(d);
-		sendButton.setSize(d);
-		
 		// Create the message field
 		messageField = new JTextField();
 		messageField.setAction(action);

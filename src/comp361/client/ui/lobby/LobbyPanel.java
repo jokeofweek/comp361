@@ -24,8 +24,10 @@ import comp361.client.ui.SwagFactory;
 import comp361.client.ui.lobby.chat.ChatPanel;
 import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
+import comp361.client.ui.setup.NewGamePanel;
 import comp361.shared.Constants;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
+import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GenericError;
 import comp361.shared.packets.shared.MessagePacket;
 
@@ -106,12 +108,6 @@ public class LobbyPanel extends ClientPanel {
 		for (JButton button : buttons) {
 			// Set up the button style.
 			SwagFactory.style(button);
-
-			d = new Dimension(button.getWidth(), SwagFactory.BUTTON_HEIGHT);
-			button.setMaximumSize(d);
-			button.setMinimumSize(d);
-			button.setPreferredSize(d);
-			button.setSize(d);
 
 			// Add it to the container
 			buttonContainer.add(button);
@@ -209,6 +205,16 @@ public class LobbyPanel extends ClientPanel {
 			chatPanel.publishChatMessage((MessagePacket) arg);
 		} else if (arg instanceof GenericError) {
 			JOptionPane.showMessageDialog(null, arg);
+		} else if (arg instanceof GameDescriptorPlayerUpdatePacket) {
+			GameDescriptorPlayerUpdatePacket packet = (GameDescriptorPlayerUpdatePacket)arg;
+			
+			// If we were the player joining, then switch to game setup view
+			if (packet.name.equals(getGameClient().getPlayerName())) {
+				if (packet.joined) {
+					getClientWindow().setPanel(new NewGamePanel(getGameClient(), getClientWindow(), packet.id));
+				}
+			}
+			// TODO: Handle the case where we are observing a game
 		}
 	}
 
