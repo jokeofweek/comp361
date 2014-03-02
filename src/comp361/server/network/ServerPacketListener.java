@@ -6,6 +6,7 @@ import java.util.Map;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.server.GameServer;
+import comp361.server.network.handlers.ChangeSeedPacketHandler;
 import comp361.server.network.handlers.JoinGamePacketHandler;
 import comp361.server.network.handlers.LeaveGamePacketHandler;
 import comp361.server.network.handlers.LoginPacketHandler;
@@ -20,6 +21,7 @@ import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
+import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.MessagePacket;
 
 /**
@@ -74,7 +76,8 @@ public class ServerPacketListener extends Listener {
 	private Map<Class, ServerPacketHandler> setupLobbyPacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		handlers.put(MessagePacket.class, new MessagePacketHandler());
-		handlers.put(NewGameDescriptorPacket.class, new NewGameDescriptorPacketHandler());
+		handlers.put(NewGameDescriptorPacket.class,
+				new NewGameDescriptorPacketHandler());
 		handlers.put(JoinGamePacket.class, new JoinGamePacketHandler());
 		return handlers;
 	}
@@ -88,9 +91,10 @@ public class ServerPacketListener extends Listener {
 	private Map<Class, ServerPacketHandler> setupGameSetupPacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		handlers.put(LeaveGamePacket.class, new LeaveGamePacketHandler());
+		handlers.put(ChangeSeedPacket.class, new ChangeSeedPacketHandler());
 		return handlers;
 	}
-	
+
 	/**
 	 * @return a map which maps java classes to their appropriate packet
 	 *         handlers which should be called when a session receives this
@@ -120,7 +124,8 @@ public class ServerPacketListener extends Listener {
 		Map<Class, ServerPacketHandler> handlers = sessionTypePacketHandlers
 				.get(session.getSessionType());
 		ServerPacketHandler handler = handlers.get(object.getClass());
-		// System.out.println("Received " + object.getClass() + " from " + session);
+		// System.out.println("Received " + object.getClass() + " from " +
+		// session);
 		// Make sure we have a handler before calling
 		if (handler != null) {
 			handler.handle(session, gameServer, object);
@@ -130,7 +135,7 @@ public class ServerPacketListener extends Listener {
 		}
 
 	}
-	
+
 	@Override
 	public void disconnected(Connection connection) {
 		super.disconnected(connection);

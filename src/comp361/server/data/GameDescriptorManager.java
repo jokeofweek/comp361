@@ -2,6 +2,7 @@ package comp361.server.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ public class GameDescriptorManager {
 	public GameDescriptor createDescriptor(NewGameDescriptorPacket packet) {
 		GameDescriptor descriptor = new GameDescriptor(currentId++,
 				packet.name, packet.password, packet.maxPlayers);
+		descriptor.setSeed(System.currentTimeMillis());
 		gameDescriptors.put(descriptor.getId(), descriptor);
 		return descriptor;
 	}
@@ -53,7 +55,9 @@ public class GameDescriptorManager {
 
 	/**
 	 * Checks whether the game has started or not.
-	 * @param id The id of the descriptor.
+	 * 
+	 * @param id
+	 *            The id of the descriptor.
 	 * @return True if the game has started.
 	 */
 	public boolean gameHasStarted(int id) {
@@ -93,6 +97,19 @@ public class GameDescriptorManager {
 		if (!gameDescriptors.get(id).hasPlayers()) {
 			gameDescriptors.remove(id);
 		}
+	}
+
+	/**
+	 * Update a game's seed.
+	 * 
+	 * @param id
+	 *            The id of the game.
+	 * @param seed
+	 *            The seed of the game.
+	 */
+	public void updateSeed(int id, long seed) {
+		gameDescriptors.get(id).setSeed(seed);
+		gameDescriptors.get(id).clearReadyPlayers();
 	}
 
 	/**

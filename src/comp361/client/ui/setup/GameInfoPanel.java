@@ -41,8 +41,13 @@ public class GameInfoPanel extends JPanel implements Observer {
 	}
 	
 	private void refreshData() {
+		// Make sure the game still exists, as this gets called when the player leaves 
+		// the game descriptor.
+		if (manager.getGameDescriptor(gameDescriptorId) == null) {
+			return;
+		}
 		model.clear();
-		// Aadd all players in the game descriptor
+		// Add all players in the game descriptor
 		for (String player : manager.getGameDescriptor(gameDescriptorId).getPlayers()) {
 			model.addElement(player);
 		}

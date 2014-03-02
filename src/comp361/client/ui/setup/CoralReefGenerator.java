@@ -13,14 +13,17 @@ public class CoralReefGenerator extends Observable {
 	private long seed;
 	
 	public CoralReefGenerator() {
-		regenerateReef();
 	}
 	
 	public void regenerateReef() {
-		hasCoral = new boolean[Constants.CORAL_WIDTH][Constants.CORAL_HEIGHT];
+		regenerateReef(System.currentTimeMillis());
+	}
+	
+	public void regenerateReef(long seed) {
+		this.seed = seed;
 		
-		// For now just randomly place the coral
-		this.seed = System.currentTimeMillis();
+		hasCoral = new boolean[Constants.CORAL_WIDTH][Constants.CORAL_HEIGHT];
+
 		
 		Random random = new Random(seed);
 		int remainingBlocks = (Constants.CORAL_WIDTH * Constants.CORAL_HEIGHT) / CORAL_PERCENT;

@@ -18,14 +18,15 @@ import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.lobby.LobbyPanel;
+import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
+import comp361.shared.packets.shared.ChangeSeedPacket;
 
 public class NewGamePanel extends ClientPanel {
 
 	private CoralReefGenerator reefGenerator;
 	private GameInfoPanel infoPanel;
-	private RegenerateCoralAction regenerateCoralAction;
 	private ReadyAction readyAction;
 	private int gameDescriptorId;
 
@@ -35,14 +36,18 @@ public class NewGamePanel extends ClientPanel {
 			int gameDescriptorId) {
 		super(gameClient, window, new BorderLayout());
 
-		this.reefGenerator = new CoralReefGenerator();
-		this.regenerateCoralAction = new RegenerateCoralAction(reefGenerator);
-		this.readyAction = new ReadyAction(regenerateCoralAction);
 		this.gameDescriptorId = gameDescriptorId;
+		this.reefGenerator = new CoralReefGenerator();
+		this.reefGenerator.regenerateReef(gameClient.getGameDescriptorManager()
+				.getGameDescriptor(gameDescriptorId).getSeed());
+		this.readyAction = new ReadyAction();
 
 		// Setup the UI
 		this.add(this.buildCoralUI(), BorderLayout.WEST);
 		this.add(this.buildOptionsUI());
+
+		// Start off with the ready action disabled.
+		updateActionStatuses();
 
 		SwagFactory.style(this);
 	}
@@ -62,8 +67,9 @@ public class NewGamePanel extends ClientPanel {
 		SwagFactory.style(buttonContainer);
 
 		// Build the button for regenerating the coral
-		JButton regenerateCoralButton = new JButton(regenerateCoralAction);
-		regenerateCoralButton.setText("Regenerate Corals");
+		JButton regenerateCoralButton = new JButton("Regenerate Corals");
+		regenerateCoralButton
+				.addActionListener(new RegenerateCoralsActionListener());
 		buttonContainer.add(regenerateCoralButton);
 		SwagFactory.style(regenerateCoralButton);
 
@@ -136,6 +142,22 @@ public class NewGamePanel extends ClientPanel {
 		getGameClient().getGameDescriptorManager().deleteObserver(infoPanel);
 	}
 
+	private void updateActionStatuses() {
+		// Make sure the game still exists, as this gets called when the player
+		// leaves the game descriptor.
+		if (getGameClient().getGameDescriptorManager().getGameDescriptor(
+				gameDescriptorId) == null) {
+			return;
+		}
+
+		// Update the ready action
+		GameDescriptor descriptor = getGameClient().getGameDescriptorManager()
+				.getGameDescriptor(gameDescriptorId);
+
+		readyAction.setEnabled(descriptor.getPlayers().size() == descriptor
+				.getMaxPlayers());
+	}
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg instanceof GameDescriptorPlayerUpdatePacket) {
@@ -143,11 +165,32 @@ public class NewGamePanel extends ClientPanel {
 			// If it was this game.
 			if (packet.id == gameDescriptorId) {
 				// If it was us, go back to the lobby
-				if (packet.name.equals(getGameClient().getPlayerName())) {
+				if (packet.name.equals(getGameClient().getPlayerName())
+						&& !packet.joined) {
 					getClientWindow().setPanel(
 							new LobbyPanel(getGameClient(), getClientWindow()));
 				}
 			}
+		} else if (arg instanceof ChangeSeedPacket) {
+			// Update the seed of the generator if this is our game
+			if (((ChangeSeedPacket) arg).id == gameDescriptorId) {
+				reefGenerator.regenerateReef(((ChangeSeedPacket) arg).seed);
+			}
+		}
+
+		updateActionStatuses();
+	}
+
+	private class RegenerateCoralsActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Regenerate the reef
+			reefGenerator.regenerateReef();
+			// Create the packet with the new seed
+			ChangeSeedPacket packet = new ChangeSeedPacket();
+			packet.id = gameDescriptorId;
+			packet.seed = reefGenerator.getSeed();
+			getGameClient().getClient().sendTCP(packet);
 		}
 	}
 
