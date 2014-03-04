@@ -43,7 +43,7 @@ public class Ship{
 	}
 	
 	/**
-	 * @return ths speed of the ship
+	 * @return the speed of the ship
 	 */
 	public int getSpeed()
 	{
