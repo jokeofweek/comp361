@@ -1,13 +1,9 @@
 package comp361.shared.data;
 
-import java.util.HashMap;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-
-import comp361.shared.data.Statistics;
 
 /**
  * This class represents the {@link Player} object used by the client.
@@ -41,7 +37,15 @@ public class Player implements KryoSerializable {
 	public void setStatistics(Statistics statistics) {
 		this.statistics = statistics;
 	}
-
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if(other instanceof Player)
+			return ((Player)other).name.equals(this.name);
+		return false;
+	}
+	
 	@Override
 	public void read(Kryo kryo, Input input) {
 		name = kryo.readObject(input, String.class);

@@ -2,16 +2,18 @@ package comp361.shared.data;
 
 import java.awt.Point;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import comp361.shared.data.radar.Radar;
+
 public class Ship{
 
 	// This is the position of the head of the ship.
 	private Point position;
+	private Player owner;
 	private int size;
 	private int speed;
 	private int mineCount;
