@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Line extends Line2D 
-{
+{	
 	private Point head;
 	private Point tail;
 	
-	public Line(Point head, Point tail)
+	public Line(Point tail, Point head)
 	{
 		this.head = head;
 		this.tail = tail;
@@ -73,12 +73,41 @@ public class Line extends Line2D
 	}
 	
 	/**
+	 * Implementation of Bresenham's algorithm
 	 * @return a list of the points lying on the line
 	 */
 	public List<Point> getPoints()
 	{
 		ArrayList<Point> points = new ArrayList<Point>();
-		//TODO: implement Bresenham's algorithm
+		double sx, sy, error, x0, x1, y0, y1;
+		x0 = tail.getX();
+		x1 = head.getX();
+		y0 = tail.getY();
+		y1 = head.getY();
+		double dx = Math.abs(x1-x0);
+		double dy = Math.abs(y1-y0);
+		if(x0 < x1)
+			sx = 1;
+		else sx = -1;
+		if(y0 < y1)
+			sy = 1;
+		else sy = -1;
+		error = dx-dy;
+		while(x1 != x0 || y1 != y0)
+		{
+			points.add(new Point((int)x0, (int)y0));
+			if(2*error > (-dy))
+			{
+				error -= dy;
+				x0 +=sx;
+			}
+			if(2*error < dx)
+			{
+				error += dx;
+				y0 += sy;
+			}
+		}
+		points.add(head);
 		return points;
 	}
 
