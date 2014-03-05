@@ -77,7 +77,7 @@ public class SwagFactory {
 			styleEditorPane((JEditorPane) component);
 		}
 		else {
-			component.setFont(new Font(FONT.getFontName(), Font.PLAIN, 12));
+			//do nothing
 		}
 	}
 
