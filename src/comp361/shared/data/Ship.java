@@ -1,7 +1,6 @@
 package comp361.shared.data;
 
 import java.awt.Point;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +13,7 @@ public class Ship{
 	// This is the position of the head of the ship.
 	private Point position;
 	private Player owner;
+	private Game game;
 	private int size;
 	private int speed;
 	private int mineCount;
@@ -42,6 +42,14 @@ public class Ship{
 	public int getSize()
 	{
 		return this.size;
+	}
+	
+	/**
+	 * @return the game in which the ship is
+	 */
+	public Game getGame()
+	{
+		return this.game;
 	}
 	
 	/**
@@ -152,9 +160,9 @@ public class Ship{
 	/**
 	 * @return the trajectory of the ship's torpedoes
 	 */
-	public Line2D getTorpedoLine()
+	public Line getTorpedoLine()
 	{
-		Line2D line = new Line2D.Double(0, 0,0,0);
+		Line line = new Line(new Point(0,0), new Point(0,0));
 		//TODO: implement this
 		return line;
 	}
@@ -180,31 +188,39 @@ public class Ship{
 	/**
 	 * @return returns the line segment that the ship occupies
 	 */
-	public Line2D getLine()
+	public Line getShipLine()
 	{
-		Line2D line = new Line2D.Double(0,0,0,0);
-		//TODO: implement this
-		return line;
+		Point tail = new Point(position);
+		if(this.facing == Direction.UP)
+			tail = new Point((int)position.getX(), (int)(position.getY()+size));
+		if(this.facing == Direction.DOWN)
+			tail = new Point((int)position.getX(), (int)(position.getY()-size));
+		if(this.facing == Direction.LEFT)
+			tail = new Point((int)position.getX()+size, (int)position.getY());
+		if(this.facing == Direction.RIGHT)
+			tail = new Point((int)position.getX()-size, (int)position.getY());
+		return new Line(tail, position);
 	}
 	
 	
 	/**
+	 * Moves the ship to the position, given there are no obstacles on the path.
 	 * @param p the new position of the ship
 	 */
 	public void moveShip(Point p)
 	{
-		//TODO: implement this
+		Line trajectory = getLineTo(p);
+		if(!game.hasObstacle(trajectory.getPoints()))
+			this.position = p;
 	}
 	
 	/**
 	 * @param p the target point
 	 * @return the line segment between the ship and p
 	 */
-	public Line2D getLineTo(Point p)
+	public Line getLineTo(Point p)
 	{
-		Line2D line = new Line2D.Double(0,0,0,0);
-		//TODO: implement this
-		return line;
+		return new Line(this.position, p);
 	}
 	
 	/**
@@ -253,8 +269,7 @@ public class Ship{
 	 */
 	public int getHealth(int index)
 	{
-		//TODO: implement this
-		return 0;
+		return health[index];
 	}
 	
 	/**
@@ -285,8 +300,7 @@ public class Ship{
 	 */
 	public boolean canTurnToFace(Direction d)
 	{
-		//TODO: implement this
-		return false;
+		return game.hasObstacle(getPointsInTurnRadius(d));
 	}
 	
 	/**
@@ -331,7 +345,6 @@ public class Ship{
 	 */
 	public boolean pointBelongsToShip(Point p)
 	{
-		//TODO: implement this
-		return false;
+		return getShipLine().contains(p);
 	}
 }

@@ -33,6 +33,24 @@ public class Line extends Line2D
 	public Point2D getP2() {
 		return new Point2D.Double(head.getX(), head.getY());
 	}
+	
+	/**
+	 * Similar to getP1()
+	 * @return the tail of the line segment
+	 */
+	public Point getTail()
+	{
+		return this.tail;
+	}
+	
+	/**
+	 * Similar to getP2()
+	 * @return the head of the line segment
+	 */
+	public Point getHead()
+	{
+		return this.head;
+	}
 
 	@Override
 	public double getX1() {

@@ -1,7 +1,6 @@
 package comp361.shared.data;
 
 import java.awt.Point;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,13 +22,34 @@ public class Game
 	{
 		//TODO: implement this
 	}
+	
+	/**
+	 * @return the first player
+	 */
+	public Player getP1() {
+		return p1;
+	}
+
+	/**
+	 * @return the second player
+	 */
+	public Player getP2() {
+		return p2;
+	}
+
+	/**
+	 * @return the field of the game
+	 */
+	public Field getField() {
+		return field;
+	}
 
 	/**
 	 * @param ship 
 	 * @param line
 	 * @return
 	 */
-	public Point getFurthestPosition(Ship ship, Line2D line)
+	public Point getFurthestPosition(Ship ship, Line line)
 	{
 		//TODO: implement this
 		return null;

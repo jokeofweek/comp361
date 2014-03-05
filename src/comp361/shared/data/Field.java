@@ -38,16 +38,10 @@ public class Field {
 	public Set<Point> getAdjacentPoints(Point p)
 	{
 		HashSet<Point> points = new HashSet<Point>();
-		for(int i = -1; i<2; i++)
-		{
-			/* just computes all neighboring points by adding all combinations
-			 * of the form (p.x (+ or -) 1 or 0, p.y (+ or -) 1 or 0)
-			 * then removes the point itself 
-			 */
-			for(int j = -1; j<2; j++)
-				points.add(new Point((int)(p.getX()+i), (int)(p.getY()+j)));
-			points.remove(p);
-		}
+		points.add(new Point((int)p.getX(), (int)p.getY()+1));
+		points.add(new Point((int)p.getX(), (int)p.getY()-1));
+		points.add(new Point((int)p.getX()-1, (int)p.getY()));
+		points.add(new Point((int)p.getX()+1, (int)p.getY()+1));
 		return points;
 	}
 	
