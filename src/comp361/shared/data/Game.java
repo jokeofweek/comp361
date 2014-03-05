@@ -13,7 +13,7 @@ public class Game
 	private Player p2;
 	private Field field;
 	private List<Ship> ships;
-	
+
 	/**
 	 * Creates a new game
 	 * @param p1 The first player to play the game
@@ -23,7 +23,7 @@ public class Game
 	{
 		//TODO: implement this
 	}
-	
+
 	/**
 	 * @param ship 
 	 * @param line
@@ -34,7 +34,7 @@ public class Game
 		//TODO: implement this
 		return null;
 	}
-	
+
 	/**
 	 * @param p The player to which the base belongs
 	 * @return The set of points visible from the player's base
@@ -45,7 +45,7 @@ public class Game
 		//TODO: implement this
 		return points;
 	}
-	
+
 	/**
 	 * @param point A point on the map
 	 * @param player The player 
@@ -56,16 +56,17 @@ public class Game
 		//TODO: implement this
 		return VisibilityType.WATER;
 	}
-	
+
 	/**
 	 * @param p1 Player to set as Player 1
 	 * @param p2 Player to set as Player 2
 	 */
 	public void setPlayers(Player p1, Player p2)
 	{
-		//TODO: implement this
+		this.p1 = p1;
+		this.p2 = p2;
 	}
-	
+
 	/**
 	 * @param s The ship
 	 * @param index The index 
@@ -76,7 +77,7 @@ public class Game
 		//TODO: implement this
 		return false;
 	}
-	
+
 	/**
 	 * @param p
 	 * @return
@@ -86,17 +87,16 @@ public class Game
 		//TODO: implement this
 		return Direction.RIGHT;
 	}
-	
+
 	/**
 	 * Places the ship along the base
 	 * @param s The ship to be placed
 	 * @param index The index of the position along the base
 	 */
-	public void placeShipAt(Ship s, int index)
-	{
+	public void placeShipAt(Ship s, int index) {
 		//TODO: implement this
 	}
-	
+
 	/**
 	 * Explodes the mine at position p
 	 * @param p The position of the mine to explode
@@ -105,55 +105,79 @@ public class Game
 	{
 		//TODO: implement this
 	}
-	
+
 	/**
 	 * @param s The ship to damage
 	 * @param collidingPoint The point of the ship colliding with the mine
 	 */
-	public void applyRotationMineDamage(Ship s, Point collidingPoint)
-	{
+	public void applyRotationMineDamage(Ship s, Point collidingPoint) {
 		//TODO: implement this
 	}
-	
+
 	/**
 	 * @param points A list of points on the map
 	 * @return true if an obstacle exists at any of the given points, false otherwise
 	 */
-	public boolean hasObstacle(List<Point> points)
-	{
-		//TODO: implement this
+	public boolean hasObstacle(List<Point> points) {
+		for(Point p : points) {
+			if(field.getCellType(p) == CellType.MINE ||
+			   field.getCellType(p) == CellType.REEF ||
+			   field.getCellType(p) == CellType.BASE)
+				return true;
+			for(Ship s : ships)
+				if(s.pointBelongsToShip(p))
+					return true;
+		}
 		return false;
 	}
-	
+
 	/**
 	 * @param points A list of points on the map
 	 * @return The type of the closest obstacle
 	 */
-	public ObstacleType getClosestObstacleType(List<Point> points)
-	{
-		//TODO: implement this
-		return ObstacleType.MINE;
+	public ObstacleType getClosestObstacleType(List<Point> points) {
+		for(Point p : points) {
+			for(Ship s : ships)
+				if(s.pointBelongsToShip(p))
+					return ObstacleType.SHIP;
+			if(field.getCellType(p) == CellType.BASE)
+				return ObstacleType.BASE;
+			if(field.getCellType(p) == CellType.MINE)
+				return ObstacleType.MINE;
+			if(field.getCellType(p) == CellType.REEF);
+				return ObstacleType.REEF;
+		}
+		return null;
 	}
-	
+
 	/**
 	 * @param points A list of points on the map
 	 * @return The position of the closest obstacle
 	 */
 	public Point getClosestObstaclePosition(List<Point> points)
 	{
-		Point p = new Point();
-		//TODO: implement this
-		return p;
+		for(Point p : points) {
+			for(Ship s : ships)
+				if(s.pointBelongsToShip(p))
+					return p;
+			if(field.getCellType(p) == CellType.MINE ||
+			   field.getCellType(p) == CellType.REEF ||
+			   field.getCellType(p) == CellType.BASE)
+				return p;
+		}
+		return null;
 	}
-	
+
 	/**
 	 * @param p A player in the game
 	 * @return A list of the ships of the specified player
 	 */
 	public List<Ship> getPlayerShips(Player p)
 	{
-		List<Ship> ships = new ArrayList<Ship>();
-		//TODO: implement this
-		return ships;
+		List<Ship> playerShips = new ArrayList<Ship>();
+		for(Ship s : ships)
+			if(s.getOwner().equals(p))
+				playerShips.add(s);
+		return playerShips;
 	}
 }

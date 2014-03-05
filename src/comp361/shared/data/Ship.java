@@ -45,6 +45,14 @@ public class Ship{
 	}
 	
 	/**
+	 * @return the owner of the ship
+	 */
+	public Player getOwner()
+	{
+		return this.owner;
+	}
+	
+	/**
 	 * @return the speed of the ship
 	 */
 	public int getSpeed()
@@ -314,6 +322,16 @@ public class Ship{
 			//drop mine
 			return true;
 		}
+		return false;
+	}
+	
+	/**
+	 * @param p A point on the field
+	 * @return true if the point belongs to the ship, false otherwise
+	 */
+	public boolean pointBelongsToShip(Point p)
+	{
+		//TODO: implement this
 		return false;
 	}
 }

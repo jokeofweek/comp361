@@ -38,7 +38,16 @@ public class Field {
 	public Set<Point> getAdjacentPoints(Point p)
 	{
 		HashSet<Point> points = new HashSet<Point>();
-		//TODO: implement this
+		for(int i = -1; i<2; i++)
+		{
+			/* just computes all neighboring points by adding all combinations
+			 * of the form (p.x (+ or -) 1 or 0, p.y (+ or -) 1 or 0)
+			 * then removes the point itself 
+			 */
+			for(int j = -1; j<2; j++)
+				points.add(new Point((int)(p.getX()+i), (int)(p.getY()+j)));
+			points.remove(p);
+		}
 		return points;
 	}
 	
@@ -49,7 +58,9 @@ public class Field {
 	public Set<Point> getAdjacentMines(Point p)
 	{
 		HashSet<Point> points = new HashSet<Point>();
-		//TODO: implement this
+		for(Point point : getAdjacentMines(p))
+			if(getCellType(point) == CellType.MINE)
+				points.add(point);
 		return points;
 	}
 	
@@ -58,7 +69,7 @@ public class Field {
 	 */
 	public void damageBase(Point p)
 	{
-		
+		//TODO: implement this
 	}
 	
 	/**
