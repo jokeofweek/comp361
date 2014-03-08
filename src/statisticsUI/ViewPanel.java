@@ -4,14 +4,18 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Observable;
+import java.util.Observer;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import comp361.client.data.PlayerManager;
+import comp361.client.ui.SwagFactory;
 import comp361.shared.data.Player;
 
-public class ViewPanel extends JPanel implements ItemListener
+public class ViewPanel extends JPanel implements ItemListener, Observer
 {
 	JPanel aCards;
 	StatisticsPanel aMain;
@@ -30,7 +34,9 @@ public class ViewPanel extends JPanel implements ItemListener
 			i++;
 		}
 		
-		JComboBox cb = new JComboBox(comboBoxItems);
+		final DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
+		JComboBox cb = new JComboBox(model);
+		
 		cb.setEditable(false);
 		cb.addItemListener(this);
 		comboBoxPane.add(cb);
@@ -48,15 +54,16 @@ public class ViewPanel extends JPanel implements ItemListener
 			
 		}
 		
-//		add(comboBoxPane, BorderLayout.BEFORE_FIRST_LINE);
 		add(aMain, BorderLayout.WEST);
 		
 		JPanel temp = new JPanel(new BorderLayout());
-		temp.add(comboBoxPane, BorderLayout.EAST);
+		SwagFactory.style(temp);
+		temp.add(comboBoxPane, BorderLayout.AFTER_LAST_LINE);
 		temp.add(aCards, BorderLayout.CENTER);
 		
 		add(temp, BorderLayout.EAST);
-//		add(aCards, BorderLayout.EAST);
+		
+		SwagFactory.style(this);
 
 	}
 
@@ -66,5 +73,12 @@ public class ViewPanel extends JPanel implements ItemListener
 	{
 		CardLayout cl = (CardLayout) (aCards.getLayout());
 		cl.show(aCards, (String) pEvent.getItem());		
+	}
+
+
+	@Override
+	public void update(Observable o, Object arg) 
+	{
+		
 	}
 }

@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import comp361.client.ui.SwagFactory;
 import comp361.shared.data.Player;
 
 public class StatisticsPanel extends JPanel
@@ -21,11 +22,10 @@ public class StatisticsPanel extends JPanel
 	{
 		aMain = pMain;
 		
-		
 		this.setLayout(new BorderLayout());
 		
 		JLabel title = new JLabel("Statistics for: " + aMain.getName());
-		title.setFont(new Font("Times", Font.BOLD, 18));
+		SwagFactory.style(title);
 		
 		add(title, BorderLayout.PAGE_START);
 		
@@ -35,25 +35,18 @@ public class StatisticsPanel extends JPanel
 
 		//Set up the look for the main player table
 		aMainTable = new JTable(aMainPlayerModel);
-		aMainTable.getTableHeader().setFont(new Font("Times", Font.ITALIC, 16));
-		aMainTable.setFont(new Font("Times", Font.PLAIN, 14));
-//        aMainTable.setPreferredScrollableViewportSize(new Dimension(800, 600));
+		aMainTable.getTableHeader().setFont(SwagFactory.FONT);
+		aMainTable.setFont(SwagFactory.FONT);
         aMainTable.setFillsViewportHeight(true);
         aMainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        //Set up the look for the other player table
-//        aOtherTable = new JTable(aOtherPlayerModel);
-//        aOtherTable.getTableHeader().setFont(new Font("Times", Font.ITALIC, 16));
-//        aOtherTable.setFont(new Font("Times", Font.PLAIN, 14));
-//        aOtherTable.setPreferredScrollableViewportSize(new Dimension(800, 600));
-//        aOtherTable.setFillsViewportHeight(true);
-//        aOtherTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         //Create the scroll pane and add the table to it.
         JScrollPane mainScrollPane = new JScrollPane(aMainTable);
  
         //Add the scroll pane to this panel.
         add(mainScrollPane, BorderLayout.CENTER);
+        
+        SwagFactory.style(this);
 	}
 	
 	/**
