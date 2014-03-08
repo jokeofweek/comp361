@@ -1,12 +1,14 @@
 package statisticsUI;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import comp361.client.data.PlayerManager;
 import comp361.shared.data.Player;
@@ -25,11 +27,29 @@ public class StatisticsExampleFrame extends JFrame
 		Player rob = new Player("Rob");
 		rob.getStatistics().initialiseOtherStatistics();
 		
-		PlayerManager players = new PlayerManager();
+		final PlayerManager players = new PlayerManager();
 		players.addPlayer(bob);
 		players.addPlayer(rob);
 		
-		container.add(new ViewPanel(bob, players), BorderLayout.CENTER);
+		ViewPanel panel = new ViewPanel(bob, players);
+		players.addObserver(panel);
+		
+		container.add(panel, BorderLayout.CENTER);
+		
+		JButton addPlayer = new JButton("Add Player");
+		addPlayer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Player Marc = new Player("Marc");
+				Marc.getStatistics().initialiseEvenOtherStatistics();
+				
+				players.addPlayer(Marc);
+				
+			}
+		});
+		
+		add(addPlayer, BorderLayout.BEFORE_FIRST_LINE);
 		
 		add(container);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

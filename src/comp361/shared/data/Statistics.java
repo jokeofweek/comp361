@@ -68,6 +68,20 @@ public class Statistics implements KryoSerializable {
 			this.addStatistic(descriptions[i], data[i]);
 		}
 	}
+	
+	/**
+	 * Make up some other random stats
+	 */
+	public void initialiseEvenOtherStatistics()
+	{
+		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ration" };
+		Object[] data = { "NOOB", 0, 0, 0, 0, 0 };
+		
+		for(int i = 0; i < descriptions.length; i++)
+		{
+			this.addStatistic(descriptions[i], data[i]);
+		}
+	}
 
 	@Override
 	public void read(Kryo kryo, Input input) {
