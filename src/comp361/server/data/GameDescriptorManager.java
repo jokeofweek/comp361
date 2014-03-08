@@ -2,8 +2,10 @@ package comp361.server.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import comp361.shared.data.Game;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
@@ -148,4 +150,16 @@ public class GameDescriptorManager {
 		return packet;
 	}
 
+	/**
+	 * Creates a new game based on the game descriptor.
+	 * @param id The game descriptor id.
+	 * @return The game.
+	 */
+	public Game createGame(int id) {
+		GameDescriptor d = gameDescriptors.get(id);
+		List<String> players = new ArrayList<>(d.getPlayers());
+		
+		Game g = new Game(players.get(0), players.get(1), d.getSeed());
+		return g;
+	}
 }

@@ -13,6 +13,8 @@ public abstract class Range {
 
 	private int width;
 	private int height;
+	
+	public Range(){}
 
 	public Range(int width, int height) {
 		this.width = width;

@@ -6,6 +6,10 @@ import comp361.shared.data.Ship;
 
 public class CenterRange extends Range {
 
+	public CenterRange() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public CenterRange(int width, int height) {
 		super(width, height);
 	}

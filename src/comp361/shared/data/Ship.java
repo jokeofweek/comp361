@@ -6,10 +6,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoSerializable;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
+
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
 
-public class Ship{
+public class Ship  {
 
 	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null);
 	private static final int TORPEDO_RANGE = 10;
@@ -17,7 +23,7 @@ public class Ship{
 	// This is the position of the head of the ship.
 	private Point position;
 	private String owner;
-	private Game game;
+	private transient Game game;
 	private int size;
 	private int speed;
 	private int mineCount;
@@ -35,6 +41,9 @@ public class Ship{
 	private Range radar;
 	private Range longRadar;
 	
+	public Ship() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	public Ship(int size, int speed, int mineCount, ArmorType armor,
 			boolean turnsOnCenter, boolean isMineLayer,
@@ -82,6 +91,10 @@ public class Ship{
 	public Game getGame()
 	{
 		return this.game;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	/**
@@ -458,4 +471,5 @@ public class Ship{
 	public Set<Point> getValidMovePoints() {
 		return new HashSet<>();
 	}
+
 }

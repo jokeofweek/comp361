@@ -237,7 +237,19 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private class MouseAdapter extends MouseInputAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println(e.getX() + ", "+ e.getY());
+			// Get the tile that we pressed
+			int x = e.getX() / Constants.TILE_SIZE;
+			int y = e.getY() / Constants.TILE_SIZE;
+			
+			// See if we selected one of our ships
+			Point p = new Point(x, y);
+			for (Ship s : game.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
+				if (s.pointBelongsToShip(p)) {
+					// Select the ship!
+					context.setShip(s);
+					return;
+				}
+			}
 		}
 	}
 }

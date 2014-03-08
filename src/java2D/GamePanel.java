@@ -19,18 +19,22 @@ import comp361.shared.data.Field;
 import comp361.shared.data.Game;
 
 public class GamePanel extends ClientPanel {
-
+	
 	public GamePanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
-		initUI();
+		initUI(new Game("p1", "p2", System.currentTimeMillis()));
 	}
 
-	private void initUI() {
+	public GamePanel(GameClient gameClient, ClientWindow clientWindow, Game game) {
+		super(gameClient, clientWindow, new BorderLayout());
+		initUI(game);
+	}
+
+	private void initUI(Game game) {
 		setLayout(new BorderLayout());
 
-		Game g = new Game("p1", "p2", System.currentTimeMillis());
 		final SelectionContext context = new SelectionContext();
-		add(new GameFieldPanel(g, context, true), BorderLayout.CENTER);
+		add(new GameFieldPanel(game, context, true), BorderLayout.CENTER);
 		
 		JButton test = new JButton("Test");
 		test.addActionListener(new ActionListener() {

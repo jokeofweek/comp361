@@ -7,6 +7,10 @@ import comp361.shared.data.Ship;
 
 public class TailRange extends Range {
 
+	public TailRange() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public TailRange(int width, int height) {
 		super(width, height);
 	}

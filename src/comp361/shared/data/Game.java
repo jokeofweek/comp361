@@ -15,6 +15,10 @@ public class Game {
 	private Field field;
 	private List<Ship> ships;
 
+	public Game() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	/**
 	 * Creates a new game
 	 * 

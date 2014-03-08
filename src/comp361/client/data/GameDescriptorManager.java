@@ -9,6 +9,7 @@ import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
+import comp361.shared.packets.server.GameDescriptorStartPacket;
 
 public class GameDescriptorManager extends Observable {
 
@@ -100,6 +101,12 @@ public class GameDescriptorManager extends Observable {
 		} else {
 			descriptor.removeReadyPlayer(packet.name);
 		}
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void updateGameDescriptor(GameDescriptorStartPacket packet) {
+		gameDescriptors.get(packet.id).setStarted(true);
 		setChanged();
 		notifyObservers();
 	}

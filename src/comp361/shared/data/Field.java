@@ -12,6 +12,10 @@ public class Field {
 	private CellType[][] cells;
 	private int[][] baseHealth;
 	
+	public Field() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public Field(int width, int height) {
 		// Instantiate every cell to water with no bomb
 		cells = new CellType[width][height];
