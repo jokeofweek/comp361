@@ -26,6 +26,7 @@ import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.MessagePacket;
+import comp361.shared.packets.shared.SetupMessagePacket;
 
 /**
  * This class is responsible for mapping all packets that a client receives to
@@ -59,6 +60,7 @@ public class ClientPacketListener extends Listener {
 		handlers.put(ChangeSeedPacket.class, new ChangeSeedPacketHandler());
 		handlers.put(GameDescriptorReadyUpdatePacket.class,
 				new GameDescriptorReadyUpdatePacketHandler());
+		handlers.put(SetupMessagePacket.class, new GenericPublishPacketHandler());
 
 		return handlers;
 	}

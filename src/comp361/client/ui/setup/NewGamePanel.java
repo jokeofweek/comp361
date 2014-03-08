@@ -202,7 +202,7 @@ public class NewGamePanel extends ClientPanel {
 				packet.message = chatField.getText();
 				packet.senderName = (getGameClient().getPlayerName());
 				
-				publishChatMessage(packet);
+				getGameClient().getClient().sendTCP(packet);				
 			}
 		});
 		
@@ -306,6 +306,11 @@ public class NewGamePanel extends ClientPanel {
 					.getGameDescriptorManager()
 					.getGameDescriptor(gameDescriptorId).getReadyPlayers()
 					.contains(getGameClient().getPlayerName()));
+		}
+		
+		//Handle the packet
+		if(arg instanceof SetupMessagePacket){
+			publishChatMessage((SetupMessagePacket) arg);
 		}
 	}
 
