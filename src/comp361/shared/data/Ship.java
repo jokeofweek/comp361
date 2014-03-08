@@ -533,10 +533,18 @@ public class Ship  {
 			}
 			
 			//Add all the points above(in front of) the ship
-			Point movementCap = new Point(this.position.x, this.position.y - this.speed - 1);
+			Point movementCap = new Point(this.position.x, this.position.y - this.speed);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
-				points.add(p);
+				if(this.getShipLine().contains(p))
+				{
+					continue;
+				}
+				
+				else
+				{
+					points.add(p);
+				}
 			}
 		}
 		
@@ -564,10 +572,18 @@ public class Ship  {
 			}
 			
 			//Add all the points below(in front of) the ship
-			Point movementCap = new Point(this.position.x, this.position.y + this.speed + 1);
+			Point movementCap = new Point(this.position.x, this.position.y + this.speed);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
-				points.add(p);
+				if(this.getShipLine().contains(p))
+				{
+					continue;
+				}
+				
+				else
+				{
+					points.add(p);
+				}			
 			}
 		}
 		
@@ -595,10 +611,18 @@ public class Ship  {
 			}
 			
 			//Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x - this.speed - 1, this.position.y);
+			Point movementCap = new Point(this.position.x - this.speed, this.position.y);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
-				points.add(p);
+				if(this.getShipLine().contains(p))
+				{
+					continue;
+				}
+				
+				else
+				{
+					points.add(p);
+				}
 			}
 		}
 		
@@ -626,10 +650,18 @@ public class Ship  {
 			}
 			
 			//Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x + this.speed + 1, this.position.y);
+			Point movementCap = new Point(this.position.x + this.speed, this.position.y);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
-				points.add(p);
+				if(this.getShipLine().contains(p))
+				{
+					continue;
+				}
+				
+				else
+				{
+					points.add(p);
+				}
 			}
 		}
 		return points;
