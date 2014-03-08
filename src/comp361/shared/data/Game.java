@@ -57,6 +57,7 @@ public class Game {
 
 		// Setup the ships
 		// TODO: Actually setup the ship
+		Ship[] templates = {Ship.CRUISER_TEMPLATE,Ship.CRUISER_TEMPLATE,Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE, Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE};
 		Ship s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
 		s.setPosition(new Point(10, 10));
 		s.setDirection(Direction.LEFT);
@@ -213,7 +214,24 @@ public class Game {
 	 *            The index of the position along the base
 	 */
 	public void placeShipAt(Ship s, int index) {
-		// TODO: implement this
+		int x = s.getOwner().equals(s.getGame().getP1()) ? 0 : Constants.MAP_WIDTH - 1;
+		int xOffset = s.getOwner().equals(s.getGame().getP1()) ? 1 : -1;
+		Direction facing= s.getOwner().equals(s.getGame().getP1()) ? Direction.RIGHT : Direction.LEFT;
+		
+		s.setDirection(facing);
+		
+		// If the ship was at index 0 or passed the length of the base, we just put it at x.
+		if (index == 0) {
+			s.setPosition(new Point(x + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET - 1));
+			return;
+		} else if (index == Constants.BASE_HEIGHT + 1) {
+			s.setPosition(new Point(x + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
+			return;
+		}
+		
+		// Position it at the right place on the ship
+		index--;
+		s.setPosition(new Point(x + xOffset + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + index));
 	}
 
 	/**
@@ -265,13 +283,13 @@ public class Game {
 			for (Ship s : ships)
 				if (s.pointBelongsToShip(p))
 					return ObstacleType.SHIP;
-			if (field.getCellType(p) == CellType.BASE)
+			if (field.getCellType(p) == CellType.BASE) {
 				return ObstacleType.BASE;
-			if (field.getCellType(p) == CellType.MINE)
+			} else if (field.getCellType(p) == CellType.MINE) {
 				return ObstacleType.MINE;
-			if (field.getCellType(p) == CellType.REEF)
-				;
-			return ObstacleType.REEF;
+			} else if (field.getCellType(p) == CellType.REEF) {
+				return ObstacleType.REEF;
+			}
 		}
 		return null;
 	}

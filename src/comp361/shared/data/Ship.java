@@ -13,7 +13,12 @@ import comp361.shared.data.range.TailRange;
 
 public class Ship  {
 
+	public static final Ship CRUISER_TEMPLATE = new Ship(5, 10, 0, ArmorType.HEAVY, false, false, false, false, true, false, false, false, new TailRange(10, 3), null, new CenterRange(15, 11));
 	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
+	// TODO: Fix torpedo cannon range
+	public static final Ship TORPEDO_TEMPLATE = new Ship(3, 9, 0, ArmorType.NORMAL, true, false, false, false, false, true, false, false, new TailRange(6, 3), null, new CenterRange(5, 5));
+	public static final Ship MINE_LAYER_TEMPLATE = new Ship(2, 6, 5, ArmorType.HEAVY, false, true, false, false, false, true, true, false, new CenterRange(6, 5), null, new CenterRange(4, 5));
+	public static final Ship RADAR_BOAT_TEMPLATE = new Ship(3, 3, 0, ArmorType.NORMAL, true, false, true, false, false, false, false, false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(5, 3));
 	private static final int TORPEDO_RANGE = 10;
 	
 	// This is the position of the head of the ship.

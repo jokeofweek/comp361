@@ -240,6 +240,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 						drawSelectionSquare(g, cannonRangeRect.x + x, cannonRangeRect.y + y);							
 					}
 				}
+			} else if (context.getType() == MoveType.MOVE) {
+				for (Point p : context.getShip().getValidMovePoints()) {
+					drawSelectionSquare(g, p.x, p.y);
+				}
 			}
 		}
 	}
