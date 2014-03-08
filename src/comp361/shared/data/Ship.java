@@ -11,7 +11,8 @@ import comp361.shared.data.range.TailRange;
 
 public class Ship{
 
-	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null);
+	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, null, null);
+	private static final int TORPEDO_RANGE = 10;
 	
 	// This is the position of the head of the ship.
 	private Point position;
@@ -199,9 +200,16 @@ public class Ship{
 	 */
 	public Line getTorpedoLine()
 	{
-		Line line = new Line(new Point(0,0), new Point(0,0));
-		//TODO: implement this
-		return line;
+		Point firstPoint;
+		if(facing == Direction.LEFT)
+			firstPoint = new Point(position.x-1, position.y);
+		if(facing == Direction.UP)
+			firstPoint = new Point(position.x, position.y-1);
+		if(facing == Direction.RIGHT)
+			firstPoint = new Point(position.x+1, position.y);
+		else
+			firstPoint = new Point(position.x, position.y+1);
+		return new Line(firstPoint, facing, TORPEDO_RANGE);
 	}
 	
 	/**
@@ -209,8 +217,17 @@ public class Ship{
 	 */
 	public void fireTorpedo()
 	{
-		//if(this.hasTorpedoes)
-			//TODO: implement this
+		if(this.hasTorpedoes)
+		{
+			for(Point p : getTorpedoLine().getPoints())
+			{
+				if(game.getField().getCellType(p) == CellType.BASE)
+					game.getField().damageBase(p);
+				for(Ship s : game.getShips())
+					if(s.pointBelongsToShip(p))
+						s.hitWithTorpedo(p, this.facing);
+			}		
+		}
 	}
 	
 	/**
@@ -219,7 +236,14 @@ public class Ship{
 	 */
 	public void hitWithTorpedo(Point p, Direction shootingDirection)
 	{
-		//TODO: implement this
+		//damage the right square
+		if(health[getShipLine().getPoints().indexOf(p)] > 0)
+			health[getShipLine().getPoints().indexOf(p)]--;
+		//if perpendicular, damage another adjacent square
+		if(Math.abs(shootingDirection.angleBetween(facing)) == Math.PI/2)
+		{
+			
+		}
 	}
 	
 	/**
@@ -370,7 +394,17 @@ public class Ship{
 	public List<Point> getPointsInTurnRadius(Direction d)
 	{
 		List<Point> points = new ArrayList<Point>();
-		//TODO: implement this
+		Point pivot, corner1, corner2;
+		if(turnsOnCenter)
+		{
+			pivot = getShipLine().getPoints().get(this.size/2);
+			//if(d == facing.opposite())
+				
+		}
+		else 
+		{
+			pivot = getShipLine().getTail();
+		}
 		return points;
 	}
 	

@@ -101,6 +101,14 @@ public class Game {
 	}
 
 	/**
+	 * @return the ships in the game
+	 */
+	public List<Ship> getShips()
+	{
+		return this.ships;
+	}
+	
+	/**
 	 * @param ship
 	 * @param line
 	 * @return
