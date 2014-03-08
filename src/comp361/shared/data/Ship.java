@@ -63,6 +63,7 @@ public class Ship  {
 		this.canTurn180 = canTurn180;
 		this.radar = radar;
 		this.longRadar = longRadar;
+		this.cannonRange = cannonRange;
 		
 		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
@@ -181,7 +182,7 @@ public class Ship  {
 	 */
 	public Range getCannonRange()
 	{
-		return null;
+		return cannonRange;
 	}
 	
 	/**
@@ -297,13 +298,13 @@ public class Ship  {
 	{
 		Point tail = new Point(position);
 		if(this.facing == Direction.UP)
-			tail = new Point((int)position.getX(), (int)(position.getY()+size));
-		if(this.facing == Direction.DOWN)
-			tail = new Point((int)position.getX(), (int)(position.getY()-size));
-		if(this.facing == Direction.LEFT)
-			tail = new Point((int)position.getX()+size, (int)position.getY());
-		if(this.facing == Direction.RIGHT)
-			tail = new Point((int)position.getX()-size, (int)position.getY());
+			tail = new Point((int)position.getX(), (int)(position.getY()+size - 1));
+		else if(this.facing == Direction.DOWN)
+			tail = new Point((int)position.getX(), (int)(position.getY()-size + 1));
+		else if(this.facing == Direction.LEFT)
+			tail = new Point((int)position.getX()+size - 1, (int)position.getY());
+		else if(this.facing == Direction.RIGHT)
+			tail = new Point((int)position.getX()-size + 1, (int)position.getY());
 		return new Line(tail, position);
 	}
 	

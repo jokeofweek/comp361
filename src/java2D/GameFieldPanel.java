@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -13,12 +14,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import javax.management.timer.Timer;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.MouseInputListener;
 
+import comp361.client.data.MoveType;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ResourceManager;
 import comp361.client.ui.SwagFactory;
@@ -217,10 +217,29 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
+	private void drawSelectionSquare(Graphics2D g, int x, int y) {
+		g.setColor(Constants.MOVE_COLOR);
+		g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+		g.setColor(Constants.MOVE_BORDER_COLOR);
+		g.drawRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+	}
+	
 	private void drawSelectionContext(Graphics2D g) {
-		if (context.getType() != null) {
-			g.setColor(Color.black);
-			g.fillRect(0, 0, 10, 10);
+		if (context.getShip() != null) {
+			if (context.getType() == MoveType.TORPEDO) {
+				// Render a move square at each 
+				for (Point p : context.getShip().getTorpedoLine().getPoints()) {
+					drawSelectionSquare(g, p.x, p.y);
+				}
+			} else if (context.getType() == MoveType.CANNON) {
+				// Get the cannon range
+				Rectangle cannonRangeRect = context.getShip().getCannonRange().getRectangle(context.getShip());
+				for (int x = 0; x < cannonRangeRect.getWidth(); x++) {
+					for (int y = 0; y < cannonRangeRect.getHeight(); y++) {
+						drawSelectionSquare(g, cannonRangeRect.x + x, cannonRangeRect.y + y);							
+					}
+				}
+			}
 		}
 	}
 

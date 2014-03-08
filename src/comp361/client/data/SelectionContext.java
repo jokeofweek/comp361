@@ -19,7 +19,7 @@ public class SelectionContext extends Observable {
 
 	public void setShip(Ship ship) {
 		this.ship = ship;
-		this.type = null;
+		this.type = MoveType.CANNON;
 		setChanged();
 		notifyObservers();
 	}
