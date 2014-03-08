@@ -13,17 +13,18 @@ import comp361.shared.data.range.TailRange;
 
 public class Ship  {
 
-	public static final Ship CRUISER_TEMPLATE = new Ship(5, 10, 0, ArmorType.HEAVY, false, false, false, false, true, false, false, false, new TailRange(10, 3), null, new CenterRange(15, 11));
-	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
+	public static final Ship CRUISER_TEMPLATE = new Ship("Cruiser", 5, 10, 0, ArmorType.HEAVY, false, false, false, false, true, false, false, false, new TailRange(10, 3), null, new CenterRange(15, 11));
+	public static final Ship DESTROYER_TEMPLATE = new Ship("Destroyer", 4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	// TODO: Fix torpedo cannon range
-	public static final Ship TORPEDO_TEMPLATE = new Ship(3, 9, 0, ArmorType.NORMAL, true, false, false, false, false, true, false, false, new TailRange(6, 3), null, new CenterRange(5, 5));
-	public static final Ship MINE_LAYER_TEMPLATE = new Ship(2, 6, 5, ArmorType.HEAVY, false, true, false, false, false, true, true, false, new CenterRange(6, 5), null, new CenterRange(4, 5));
-	public static final Ship RADAR_BOAT_TEMPLATE = new Ship(3, 3, 0, ArmorType.NORMAL, true, false, true, false, false, false, false, false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(5, 3));
+	public static final Ship TORPEDO_TEMPLATE = new Ship("Torpedo", 3, 9, 0, ArmorType.NORMAL, true, false, false, false, false, true, false, false, new TailRange(6, 3), null, new CenterRange(5, 5));
+	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6, 5, ArmorType.HEAVY, false, true, false, false, false, true, true, false, new CenterRange(6, 5), null, new CenterRange(4, 5));
+	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3, 0, ArmorType.NORMAL, true, false, true, false, false, false, false, false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(5, 3));
 	private static final int TORPEDO_RANGE = 10;
 	
 	// This is the position of the head of the ship.
 	private Point position;
 	private String owner;
+	private String name;
 	private transient Game game;
 	private int size;
 	private int speed;
@@ -47,12 +48,13 @@ public class Ship  {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Ship(int size, int speed, int mineCount, ArmorType armor,
+	public Ship(String name, int size, int speed, int mineCount, ArmorType armor,
 			boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
 			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
 			boolean canTurn180, Range radar, Range longRadar, Range cannonRange) {
 		super();
+		this.name = name;
 		this.size = size;
 		this.speed = speed;
 		this.mineCount = mineCount;
@@ -76,10 +78,14 @@ public class Ship  {
 	
 	public Ship clone(Game game, String owner)
 	{
-		Ship s = new Ship(size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar, cannonRange);
+		Ship s = new Ship(name, size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar, cannonRange);
 		s.owner = owner;
 		s.game = game;
 		return s;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	/**

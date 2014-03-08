@@ -35,16 +35,7 @@ public class GamePanel extends ClientPanel {
 
 		final SelectionContext context = new SelectionContext();
 		add(new GameFieldPanel(game, context, true), BorderLayout.CENTER);
-		
-		JButton test = new JButton("Test");
-		test.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				context.setType(MoveType.CANNON);
-			}
-		});
-		add(test, BorderLayout.WEST);
+		add(new ShipInfoPanel(context), BorderLayout.WEST );
 	}
 
 	@Override
