@@ -280,7 +280,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 	
 	@Override
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
-		System.out.println("imageUpdate");
 		repaint();
 		return true;
 	}
