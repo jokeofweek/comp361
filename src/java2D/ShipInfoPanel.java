@@ -60,6 +60,15 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			
 			if (context.getShip().hasTorpedoes()) {
 				JButton fireTorpedoButton = new JButton("Fire Torpedo");
+				fireTorpedoButton.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						context.getShip().fireTorpedo();
+						getParent().revalidate();
+						getParent().repaint();
+					}
+				});
 				infoPanel.add(fireTorpedoButton);	
 			}
 						

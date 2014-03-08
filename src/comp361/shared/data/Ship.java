@@ -266,11 +266,14 @@ public class Ship  {
 		{
 			for(Point p : getTorpedoLine().getPoints())
 			{
-				if(game.getField().getCellType(p) == CellType.BASE)
+				if(game.getField().getCellType(p) == CellType.BASE) 
 					game.getField().damageBase(p);
-				for(Ship s : game.getShips())
-					if(s.pointBelongsToShip(p))
+				for(Ship s : game.getShips()) {
+					if(s.pointBelongsToShip(p)) { 
 						s.hitWithTorpedo(p, this.facing);
+						return;
+					}
+				}
 			}		
 		}
 	}

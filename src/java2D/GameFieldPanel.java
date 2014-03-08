@@ -288,6 +288,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 						revalidate();
 						repaint();
 					}
+				} else if (context.getType() == MoveType.CANNON) {
+					if (context.getShip().getCannonRange().inRange(context.getShip(), p.x, p.y)) {
+						context.getShip().fireCannon(p);
+						revalidate();
+						repaint();
+					}
 				}
 			}
 		}
