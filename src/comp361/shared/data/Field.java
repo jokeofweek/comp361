@@ -31,6 +31,11 @@ public class Field {
 		cells[(int)p.getX()][(int)p.getY()] = cellType;
 	}
 	
+	public CellType[][] getCellTypeArray()
+	{
+		return cells;
+	}
+	
 	/**
 	 * @param p A point on the field
 	 * @return a set containing all adjacent points to p
