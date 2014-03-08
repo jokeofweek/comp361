@@ -23,7 +23,7 @@ public class GamePanel extends ClientPanel {
 		setLayout(new BorderLayout());
 
 		Game g = new Game("p1", "p2", System.currentTimeMillis());
-		add(new GameFieldPanel(g), BorderLayout.CENTER);
+		add(new GameFieldPanel(g, true), BorderLayout.CENTER);
 	}
 
 	@Override

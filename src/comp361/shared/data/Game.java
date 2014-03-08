@@ -50,9 +50,9 @@ public class Game {
 				}
 			}
 		}
-		
+
 		// Setup the ships
-		//TODO: Actually setup the ship
+		// TODO: Actually setup the ship
 		Ship s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
 		s.setPosition(new Point(3, 10));
 		s.setDirection(Direction.DOWN);
@@ -97,7 +97,33 @@ public class Game {
 	 */
 	public Set<Point> getPointsVisibleFromBase(String p) {
 		HashSet<Point> points = new HashSet<Point>();
-		// TODO: implement this
+
+		// This is the column where the base is
+		int baseX = 0;
+		// This lets us pick points either to the left of the base or to the
+		// right of it.
+		int offsetX = 0;
+		if (getP1().equals(p)) {
+			baseX = 0;
+			offsetX = 1;
+		} else if (getP2().equals(p)) {
+			baseX = Constants.MAP_WIDTH - 1;
+			offsetX = -1;
+		} else {
+			// Wtf?
+			throw new IllegalArgumentException("Not a valid player.");
+		}
+		
+		// Add the points above and below the base
+		points.add(new Point(baseX, Constants.BASE_Y_OFFSET - 1));
+		points.add(new Point(baseX, Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
+		
+		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
+			// Add the base itself as well as the point to the left/right of it.
+			points.add(new Point(baseX, y + Constants.BASE_Y_OFFSET));
+			points.add(new Point(baseX + offsetX, y + Constants.BASE_Y_OFFSET));
+		}
+
 		return points;
 	}
 

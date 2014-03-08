@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import comp361.shared.data.radar.Radar;
+import comp361.shared.data.range.Range;
+import comp361.shared.data.range.TailRange;
 
 public class Ship{
 
-	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, null, null);
+	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null);
 	
 	// This is the position of the head of the ship.
 	private Point position;
@@ -30,15 +31,15 @@ public class Ship{
 	private boolean hasTorpedoes;
 	private boolean hasSonar;
 	private boolean canTurn180;
-	private Radar radar;
-	private Radar longRadar;
+	private Range radar;
+	private Range longRadar;
 	
 	
 	public Ship(int size, int speed, int mineCount, ArmorType armor,
 			boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
 			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
-			boolean canTurn180, Radar radar, Radar longRadar) {
+			boolean canTurn180, Range radar, Range longRadar) {
 		super();
 		this.size = size;
 		this.speed = speed;
@@ -406,5 +407,16 @@ public class Ship{
 	 */
 	public boolean pointBelongsToShip(Point p) {
 		return getShipLine().contains(p);
+	}
+	
+	/**
+	 * @return the active radar, whether it's the long range or the regular range.
+	 */
+	public Range getActiveRadar() {
+		if (longRangeRadarEnabled) {
+			return longRadar;
+		} else {
+			return radar;
+		}
 	}
 }

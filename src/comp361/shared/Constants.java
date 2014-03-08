@@ -1,5 +1,6 @@
 package comp361.shared;
 
+import java.awt.Color;
 import java.nio.charset.Charset;
 
 public class Constants {
@@ -18,7 +19,6 @@ public class Constants {
 	public static final int TILE_SIZE = 20;
 	
 	// Map shape constants
-
 	public static final int MAP_WIDTH = 30;
 	public static final int MAP_HEIGHT = 30;
 	public static final int CORAL_WIDTH = 10;
@@ -27,4 +27,7 @@ public class Constants {
 	public static final int CORAL_Y_OFFSET = 3;
 	public static final int BASE_HEIGHT = 10;
 	public static final int BASE_Y_OFFSET = 10;
+	
+	// Color constants
+	public static final Color FOG_OF_WAR_COLOR = new Color(0f, 0f, 0f, 0.5f);
 }

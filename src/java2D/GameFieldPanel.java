@@ -6,8 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -22,8 +22,9 @@ import comp361.shared.data.Ship;
 public class GameFieldPanel extends JPanel {
 
 	private Game game;
+	private boolean isP1;
 
-	GameFieldPanel(Game game) {
+	GameFieldPanel(Game game, boolean isP1) {
 		SwagFactory.style(this);
 		this.game = game;
 
@@ -34,13 +35,45 @@ public class GameFieldPanel extends JPanel {
 		setMaximumSize(d);
 		setMinimumSize(d);
 		setPreferredSize(d);
+
+		this.isP1 = isP1;
 	}
 
-	private void doDrawing(Graphics g) {
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
 		Graphics2D g2d = (Graphics2D) g;
 
+		List<Ship> ownShips = game.getPlayerShips(game.getP1());
+
 		drawRectangles(g2d);
-		drawOwnShips(g2d, game.getPlayerShips(game.getP1()));
+		drawOwnShips(g2d, ownShips);
+
+		// Calculate the field of vision
+		Set<Point> fov = getFieldOfVision(ownShips);
+		drawFogOfWar(g2d, fov);
+	}
+
+	private Set<Point> getFieldOfVision(List<Ship> ships) {
+		Set<Point> points = game.getPointsVisibleFromBase(isP1 ? game.getP1()
+				: game.getP2());
+
+		// Add all the points visible from the ship
+		for (int x = 0; x < Constants.MAP_WIDTH; x++) {
+			for (int y = 0; y < Constants.MAP_HEIGHT; y++) {
+				Point p = new Point(x, y);
+				if (!points.contains(p)) {
+					for (Ship s : ships) {
+						if (s.getActiveRadar().inRange(s, x, y)) {
+							points.add(p);
+						}
+					}
+				}
+			}
+		}
+		
+		return points;
 	}
 
 	private void drawOwnShips(Graphics g, List<Ship> ships) {
@@ -55,13 +88,13 @@ public class GameFieldPanel extends JPanel {
 			g.drawImage(rm.getHeadImage(d), (int) head.getX()
 					* Constants.TILE_SIZE, (int) head.getY()
 					* Constants.TILE_SIZE, null);
-			
+
 			// Render the tail
 			Point tail = points.remove(0);
 			g.drawImage(rm.getTailImage(d), (int) tail.getX()
 					* Constants.TILE_SIZE, (int) tail.getY()
 					* Constants.TILE_SIZE, null);
-			
+
 			// Render the body
 			for (Point p : points) {
 				g.drawImage(rm.getBodyImage(d), (int) p.getX()
@@ -109,11 +142,17 @@ public class GameFieldPanel extends JPanel {
 		}
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		doDrawing(g);
-
+	public void drawFogOfWar(Graphics2D g, Set<Point> fov) {
+		g.setColor(Constants.FOG_OF_WAR_COLOR);
+		for (int x = 0; x < Constants.MAP_WIDTH; x++) {
+			for (int y = 0; y < Constants.MAP_HEIGHT; y++) {
+				// If the point isn't in the FOV, then we render the fog of war
+				if (!fov.contains(new Point(x, y))) {
+					g.fillRect(x * Constants.TILE_SIZE,
+							y * Constants.TILE_SIZE, Constants.TILE_SIZE,
+							Constants.TILE_SIZE);
+				}
+			}
+		}
 	}
 }

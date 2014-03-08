@@ -32,6 +32,6 @@ public class JoinGamePacketHandler implements
 		packet.joined = true;
 		
 		gameServer.getServer().sendToAllTCP(packet);
-
+		
 	}
 }
