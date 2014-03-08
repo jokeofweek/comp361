@@ -44,7 +44,7 @@ public class StatisticsExampleFrame extends JFrame
 			public void run() {
 				try 
 				{	
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					new StatisticsExampleFrame();
 				} 
 				catch (IOException e) 

@@ -12,7 +12,7 @@ public class Ship{
 
 	// This is the position of the head of the ship.
 	private Point position;
-	private Player owner;
+	private String owner;
 	private Game game;
 	private int size;
 	private int speed;
@@ -55,7 +55,7 @@ public class Ship{
 	/**
 	 * @return the owner of the ship
 	 */
-	public Player getOwner()
+	public String getOwner()
 	{
 		return this.owner;
 	}

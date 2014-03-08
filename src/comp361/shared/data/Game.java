@@ -4,12 +4,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Observable;
 import java.util.Set;
 
-public class Game 
+public class Game
 {
-	private Player p1;
-	private Player p2;
+	private String p1;
+	private String p2;
 	private Field field;
 	private List<Ship> ships;
 
@@ -18,7 +19,7 @@ public class Game
 	 * @param p1 The first player to play the game
 	 * @param p2 The second player to play the game
 	 */
-	public void create(Player p1, Player p2)
+	public void create(String p1, String p2)
 	{
 		//TODO: implement this
 	}
@@ -26,14 +27,14 @@ public class Game
 	/**
 	 * @return the first player
 	 */
-	public Player getP1() {
+	public String getP1() {
 		return p1;
 	}
 
 	/**
 	 * @return the second player
 	 */
-	public Player getP2() {
+	public String getP2() {
 		return p2;
 	}
 
@@ -59,7 +60,7 @@ public class Game
 	 * @param p The player to which the base belongs
 	 * @return The set of points visible from the player's base
 	 */
-	public Set<Point> getPointsVisibleFromBase(Player p)
+	public Set<Point> getPointsVisibleFromBase(String p)
 	{
 		HashSet<Point> points = new HashSet<Point>();
 		//TODO: implement this
@@ -71,7 +72,7 @@ public class Game
 	 * @param player The player 
 	 * @return Returns the visibility of the point if it is visible to the player, null otherwise
 	 */
-	public VisibilityType isVisible(Point point, Player player)
+	public VisibilityType isVisible(Point point, String player)
 	{
 		//TODO: implement this
 		return VisibilityType.WATER;
@@ -81,7 +82,7 @@ public class Game
 	 * @param p1 Player to set as Player 1
 	 * @param p2 Player to set as Player 2
 	 */
-	public void setPlayers(Player p1, Player p2)
+	public void setPlayers(String p1, String p2)
 	{
 		this.p1 = p1;
 		this.p2 = p2;
@@ -102,7 +103,7 @@ public class Game
 	 * @param p
 	 * @return
 	 */
-	public Direction getInitialDirection(Player p)
+	public Direction getInitialDirection(String p)
 	{
 		//TODO: implement this
 		return Direction.RIGHT;
@@ -192,7 +193,7 @@ public class Game
 	 * @param p A player in the game
 	 * @return A list of the ships of the specified player
 	 */
-	public List<Ship> getPlayerShips(Player p)
+	public List<Ship> getPlayerShips(String p)
 	{
 		List<Ship> playerShips = new ArrayList<Ship>();
 		for(Ship s : ships)
