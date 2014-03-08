@@ -204,7 +204,15 @@ public class Ship  {
 	{
 		if(this.getCannonRange().getRectangle(this).contains(p))
 		{
-			
+			if(this.game.getField().getCellType(p) == CellType.MINE)
+				//destroy the mine
+				this.game.getField().setCellType(p, CellType.WATER);
+			else if(this.game.getField().getCellType(p) == CellType.BASE)
+				//damage the base
+				this.game.getField().damageBase(p);
+			for(Ship s : this.game.getShips())
+				if(s.pointBelongsToShip(p))
+					s.hitWithCannon(p, this.hasHeavyCannon);
 			return true;
 		}
 		return false;
@@ -396,15 +404,7 @@ public class Ship  {
 	{
 		return health[index];
 	}
-	
-	/**
-	 * @param index the index of the position on the base
-	 */
-	public void positionShip(int index)
-	{
-		//TODO: implement this
-	}
-	
+
 	/**
 	 * @param d the new direction of the ship
 	 * @return true if the turning operation succeeds, false otherwise
