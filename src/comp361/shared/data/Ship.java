@@ -2,6 +2,7 @@ package comp361.shared.data;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class Ship{
 		this.speed = speed;
 		this.mineCount = mineCount;
 		this.armor = armor;
-		// TODO: Setup health
+		this.health = new int[size];
 		this.turnsOnCenter = turnsOnCenter;
 		this.isMineLayer = isMineLayer;
 		this.hasLongRangeRadar = hasLongRangeRadar;
@@ -57,6 +58,8 @@ public class Ship{
 		this.canTurn180 = canTurn180;
 		this.radar = radar;
 		this.longRadar = longRadar;
+		
+		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
 
 	
@@ -476,5 +479,12 @@ public class Ship{
 	 */
 	public Set<Point> getValidMovePoints() {
 		return new HashSet<>();
+	}
+	
+	/**
+	 * @return the max health of each square of the ship
+	 */
+	public int getMaxHealthPerSquare() {
+		return armor.getHealthPointsPerSquare();
 	}
 }
