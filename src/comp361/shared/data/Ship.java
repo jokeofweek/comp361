@@ -419,4 +419,11 @@ public class Ship{
 			return radar;
 		}
 	}
+	
+	/**
+	 * @return a set containing all points a ship can move to.
+	 */
+	public Set<Point> getValidMovePoints() {
+		return new HashSet<>();
+	}
 }
