@@ -10,6 +10,7 @@ import comp361.client.ui.ClientWindow;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;
 import comp361.shared.data.Field;
+import comp361.shared.data.Game;
 
 public class GamePanel extends ClientPanel {
 
@@ -21,16 +22,8 @@ public class GamePanel extends ClientPanel {
 	private void initUI() {
 		setLayout(new BorderLayout());
 
-		Field testField = new Field(Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
-
-		for (int x = 0; x < testField.getCellTypeArray().length; x = x + 2) {
-			for (int y = 0; y < testField.getCellTypeArray()[x].length; y = y + 2) {
-				Point point = new Point(x, y);
-				testField.setCellType(point, CellType.MINE);
-			}
-		}
-
-		add(new GameFieldPanel(testField), BorderLayout.CENTER);
+		Game g = new Game("p1", "p2", System.currentTimeMillis());
+		add(new GameFieldPanel(g), BorderLayout.CENTER);
 	}
 
 	@Override

@@ -16,18 +16,16 @@ import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;
 import comp361.shared.data.Field;
+import comp361.shared.data.Game;
 import comp361.shared.data.Ship;
 
 public class GameFieldPanel extends JPanel {
 
-	Field aField;
-	Map<Point, Rectangle2D> graphicField;
+	private Game game;
 
-	GameFieldPanel(Field pField) {
+	GameFieldPanel(Game game) {
 		SwagFactory.style(this);
-		aField = pField;
-		graphicField = new HashMap<Point, Rectangle2D>();
-		populateGraphicField();
+		this.game = game;
 
 		// Set dimensions
 		Dimension d = new Dimension(Constants.TILE_SIZE * Constants.MAP_WIDTH,
@@ -36,19 +34,6 @@ public class GameFieldPanel extends JPanel {
 		setMaximumSize(d);
 		setMinimumSize(d);
 		setPreferredSize(d);
-	}
-
-	private void populateGraphicField() {
-		// int x = 0;
-		// int y = 0;
-		for (int x = 0; x < aField.getCellTypeArray().length; x++) {
-			for (int y = 0; y < aField.getCellTypeArray()[x].length; y++) {
-				Point point = new Point(x, y);
-				graphicField.put(point, new Rectangle2D.Double(x
-						* Constants.TILE_SIZE, y * Constants.TILE_SIZE,
-						Constants.TILE_SIZE, Constants.TILE_SIZE));
-			}
-		}
 	}
 
 	private void doDrawing(Graphics g) {
@@ -64,37 +49,31 @@ public class GameFieldPanel extends JPanel {
 	}
 
 	public void drawRectangles(Graphics2D g) {
-		for (Point point : graphicField.keySet()) {
-			// System.out.println(graphicField.keySet().size());
-			// System.err.println(point.getX());
-			// System.err.println(point.getY());
+		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
+			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
+				Rectangle2D rect = new Rectangle2D.Double(x
+						* Constants.TILE_SIZE, y * Constants.TILE_SIZE,
+						Constants.TILE_SIZE, Constants.TILE_SIZE);
 
-			// System.out.println(aField.getCellTypeArray().length);
-			CellType type = aField.getCellTypeArray()[(int) point.getX()][(int) point
-					.getY()];
+				CellType type = game.getField().getCellTypeArray()[(int) x][(int) y];
 
-			if (type == CellType.BASE) {
-				g.setColor(Color.GREEN);
-				g.draw(graphicField.get(point));
-				g.fill(graphicField.get(point));
-			}
+				Color fillColor = Color.blue;
+				switch (type) {
+				case BASE:
+					fillColor = Color.green;
+					break;
+				case MINE:
+					fillColor = Color.red;
+					break;
+				case REEF:
+					fillColor = Color.black;
+					break;
+				}
 
-			else if (type == CellType.MINE) {
-				g.setColor(Color.RED);
-				g.draw(graphicField.get(point));
-				g.fill(graphicField.get(point));
-			}
+				g.setColor(fillColor);
+				g.draw(rect);
+				g.fill(rect);
 
-			else if (type == CellType.REEF) {
-				g.setColor(Color.BLACK);
-				g.draw(graphicField.get(point));
-				g.fill(graphicField.get(point));
-			}
-
-			else {
-				g.setColor(Color.BLUE);
-				g.draw(graphicField.get(point));
-				g.fill(graphicField.get(point));
 			}
 		}
 	}
