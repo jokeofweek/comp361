@@ -7,12 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
 
 public class Ship{
 
-	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null);
+	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	private static final int TORPEDO_RANGE = 10;
 	
 	// This is the position of the head of the ship.
@@ -35,13 +36,14 @@ public class Ship{
 	private boolean canTurn180;
 	private Range radar;
 	private Range longRadar;
+	private Range cannonRange;
 	
 	
 	public Ship(int size, int speed, int mineCount, ArmorType armor,
 			boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
 			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
-			boolean canTurn180, Range radar, Range longRadar) {
+			boolean canTurn180, Range radar, Range longRadar, Range cannonRange) {
 		super();
 		this.size = size;
 		this.speed = speed;
@@ -65,7 +67,7 @@ public class Ship{
 	
 	public Ship clone(Game game, String owner)
 	{
-		Ship s = new Ship(size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar);
+		Ship s = new Ship(size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar, cannonRange);
 		s.owner = owner;
 		s.game = game;
 		return s;
@@ -117,6 +119,14 @@ public class Ship{
 	public void setDirection(Direction direction)
 	{
 		this.facing = direction;
+	}
+	
+	/**
+	 * @return the position of the head of the ship
+	 */
+	public Point getPosition()
+	{
+		return this.position;
 	}
 	
 	/**
@@ -175,7 +185,7 @@ public class Ship{
 	{
 		if(this.getCannonRange().getRectangle(this).contains(p))
 		{
-			//TODO: implement fire cannon functionality
+			
 			return true;
 		}
 		return false;
@@ -187,7 +197,12 @@ public class Ship{
 	 */
 	public void hitWithCannon(Point p, boolean isHeavyCannon)
 	{
-		//TODO: implement this
+		if(health[getShipLine().getPoints().indexOf(p)] > 0)
+		{
+			if(isHeavyCannon)
+				health[getShipLine().getPoints().indexOf(p)] = 0;
+			else health[getShipLine().getPoints().indexOf(p)]--;
+		}
 	}
 	
 	/**

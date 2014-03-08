@@ -11,8 +11,8 @@ import comp361.shared.data.Ship;
  */
 public abstract class Range {
 
-	private int width;
-	private int height;
+	protected int width;
+	protected int height;
 
 	public Range(int width, int height) {
 		this.width = width;
