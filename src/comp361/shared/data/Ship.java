@@ -9,7 +9,6 @@ import java.util.Set;
 
 import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
-import comp361.shared.data.range.TailRange;
 
 public class Ship  {
 
@@ -501,7 +500,133 @@ public class Ship  {
 	 * @return a set containing all points a ship can move to.
 	 */
 	public Set<Point> getValidMovePoints() {
-		return new HashSet<>();
+		
+		Set<Point> points = new HashSet<Point>();
+		
+		if(this.facing == Direction.UP)
+		{
+			//The point below (behind) the ship
+			int backY = this.position.y + this.size;
+			Point backPoint = new Point(this.position.x, backY);
+			points.add(backPoint);
+			
+			//Add all the points to the right of the ship
+			int rightX = this.position.x + 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point rightPoint = new Point(this.position.x, rightX);
+				points.add(rightPoint);
+			}
+			
+			//Add all the points to the left of the ship
+			int leftX = this.position.x - 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point leftPoint = new Point(this.position.x, leftX);
+				points.add(leftPoint);
+			}
+			
+			//Add all the points above(in front of) the ship
+			Point movementCap = new Point(this.position.x, this.position.y - this.speed);
+			for(Point p : getLineTo(movementCap).getPoints())
+			{
+				points.add(p);
+			}
+		}
+		
+		else if(this.facing == Direction.DOWN)
+		{
+			//Add the point above (behind) the ship
+			int backY = this.position.y - this.size;
+			Point backPoint = new Point(this.position.x, backY);
+			points.add(backPoint);
+			
+			//Add all the points to the right of the ship
+			int rightX = this.position.x + 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point rightPoint = new Point(this.position.x, rightX);
+				points.add(rightPoint);
+			}
+			
+			//Add all the points to the left of the ship
+			int leftX = this.position.x - 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point leftPoint = new Point(this.position.x, leftX);
+				points.add(leftPoint);
+			}
+			
+			//Add all the points below(in front of) the ship
+			Point movementCap = new Point(this.position.x, this.position.y + this.speed);
+			for(Point p : getLineTo(movementCap).getPoints())
+			{
+				points.add(p);
+			}
+		}
+		
+		else if(this.facing == Direction.LEFT)
+		{
+			//Add the point to the right of (behind) the ship
+			int backX = this.position.x + this.size;
+			Point backPoint = new Point(backX, this.position.y);
+			points.add(backPoint);
+			
+			//Add all the points right above the ship
+			int topY = this.position.y - 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point topPoint = new Point(p.x, topY);
+				points.add(topPoint);
+			}
+			
+			//Add all the points right below the ship
+			int bottomY = this.position.y + 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point bottomPoint = new Point(p.x, bottomY);
+				points.add(bottomPoint);
+			}
+			
+			//Add all the points in front of the ship
+			Point movementCap = new Point(this.position.x - this.speed, this.position.y);
+			for(Point p : getLineTo(movementCap).getPoints())
+			{
+				points.add(p);
+			}
+		}
+		
+		else
+		{
+			//Add the points to the left of (behind) the ship
+			int backX = this.position.x - this.size;
+			Point backPoint = new Point(backX, this.position.y);
+			points.add(backPoint);
+			
+			//Add all the points right above the ship
+			int topY = this.position.y - 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point topPoint = new Point(p.x, topY);
+				points.add(topPoint);
+			}
+			
+			//Add all the points below the ship
+			int bottomY = this.position.y + 1;
+			for(Point p : this.getShipLine().getPoints())
+			{
+				Point bottomPoint = new Point(p.x, bottomY);
+				points.add(bottomPoint);
+			}
+			
+			//Add all the points in front of the ship
+			Point movementCap = new Point(this.position.x + this.speed, this.position.y);
+			for(Point p : getLineTo(movementCap).getPoints())
+			{
+				points.add(p);
+			}
+		}
+		return points;
 	}
 	
 	/**
