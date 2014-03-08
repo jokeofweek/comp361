@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
+import java2D.GamePanel;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -79,6 +80,15 @@ public class LoginPanel extends ClientPanel {
 		
 		registerButton = new JButton("Register");
 		registerButton.addActionListener(new RegisterActionListener());
+		
+		JButton gameButon = new JButton("Game");
+		gameButon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getClientWindow().setPanel(new GamePanel(getGameClient(), getClientWindow()));
+			}
+		});
 
 		// add everything to the panel
 		loginPanel.add(loginLabel);
@@ -90,6 +100,9 @@ public class LoginPanel extends ClientPanel {
 		loginPanel.add(loginButton);
 		loginPanel.add(Box.createVerticalBox());
 		loginPanel.add(registerButton);
+		loginPanel.add(Box.createVerticalBox());
+		loginPanel.add(gameButon);
+		
 
 		// add some style
 		setBackground(Color.WHITE);
