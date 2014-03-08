@@ -30,4 +30,5 @@ public class Constants {
 	
 	// Color constants
 	public static final Color FOG_OF_WAR_COLOR = new Color(0f, 0f, 0f, 0.5f);
+	public static final Color SHIP_SELECTION_COLOR = new Color(1.0f, 1.0f, 0f, 0.5f);
 }

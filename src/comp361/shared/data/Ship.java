@@ -158,11 +158,9 @@ public class Ship{
 	/**
 	 * @return the set of points reachable by the ship's cannon
 	 */
-	public Set<Point> getCannonRange()
+	public Range getCannonRange()
 	{
-		Set<Point> points = new HashSet<Point>();
-		//TODO: implement this
-		return points;
+		return null;
 	}
 	
 	/**
@@ -171,7 +169,7 @@ public class Ship{
 	 */
 	public boolean fireCannon(Point p)
 	{
-		if(this.getCannonRange().contains(p))
+		if(this.getCannonRange().getRectangle(this).contains(p))
 		{
 			//TODO: implement fire cannon functionality
 			return true;

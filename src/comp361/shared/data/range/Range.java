@@ -36,7 +36,7 @@ public abstract class Range {
 	 * @return True if the destination is in the radar's range.
 	 */
 	public boolean inRange(Ship source, int destinationX, int destinationY) {
-		return getVisibleRectangle(source).contains(destinationX, destinationY);
+		return getRectangle(source).contains(destinationX, destinationY);
 	}
 	
 	/**
@@ -44,5 +44,5 @@ public abstract class Range {
 	 * @param source The source ship.
 	 * @return A rectangle representing the visible area.
 	 */
-	public abstract Rectangle getVisibleRectangle(Ship source);
+	public abstract Rectangle getRectangle(Ship source);
 }

@@ -11,4 +11,12 @@ public enum Direction {
 	{
 		return values()[(this.ordinal()+2)%4];
 	}
+	
+	/**
+	 * @return true if this is left or right, else false.
+	 */
+	public boolean alongXAxis() 
+	{
+		return this == LEFT || this == RIGHT;
+	}
 }

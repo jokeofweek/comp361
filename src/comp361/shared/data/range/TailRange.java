@@ -12,7 +12,7 @@ public class TailRange extends Range {
 	}
 
 	@Override
-	public Rectangle getVisibleRectangle(Ship source) {
+	public Rectangle getRectangle(Ship source) {
 		// Get the point before the tail.
 		Point p = source.getShipLine().getPoints().get(1);
 

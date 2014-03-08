@@ -11,7 +11,7 @@ public class CenterRange extends Range {
 	}
 
 	@Override
-	public Rectangle getVisibleRectangle(Ship source) {
+	public Rectangle getRectangle(Ship source) {
 		// TODO Auto-generated method stub
 		return null;
 	}

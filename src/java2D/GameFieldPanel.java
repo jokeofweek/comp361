@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Observable;
@@ -14,6 +16,8 @@ import java.util.Set;
 import javax.management.timer.Timer;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.MouseInputListener;
 
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ResourceManager;
@@ -41,10 +45,13 @@ public class GameFieldPanel extends JPanel implements Observer {
 		setMaximumSize(d);
 		setMinimumSize(d);
 		setPreferredSize(d);
+		
 
 		this.isP1 = isP1;
 		this.context = context;
 		this.context.addObserver(this);
+		
+		this.addMouseListener(new MouseAdapter());
 	}
 
 	@Override
@@ -58,6 +65,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		drawWater(g2d);
 		drawRectangles(g2d);
+
+		// Draw ship outline for selected ship
+		if (context.getShip() != null) {
+			drawShipSelection(g2d, context.getShip());
+		}
 
 		// Calculate the field of vision
 		Set<Point> fov = getFieldOfVision(ownShips);
@@ -92,21 +104,20 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		for (Ship ship : game
 				.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
-			renderShip(g, ship, true, fov);
+			drawShip(g, ship, true, fov);
 		}
 
 		for (Ship ship : game.getPlayerShips(!isP1 ? game.getP1() : game
 				.getP2())) {
-			renderShip(g, ship, false, fov);
+			drawShip(g, ship, false, fov);
 		}
 	}
 
 	public void drawWater(Graphics g) {
 		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
 			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
-				g.drawImage(ResourceManager.getInstance().getWaterImage(),
-						x * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
-						null);
+				g.drawImage(ResourceManager.getInstance().getWaterImage(), x
+						* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
 			}
 		}
 	}
@@ -146,7 +157,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void renderShip(Graphics g, Ship ship, boolean isOwnShip,
+	public void drawShip(Graphics g, Ship ship, boolean isOwnShip,
 			Set<Point> fov) {
 
 		ResourceManager rm = ResourceManager.getInstance();
@@ -179,6 +190,20 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
+	private void drawShipSelection(Graphics2D g, Ship ship) {
+		Line2D line = ship.getShipLine();
+		g.setColor(Constants.SHIP_SELECTION_COLOR);
+		g.fillRect(Math.min((int) line.getX1(), (int) line.getX2())
+				* Constants.TILE_SIZE,
+				Math.min((int) line.getY1(), (int) line.getY2())
+						* Constants.TILE_SIZE,
+				(Math.abs((int) line.getX1() - (int) line.getX2()) + 1)
+						* Constants.TILE_SIZE,
+				(Math.abs((int) line.getY1() - (int) line.getY2()) + 1)
+						* Constants.TILE_SIZE);
+
+	}
+
 	public void drawFogOfWar(Graphics2D g, Set<Point> fov) {
 		g.setColor(Constants.FOG_OF_WAR_COLOR);
 		for (int x = 0; x < Constants.MAP_WIDTH; x++) {
@@ -208,5 +233,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 				repaint();
 			}
 		});
+	}
+	
+	private class MouseAdapter extends MouseInputAdapter {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println(e.getX() + ", "+ e.getY()
+		}
 	}
 }
