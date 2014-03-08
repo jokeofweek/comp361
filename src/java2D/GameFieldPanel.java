@@ -166,7 +166,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the head
 		Point head = points.remove(points.size() - 1);
 		if (isOwnShip || fov.contains(head)) {
-			g.drawImage(rm.getHeadImage(d), (int) head.getX()
+			g.drawImage(rm.getHeadImage(ship, isOwnShip), (int) head.getX()
 					* Constants.TILE_SIZE, (int) head.getY()
 					* Constants.TILE_SIZE, null);
 		}
@@ -174,15 +174,16 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail)) {
-			g.drawImage(rm.getTailImage(d), (int) tail.getX()
+			g.drawImage(rm.getTailImage(ship, isOwnShip), (int) tail.getX()
 					* Constants.TILE_SIZE, (int) tail.getY()
 					* Constants.TILE_SIZE, null);
 		}
 
 		// Render the body
-		for (Point p : points) {
+		for (int i = 0; i < points.size(); i++) {
+			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p)) {
-				g.drawImage(rm.getBodyImage(d), (int) p.getX()
+				g.drawImage(rm.getBodyImage(ship, i+1), (int) p.getX()
 						* Constants.TILE_SIZE, (int) p.getY()
 						* Constants.TILE_SIZE, null);
 			}
