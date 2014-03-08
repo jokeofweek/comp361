@@ -39,6 +39,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
+	private long lastImageUpdate = 0;
 
 	public GameFieldPanel(GameClient client, SelectionContext context, boolean isP1) {
 		SwagFactory.style(this);
@@ -310,7 +311,13 @@ public class GameFieldPanel extends JPanel implements Observer {
 	
 	@Override
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
-		repaint();
+		long now = System.currentTimeMillis();
+		
+		if (now - lastImageUpdate > 100) {
+			repaint();
+			lastImageUpdate = now;
+		}
+		
 		return true;
 	}
 }
