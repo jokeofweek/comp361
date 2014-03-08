@@ -17,13 +17,20 @@ public class TailRange extends Range {
 		Point p = source.getShipLine().getPoints().get(1);
 
 		switch (source.getDirection()) {
+		case LEFT:
+			return new Rectangle(p.x - getWidth() + 1, p.y
+					- ((getHeight() - 1) / 2), getWidth(), getHeight());
 		case RIGHT:
 			return new Rectangle(p.x, p.y - ((getHeight() - 1) / 2),
 					getWidth(), getHeight());
-
+		case DOWN:
+			return new Rectangle(p.x - ((getHeight() - 1) / 2), p.y,
+					getHeight(), getWidth());
+		case UP:
+			return new Rectangle(p.x - ((getHeight() - 1) / 2), p.y
+					- getWidth() + 1, getHeight(), getWidth());
 		}
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException();
 	}
 
 }
