@@ -228,9 +228,9 @@ public class Ship  {
 		Point firstPoint;
 		if(facing == Direction.LEFT)
 			firstPoint = new Point(position.x-1, position.y);
-		if(facing == Direction.UP)
+		else if(facing == Direction.UP)
 			firstPoint = new Point(position.x, position.y-1);
-		if(facing == Direction.RIGHT)
+		else if(facing == Direction.RIGHT)
 			firstPoint = new Point(position.x+1, position.y);
 		else
 			firstPoint = new Point(position.x, position.y+1);

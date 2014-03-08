@@ -22,13 +22,13 @@ public class Line extends Line2D
 	{
 		this.tail = tail;
 		if(direction == Direction.DOWN)
-			this.head = new Point((int)tail.getX(), (int)(tail.getY()+length));
+			this.head = new Point((int)tail.getX(), (int)(tail.getY()+length - 1));
 		if(direction == Direction.UP)
-			this.head = new Point((int)tail.getX(), (int)(tail.getY()-length));
+			this.head = new Point((int)tail.getX(), (int)(tail.getY()-length + 1));
 		if(direction == Direction.LEFT)
-			this.head = new Point((int)(tail.getX()-length), (int)tail.getY());
-		if(direction == Direction.DOWN)
-			this.head = new Point((int)(tail.getX()+length), (int)(tail.getY()+length));
+			this.head = new Point((int)(tail.getX()-length + 1), (int)tail.getY());
+		if(direction == Direction.RIGHT)
+			this.head = new Point((int)(tail.getX()+length + 1), (int)tail.getY());
 	}
 	
 	@Override
