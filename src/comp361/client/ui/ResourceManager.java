@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
@@ -21,6 +22,7 @@ public class ResourceManager {
 	private final String[] colors = {"blue", "red"};
 	private final String[] states = {null, "hit"};
 	
+	private final ImageIcon waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME);
 	private final Map<String, BufferedImage> images = new HashMap<String, BufferedImage>();
 
 	public static ResourceManager getInstance() {
@@ -33,7 +35,6 @@ public class ResourceManager {
 	private ResourceManager() {
 		// Load all the resources
 		try {
-			loadWaterImage();
 			loadHeadImages();
 			loadBodyImages();
 			loadTailImages();
@@ -44,8 +45,8 @@ public class ResourceManager {
 
 	}
 
-	public BufferedImage getWaterImage() {
-		return images.get(WATER_FILENAME);
+	public ImageIcon getWaterImage() {
+		return waterImage;
 	}
 
 	public BufferedImage getBodyImage(Ship s, int index) {
@@ -64,10 +65,6 @@ public class ResourceManager {
 		String state = s.getHealth(s.getSize() - 2) < s.getMaxHealthPerSquare() ? "hit" : null;
 		String filename = getFilename("tail", s.getDirection(), isOwner, state);
 		return images.get(filename);
-	}
-	
-	private void loadWaterImage() throws IOException {
-		images.put(WATER_FILENAME, ImageIO.read(new File(Constants.GFX_DATA_PATH + WATER_FILENAME)));
 	}
 	
 	private void loadHeadImages() throws IOException {

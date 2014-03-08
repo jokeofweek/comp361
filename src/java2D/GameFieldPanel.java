@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -115,8 +116,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 	public void drawWater(Graphics g) {
 		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
 			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
-				g.drawImage(ResourceManager.getInstance().getWaterImage(), x
-						* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+				Image waterImage = ResourceManager.getInstance().getWaterImage().getImage();
+				g.drawImage(waterImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 			}
 		}
 	}
@@ -275,5 +276,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
+		System.out.println("imageUpdate");
+		repaint();
+		return true;
 	}
 }
