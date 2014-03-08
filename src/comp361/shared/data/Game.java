@@ -4,10 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
-
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import comp361.client.ui.setup.CoralReefGenerator;
 import comp361.shared.Constants;
@@ -53,6 +50,13 @@ public class Game {
 				}
 			}
 		}
+		
+		// Setup the ships
+		//TODO: Actually setup the ship
+		Ship s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
+		s.setPosition(new Point(3, 10));
+		s.setDirection(Direction.DOWN);
+		ships.add(s);
 	}
 
 	/**

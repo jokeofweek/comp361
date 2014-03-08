@@ -106,6 +106,8 @@ public class StartWindow extends JFrame {
 					window.setVisible(false);
 					
 					ClientWindow clientWindow = new ClientWindow(gameClient);
+					// Load the resources
+					ResourceManager.getInstance();
 					// Create the login window
 					clientWindow.setPanel(new LoginPanel(gameClient, clientWindow));
 

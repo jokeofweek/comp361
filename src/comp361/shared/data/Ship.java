@@ -10,6 +10,8 @@ import comp361.shared.data.radar.Radar;
 
 public class Ship{
 
+	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, null, null);
+	
 	// This is the position of the head of the ship.
 	private Point position;
 	private String owner;
@@ -31,10 +33,37 @@ public class Ship{
 	private Radar radar;
 	private Radar longRadar;
 	
-	public Ship clone()
+	
+	public Ship(int size, int speed, int mineCount, ArmorType armor,
+			boolean turnsOnCenter, boolean isMineLayer,
+			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
+			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
+			boolean canTurn180, Radar radar, Radar longRadar) {
+		super();
+		this.size = size;
+		this.speed = speed;
+		this.mineCount = mineCount;
+		this.armor = armor;
+		// TODO: Setup health
+		this.turnsOnCenter = turnsOnCenter;
+		this.isMineLayer = isMineLayer;
+		this.hasLongRangeRadar = hasLongRangeRadar;
+		this.longRangeRadarEnabled = longRangeRadarEnabled;
+		this.hasHeavyCannon = hasHeavyCannon;
+		this.hasTorpedoes = hasTorpedoes;
+		this.hasSonar = hasSonar;
+		this.canTurn180 = canTurn180;
+		this.radar = radar;
+		this.longRadar = longRadar;
+	}
+
+	
+	public Ship clone(Game game, String owner)
 	{
-		//TODO: implement this
-		return null;
+		Ship s = new Ship(size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar);
+		s.owner = owner;
+		s.game = game;
+		return s;
 	}
 	
 	/**
@@ -224,6 +253,14 @@ public class Ship{
 	}
 	
 	/**
+	 * This sets the position of the ship's head.
+	 * @param position The new position.
+	 */
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+	
+	/**
 	 * @param p the target point
 	 * @return the line segment between the ship and p
 	 */
@@ -367,8 +404,7 @@ public class Ship{
 	 * @param p A point on the field
 	 * @return true if the point belongs to the ship, false otherwise
 	 */
-	public boolean pointBelongsToShip(Point p)
-	{
+	public boolean pointBelongsToShip(Point p) {
 		return getShipLine().contains(p);
 	}
 }
