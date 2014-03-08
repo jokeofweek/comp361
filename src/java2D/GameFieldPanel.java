@@ -48,10 +48,10 @@ public class GameFieldPanel extends JPanel {
 		List<Ship> ownShips = game.getPlayerShips(game.getP1());
 
 		drawRectangles(g2d);
-		drawOwnShips(g2d, ownShips);
 
 		// Calculate the field of vision
 		Set<Point> fov = getFieldOfVision(ownShips);
+		drawShips(g2d, fov);
 		drawFogOfWar(g2d, fov);
 	}
 
@@ -72,35 +72,19 @@ public class GameFieldPanel extends JPanel {
 				}
 			}
 		}
-		
+
 		return points;
 	}
 
-	private void drawOwnShips(Graphics g, List<Ship> ships) {
+	private void drawShips(Graphics g, Set<Point> fov) {
 		ResourceManager rm = ResourceManager.getInstance();
 
-		for (Ship ship : ships) {
-			// Get the ship's line
-			List<Point> points = ship.getShipLine().getPoints();
-			Direction d = ship.getDirection();
-			// Render the head
-			Point head = points.remove(points.size() - 1);
-			g.drawImage(rm.getHeadImage(d), (int) head.getX()
-					* Constants.TILE_SIZE, (int) head.getY()
-					* Constants.TILE_SIZE, null);
-
-			// Render the tail
-			Point tail = points.remove(0);
-			g.drawImage(rm.getTailImage(d), (int) tail.getX()
-					* Constants.TILE_SIZE, (int) tail.getY()
-					* Constants.TILE_SIZE, null);
-
-			// Render the body
-			for (Point p : points) {
-				g.drawImage(rm.getBodyImage(d), (int) p.getX()
-						* Constants.TILE_SIZE, (int) p.getY()
-						* Constants.TILE_SIZE, null);
-			}
+		for (Ship ship : game.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
+			renderShip(g, ship, true, fov);
+		}
+		
+		for (Ship ship : game.getPlayerShips(!isP1 ? game.getP1() : game.getP2())) {
+			renderShip(g, ship, false, fov);
 		}
 	}
 
@@ -138,6 +122,39 @@ public class GameFieldPanel extends JPanel {
 				g.draw(rect);
 				g.fill(rect);
 
+			}
+		}
+	}
+
+	public void renderShip(Graphics g, Ship ship, boolean isOwnShip,
+			Set<Point> fov) {
+
+		ResourceManager rm = ResourceManager.getInstance();
+		// Get the ship's line
+		List<Point> points = ship.getShipLine().getPoints();
+		Direction d = ship.getDirection();
+		// Render the head
+		Point head = points.remove(points.size() - 1);
+		if (isOwnShip || fov.contains(head)) {
+			g.drawImage(rm.getHeadImage(d), (int) head.getX()
+					* Constants.TILE_SIZE, (int) head.getY()
+					* Constants.TILE_SIZE, null);
+		}
+
+		// Render the tail
+		Point tail = points.remove(0);
+		if (isOwnShip || fov.contains(tail)) {
+			g.drawImage(rm.getTailImage(d), (int) tail.getX()
+					* Constants.TILE_SIZE, (int) tail.getY()
+					* Constants.TILE_SIZE, null);
+		}
+
+		// Render the body
+		for (Point p : points) {
+			if (isOwnShip || fov.contains(p)) {
+				g.drawImage(rm.getBodyImage(d), (int) p.getX()
+						* Constants.TILE_SIZE, (int) p.getY()
+						* Constants.TILE_SIZE, null);
 			}
 		}
 	}
