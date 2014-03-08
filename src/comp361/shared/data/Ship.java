@@ -11,7 +11,7 @@ import comp361.shared.data.range.TailRange;
 
 public class Ship{
 
-	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, null, null);
+	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null);
 	private static final int TORPEDO_RANGE = 10;
 	
 	// This is the position of the head of the ship.

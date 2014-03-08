@@ -45,12 +45,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 		setMaximumSize(d);
 		setMinimumSize(d);
 		setPreferredSize(d);
-		
 
 		this.isP1 = isP1;
 		this.context = context;
 		this.context.addObserver(this);
-		
+
 		this.addMouseListener(new MouseAdapter());
 	}
 
@@ -234,11 +233,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 			}
 		});
 	}
-	
+
 	private class MouseAdapter extends MouseInputAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println(e.getX() + ", "+ e.getY()
+			System.out.println(e.getX() + ", "+ e.getY());
 		}
 	}
 }
