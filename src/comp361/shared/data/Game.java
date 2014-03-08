@@ -57,10 +57,12 @@ public class Game {
 		s.setPosition(new Point(10, 10));
 		s.setDirection(Direction.LEFT);
 		ships.add(s);
+		
 		s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
 		s.setPosition(new Point(10, 20));
 		s.setDirection(Direction.RIGHT);
 		ships.add(s);
+		
 		s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
 		s.setPosition(new Point(20, 14));
 		s.setDirection(Direction.DOWN);

@@ -30,7 +30,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private boolean isP1;
 	private SelectionContext context;
 
-	GameFieldPanel(Game game, SelectionContext context, boolean isP1) {
+	public GameFieldPanel(Game game, SelectionContext context, boolean isP1) {
 		SwagFactory.style(this);
 		this.game = game;
 
@@ -56,6 +56,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		List<Ship> ownShips = game.getPlayerShips(game.getP1());
 
+		drawWater(g2d);
 		drawRectangles(g2d);
 
 		// Calculate the field of vision
@@ -89,12 +90,24 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private void drawShips(Graphics g, Set<Point> fov) {
 		ResourceManager rm = ResourceManager.getInstance();
 
-		for (Ship ship : game.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
+		for (Ship ship : game
+				.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
 			renderShip(g, ship, true, fov);
 		}
-		
-		for (Ship ship : game.getPlayerShips(!isP1 ? game.getP1() : game.getP2())) {
+
+		for (Ship ship : game.getPlayerShips(!isP1 ? game.getP1() : game
+				.getP2())) {
 			renderShip(g, ship, false, fov);
+		}
+	}
+
+	public void drawWater(Graphics g) {
+		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
+			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
+				g.drawImage(ResourceManager.getInstance().getWaterImage(),
+						x * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
+						null);
+			}
 		}
 	}
 
@@ -107,15 +120,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 				CellType type = game.getField().getCellTypeArray()[(int) x][(int) y];
 
-				// If the type is water, render the image
+				// If the type is water, skip
 				if (type == CellType.WATER) {
-					g.drawImage(ResourceManager.getInstance().getWaterImage(),
-							x * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
-							null);
 					continue;
 				}
 
-				Color fillColor = Color.blue;
+				Color fillColor = null;
 				switch (type) {
 				case BASE:
 					fillColor = Color.green;
@@ -182,7 +192,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			}
 		}
 	}
-	
+
 	private void drawSelectionContext(Graphics2D g) {
 		if (context.getType() != null) {
 			g.setColor(Color.black);
