@@ -2,9 +2,15 @@ package java2D;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 
+import javax.swing.JButton;
+
 import comp361.client.GameClient;
+import comp361.client.data.MoveType;
+import comp361.client.data.SelectionContext;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.shared.Constants;
@@ -23,7 +29,18 @@ public class GamePanel extends ClientPanel {
 		setLayout(new BorderLayout());
 
 		Game g = new Game("p1", "p2", System.currentTimeMillis());
-		add(new GameFieldPanel(g, true), BorderLayout.CENTER);
+		final SelectionContext context = new SelectionContext();
+		add(new GameFieldPanel(g, context, true), BorderLayout.CENTER);
+		
+		JButton test = new JButton("Test");
+		test.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				context.setType(MoveType.CANNON);
+			}
+		});
+		add(test, BorderLayout.WEST);
 	}
 
 	@Override

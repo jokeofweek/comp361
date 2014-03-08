@@ -7,10 +7,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
+import javax.management.timer.Timer;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import comp361.client.data.SelectionContext;
 import comp361.client.ui.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
@@ -19,12 +24,13 @@ import comp361.shared.data.Direction;
 import comp361.shared.data.Game;
 import comp361.shared.data.Ship;
 
-public class GameFieldPanel extends JPanel {
+public class GameFieldPanel extends JPanel implements Observer {
 
 	private Game game;
 	private boolean isP1;
+	private SelectionContext context;
 
-	GameFieldPanel(Game game, boolean isP1) {
+	GameFieldPanel(Game game, SelectionContext context, boolean isP1) {
 		SwagFactory.style(this);
 		this.game = game;
 
@@ -37,11 +43,14 @@ public class GameFieldPanel extends JPanel {
 		setPreferredSize(d);
 
 		this.isP1 = isP1;
+		this.context = context;
+		this.context.addObserver(this);
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.clearRect(0, 0, getWidth(), getHeight());
 
 		Graphics2D g2d = (Graphics2D) g;
 
@@ -53,6 +62,7 @@ public class GameFieldPanel extends JPanel {
 		Set<Point> fov = getFieldOfVision(ownShips);
 		drawShips(g2d, fov);
 		drawFogOfWar(g2d, fov);
+		drawSelectionContext(g2d);
 	}
 
 	private Set<Point> getFieldOfVision(List<Ship> ships) {
@@ -171,5 +181,22 @@ public class GameFieldPanel extends JPanel {
 				}
 			}
 		}
+	}
+	
+	private void drawSelectionContext(Graphics2D g) {
+		if (context.getType() != null) {
+			g.setColor(Color.black);
+			g.fillRect(0, 0, 10, 10);
+		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				repaint();
+			}
+		});
 	}
 }
