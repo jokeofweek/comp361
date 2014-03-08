@@ -64,7 +64,23 @@ public class Line extends Line2D
 	{
 		return this.head;
 	}
-
+	
+	/**
+	 * @param tail a new value for tail
+	 */
+	public void setTail(Point tail)
+	{
+		this.tail = tail;
+	}
+	
+	/**
+	 * @param head a new value for head
+	 */
+	public void setHead(Point head)
+	{
+		this.head = head;
+	}
+	
 	@Override
 	public double getX1() {
 		return tail.getX();
