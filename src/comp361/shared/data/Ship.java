@@ -242,7 +242,26 @@ public class Ship{
 		//if perpendicular, damage another adjacent square
 		if(Math.abs(shootingDirection.angleBetween(facing)) == Math.PI/2)
 		{
-			
+			if(Math.abs(facing.angle()) == Math.PI)
+			{
+				//try to damage two potential points
+				Point secondP1 = new Point(p.x,p.y+1);
+				Point secondP2 = new Point(p.x,p.y-1);
+				if(pointBelongsToShip(secondP1) && health[getShipLine().getPoints().indexOf(secondP1)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP1)]--;
+				else if(pointBelongsToShip(secondP2) && health[getShipLine().getPoints().indexOf(secondP2)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP2)]--;	
+			}
+			else
+			{
+				//try to damage two potential points
+				Point secondP1 = new Point(p.x+1,p.y);
+				Point secondP2 = new Point(p.x-1,p.y);
+				if(pointBelongsToShip(secondP1) && health[getShipLine().getPoints().indexOf(secondP1)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP1)]--;
+				else if(pointBelongsToShip(secondP2) && health[getShipLine().getPoints().indexOf(secondP2)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP2)]--;	
+			}
 		}
 	}
 	
