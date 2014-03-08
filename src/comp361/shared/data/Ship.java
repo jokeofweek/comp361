@@ -520,7 +520,7 @@ public class Ship  {
 			int rightX = this.position.x + 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point rightPoint = new Point(p.x, rightX);
+				Point rightPoint = new Point(rightX, p.y);
 				points.add(rightPoint);
 			}
 			
@@ -528,7 +528,7 @@ public class Ship  {
 			int leftX = this.position.x - 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point leftPoint = new Point(p.x, leftX);
+				Point leftPoint = new Point(leftX, p.y);
 				points.add(leftPoint);
 			}
 			
@@ -551,7 +551,7 @@ public class Ship  {
 			int rightX = this.position.x + 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point rightPoint = new Point(p.x, rightX);
+				Point rightPoint = new Point(rightX, p.y);
 				points.add(rightPoint);
 			}
 			
@@ -559,7 +559,7 @@ public class Ship  {
 			int leftX = this.position.x - 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point leftPoint = new Point(p.x, leftX);
+				Point leftPoint = new Point(leftX, p.y);
 				points.add(leftPoint);
 			}
 			
