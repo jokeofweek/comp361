@@ -2,22 +2,18 @@ package comp361.shared.data;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.KryoSerializable;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.FieldSerializer;
-
+import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
 
 public class Ship  {
 
-	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null);
+	public static final Ship DESTROYER_TEMPLATE = new Ship(4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	private static final int TORPEDO_RANGE = 10;
 	
 	// This is the position of the head of the ship.
@@ -40,6 +36,7 @@ public class Ship  {
 	private boolean canTurn180;
 	private Range radar;
 	private Range longRadar;
+	private Range cannonRange;
 	
 	public Ship() {
 		// TODO Auto-generated constructor stub
@@ -49,13 +46,13 @@ public class Ship  {
 			boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
 			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
-			boolean canTurn180, Range radar, Range longRadar) {
+			boolean canTurn180, Range radar, Range longRadar, Range cannonRange) {
 		super();
 		this.size = size;
 		this.speed = speed;
 		this.mineCount = mineCount;
 		this.armor = armor;
-		// TODO: Setup health
+		this.health = new int[size];
 		this.turnsOnCenter = turnsOnCenter;
 		this.isMineLayer = isMineLayer;
 		this.hasLongRangeRadar = hasLongRangeRadar;
@@ -66,12 +63,14 @@ public class Ship  {
 		this.canTurn180 = canTurn180;
 		this.radar = radar;
 		this.longRadar = longRadar;
+		
+		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
 
 	
 	public Ship clone(Game game, String owner)
 	{
-		Ship s = new Ship(size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar);
+		Ship s = new Ship(size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar, cannonRange);
 		s.owner = owner;
 		s.game = game;
 		return s;
@@ -130,6 +129,14 @@ public class Ship  {
 	}
 	
 	/**
+	 * @return the position of the head of the ship
+	 */
+	public Point getPosition()
+	{
+		return this.position;
+	}
+	
+	/**
 	 * @return the numbers of mines the ship is carrying
 	 */
 	public int getMineCount()
@@ -185,7 +192,7 @@ public class Ship  {
 	{
 		if(this.getCannonRange().getRectangle(this).contains(p))
 		{
-			//TODO: implement fire cannon functionality
+			
 			return true;
 		}
 		return false;
@@ -197,7 +204,12 @@ public class Ship  {
 	 */
 	public void hitWithCannon(Point p, boolean isHeavyCannon)
 	{
-		//TODO: implement this
+		if(health[getShipLine().getPoints().indexOf(p)] > 0)
+		{
+			if(isHeavyCannon)
+				health[getShipLine().getPoints().indexOf(p)] = 0;
+			else health[getShipLine().getPoints().indexOf(p)]--;
+		}
 	}
 	
 	/**
@@ -255,7 +267,26 @@ public class Ship  {
 		//if perpendicular, damage another adjacent square
 		if(Math.abs(shootingDirection.angleBetween(facing)) == Math.PI/2)
 		{
-			
+			if(Math.abs(facing.angle()) == Math.PI)
+			{
+				//try to damage two potential points
+				Point secondP1 = new Point(p.x,p.y+1);
+				Point secondP2 = new Point(p.x,p.y-1);
+				if(pointBelongsToShip(secondP1) && health[getShipLine().getPoints().indexOf(secondP1)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP1)]--;
+				else if(pointBelongsToShip(secondP2) && health[getShipLine().getPoints().indexOf(secondP2)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP2)]--;	
+			}
+			else
+			{
+				//try to damage two potential points
+				Point secondP1 = new Point(p.x+1,p.y);
+				Point secondP2 = new Point(p.x-1,p.y);
+				if(pointBelongsToShip(secondP1) && health[getShipLine().getPoints().indexOf(secondP1)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP1)]--;
+				else if(pointBelongsToShip(secondP2) && health[getShipLine().getPoints().indexOf(secondP2)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP2)]--;	
+			}
 		}
 	}
 	
@@ -471,5 +502,11 @@ public class Ship  {
 	public Set<Point> getValidMovePoints() {
 		return new HashSet<>();
 	}
-
+	
+	/**
+	 * @return the max health of each square of the ship
+	 */
+	public int getMaxHealthPerSquare() {
+		return armor.getHealthPointsPerSquare();
+	}
 }
