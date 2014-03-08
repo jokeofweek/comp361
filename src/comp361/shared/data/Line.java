@@ -18,6 +18,19 @@ public class Line extends Line2D
 		this.tail = tail;
 	}
 	
+	public Line(Point tail, Direction direction, int length)
+	{
+		this.tail = tail;
+		if(direction == Direction.DOWN)
+			this.head = new Point((int)tail.getX(), (int)(tail.getY()+length));
+		if(direction == Direction.UP)
+			this.head = new Point((int)tail.getX(), (int)(tail.getY()-length));
+		if(direction == Direction.LEFT)
+			this.head = new Point((int)(tail.getX()-length), (int)tail.getY());
+		if(direction == Direction.DOWN)
+			this.head = new Point((int)(tail.getX()+length), (int)(tail.getY()+length));
+	}
+	
 	@Override
 	public Rectangle2D getBounds2D() {
 		return new Rectangle2D.Double(tail.getX(), tail.getY(), 
@@ -128,5 +141,13 @@ public class Line extends Line2D
 		points.add(head);
 		return points;
 	}
-
+	
+	
+	/**
+	 * @return the length of the 
+	 */
+	public int getLength()
+	{
+		return (int)Math.sqrt(Math.pow(head.x-tail.x, 2)+Math.pow(head.y-tail.y, 2))+1;
+	}
 }

@@ -27,6 +27,7 @@ public class Ship{
 	private boolean hasHeavyCannon;
 	private boolean hasTorpedoes;
 	private boolean hasSonar;
+	private boolean canTurn180;
 	private Radar radar;
 	private Radar longRadar;
 	
@@ -114,6 +115,14 @@ public class Ship{
 	public boolean hasHeavyCannon()
 	{
 		return this.hasHeavyCannon();
+	}
+	
+	/**
+	 * @return true if the ship can perform 180 degrees turns, false otherwise
+	 */
+	public boolean canTurn180()
+	{
+		return this.canTurn180;
 	}
 	
 	/**
@@ -288,7 +297,20 @@ public class Ship{
 	{
 		if(this.canTurnToFace(d))
 		{
-			//turn
+			Point pivot;
+			this.facing = d;
+			if(this.turnsOnCenter)
+			{
+				//ship turns on its center
+				pivot = getShipLine().getPoints().get(this.size/2);
+				this.position = new Line(pivot, d, this.size/2).getHead();
+			}
+			else
+			{
+				//ship turns on its tail
+				pivot = getShipLine().getTail();
+				this.position = new Line(pivot, d, this.size).getHead();
+			}
 			return true;
 		}
 		return false;
@@ -300,7 +322,9 @@ public class Ship{
 	 */
 	public boolean canTurnToFace(Direction d)
 	{
-		return game.hasObstacle(getPointsInTurnRadius(d));
+		if(d == this.facing.opposite() && !canTurn180)
+			return false;
+		return !(game.hasObstacle(getPointsInTurnRadius(d))) ;
 	}
 	
 	/**
