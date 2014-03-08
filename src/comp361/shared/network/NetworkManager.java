@@ -27,6 +27,7 @@ import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.MessagePacket;
+import comp361.shared.packets.shared.SetupMessagePacket;
 
 public class NetworkManager {
 
@@ -63,6 +64,7 @@ public class NetworkManager {
 		kryo.register(UpdateReadyPacket.class);
 		kryo.register(GameDescriptorReadyUpdatePacket.class);
 		kryo.register(ChangeSeedPacket.class);
+		kryo.register(SetupMessagePacket.class);
 	}
 
 	private NetworkManager() {
