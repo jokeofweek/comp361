@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
-import comp361.client.data.MoveType;
+import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ResourceManager;
 import comp361.client.ui.SwagFactory;
@@ -27,19 +27,24 @@ import comp361.shared.Constants;
 import comp361.shared.data.CellType;
 import comp361.shared.data.Direction;
 import comp361.shared.data.Game;
+import comp361.shared.data.MoveType;
 import comp361.shared.data.Ship;
+import comp361.shared.packets.shared.GameMovePacket;
 
 public class GameFieldPanel extends JPanel implements Observer {
 
 	private static boolean GOD_MODE = false;
 	
+	private GameClient client;
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
 
-	public GameFieldPanel(Game game, SelectionContext context, boolean isP1) {
+	public GameFieldPanel(GameClient client, SelectionContext context, boolean isP1) {
 		SwagFactory.style(this);
-		this.game = game;
+
+		this.client = client;
+		this.game = client.getGameManager().getGame();
 
 		// Set dimensions
 		Dimension d = new Dimension(Constants.TILE_SIZE * Constants.MAP_WIDTH,
@@ -284,19 +289,23 @@ public class GameFieldPanel extends JPanel implements Observer {
 			if (context.getShip() != null && context.getType() != null) {
 				if (context.getType() == MoveType.MOVE) {
 					if (context.getShip().getValidMovePoints().contains(p)) {
-						context.getShip().moveShip(p);
-						revalidate();
-						repaint();
+						sendMove(p);
 					}
 				} else if (context.getType() == MoveType.CANNON) {
 					if (context.getShip().getCannonRange().inRange(context.getShip(), p.x, p.y)) {
-						context.getShip().fireCannon(p);
-						revalidate();
-						repaint();
+						sendMove(p);
 					}
 				}
 			}
 		}
+	}
+	
+	private void sendMove(Point p) {
+		GameMovePacket packet = new GameMovePacket();
+		packet.ship = client.getGameManager().getGame().getShips().indexOf(context.getShip());
+		packet.moveType = MoveType.MOVE;
+		packet.contextPoint = p;
+		client.getGameManager().applyMove(packet, true);
 	}
 	
 	@Override

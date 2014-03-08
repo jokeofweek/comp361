@@ -309,8 +309,7 @@ public class NewGamePanel extends ClientPanel {
 		} else if (arg instanceof GameStartPacket) {
 			// Switch screens
 			getClientWindow().setPanel(
-					new GamePanel(getGameClient(), getClientWindow(),
-							getGameClient().getGame()));
+					new GamePanel(getGameClient(), getClientWindow()));
 			return;
 		}
 

@@ -3,36 +3,54 @@ package java2D;
 import java.awt.BorderLayout;
 import java.util.Observable;
 
+import javax.swing.SwingUtilities;
+
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
-import comp361.shared.data.Game;
 
 public class GamePanel extends ClientPanel {
 	
+	private GameFieldPanel fieldPanel;
+	private ShipInfoPanel infoPanel;
+	
 	public GamePanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
-		initUI(new Game("p1", "p2", System.currentTimeMillis()), true);
+		initUI(gameClient);
 	}
 
-	public GamePanel(GameClient gameClient, ClientWindow clientWindow, Game game) {
-		super(gameClient, clientWindow, new BorderLayout());
-		initUI(game, gameClient.getPlayerName().equals(game.getP1()));
-	}
-
-	private void initUI(Game game, boolean isP1) {
+	private void initUI(GameClient client) {
 		setLayout(new BorderLayout());
 
 		final SelectionContext context = new SelectionContext();
-		add(new GameFieldPanel(game, context, isP1), BorderLayout.CENTER);
-		add(new ShipInfoPanel(context), BorderLayout.WEST );
+		fieldPanel = new GameFieldPanel(client, context, client.getGameManager().isPlayer1());
+		add(fieldPanel, BorderLayout.CENTER);
+		
+		infoPanel = new ShipInfoPanel(client, context); 
+		add(infoPanel, BorderLayout.WEST );
 	}
 
 	@Override
+	public void enter() {
+		getGameClient().getGameManager().addObserver(this);
+	}
+	
+	@Override
+	public void exit() {
+		getGameClient().getGameManager().deleteObserver(this);
+	}
+	
+	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
-
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				revalidate();
+				repaint();
+			}
+		});
 	}
 
 }

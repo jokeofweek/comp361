@@ -12,7 +12,7 @@ public class GameStartPacketHandler implements
 		for (Ship s : packet.game.getShips()) {
 			s.setGame(packet.game);
 		}
-		gameClient.setGame(packet.game);
+		gameClient.getGameManager().setGame(packet.game);
 		gameClient.publishMessage(packet);
 	}
 }

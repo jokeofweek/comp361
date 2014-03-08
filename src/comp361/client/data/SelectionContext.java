@@ -2,6 +2,7 @@ package comp361.client.data;
 
 import java.util.Observable;
 
+import comp361.shared.data.MoveType;
 import comp361.shared.data.Ship;
 
 public class SelectionContext extends Observable {

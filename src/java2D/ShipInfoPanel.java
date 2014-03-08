@@ -12,18 +12,22 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import comp361.client.data.MoveType;
+import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
 import comp361.shared.Constants;
+import comp361.shared.data.MoveType;
+import comp361.shared.packets.shared.GameMovePacket;
 
 public class ShipInfoPanel extends JPanel implements Observer {
 
 	private SelectionContext context;
 	private JPanel infoPanel = new JPanel();
+	private GameClient client;
 	
-	public ShipInfoPanel(SelectionContext context) {
+	public ShipInfoPanel(GameClient client, SelectionContext context) {
 		super(new BorderLayout());
 		
+		this.client = client;
 		this.context = context;
 		context.addObserver(this);
 		
@@ -64,9 +68,10 @@ public class ShipInfoPanel extends JPanel implements Observer {
 					
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						context.getShip().fireTorpedo();
-						getParent().revalidate();
-						getParent().repaint();
+						GameMovePacket packet = new GameMovePacket();
+						packet.ship = client.getGameManager().getGame().getShips().indexOf(context.getShip());
+						packet.moveType = MoveType.TORPEDO;
+						client.getGameManager().applyMove(packet, true);
 					}
 				});
 				infoPanel.add(fireTorpedoButton);	

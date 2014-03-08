@@ -5,6 +5,7 @@ import java.util.Observable;
 
 import com.esotericsoftware.kryonet.Client;
 import comp361.client.data.GameDescriptorManager;
+import comp361.client.data.GameManager;
 import comp361.client.data.PlayerManager;
 import comp361.client.network.ClientPacketListener;
 import comp361.shared.data.Game;
@@ -13,9 +14,9 @@ import comp361.shared.network.NetworkManager;
 public class GameClient extends Observable {
 
 	private Client client;
-	private PlayerManager playerManager;
 	private String playerName;
-	private Game game;
+	private GameManager gameManager;
+	private PlayerManager playerManager;
 	private GameDescriptorManager gameDescriptorManager;
 	
 	/**
@@ -32,11 +33,10 @@ public class GameClient extends Observable {
 		this.client = new Client(8192, 8192);
 		client.start();
 
-		// Create the player manager
+		// Create the managers
 		this.playerManager = new PlayerManager();
-		
-		// Create the game descriptor manager
 		this.gameDescriptorManager = new GameDescriptorManager();
+		this.gameManager = new GameManager(this);
 		
 		// For consistency, the classes to be sent over the network are
 		// registered by the same method for both the client and server.
@@ -82,12 +82,8 @@ public class GameClient extends Observable {
 		this.playerName = playerName;
 	}
 	
-	public Game getGame() {
-		return game;
-	}
-	
-	public void setGame(Game game) {
-		this.game = game;
+	public GameManager getGameManager() {
+		return gameManager;
 	}
 	
 }

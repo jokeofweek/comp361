@@ -1,4 +1,4 @@
-package comp361.client.data;
+package comp361.shared.data;
 
 public enum MoveType {
 	MOVE,
