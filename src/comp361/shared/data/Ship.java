@@ -9,6 +9,7 @@ import java.util.Set;
 
 import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
+import comp361.shared.data.range.TailRange;
 
 public class Ship  {
 
@@ -514,7 +515,7 @@ public class Ship  {
 			int rightX = this.position.x + 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point rightPoint = new Point(this.position.x, rightX);
+				Point rightPoint = new Point(p.x, rightX);
 				points.add(rightPoint);
 			}
 			
@@ -522,12 +523,12 @@ public class Ship  {
 			int leftX = this.position.x - 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point leftPoint = new Point(this.position.x, leftX);
+				Point leftPoint = new Point(p.x, leftX);
 				points.add(leftPoint);
 			}
 			
 			//Add all the points above(in front of) the ship
-			Point movementCap = new Point(this.position.x, this.position.y - this.speed);
+			Point movementCap = new Point(this.position.x, this.position.y - this.speed - 1);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
 				points.add(p);
@@ -545,7 +546,7 @@ public class Ship  {
 			int rightX = this.position.x + 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point rightPoint = new Point(this.position.x, rightX);
+				Point rightPoint = new Point(p.x, rightX);
 				points.add(rightPoint);
 			}
 			
@@ -553,12 +554,12 @@ public class Ship  {
 			int leftX = this.position.x - 1;
 			for(Point p : this.getShipLine().getPoints())
 			{
-				Point leftPoint = new Point(this.position.x, leftX);
+				Point leftPoint = new Point(p.x, leftX);
 				points.add(leftPoint);
 			}
 			
 			//Add all the points below(in front of) the ship
-			Point movementCap = new Point(this.position.x, this.position.y + this.speed);
+			Point movementCap = new Point(this.position.x, this.position.y + this.speed + 1);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
 				points.add(p);
@@ -589,7 +590,7 @@ public class Ship  {
 			}
 			
 			//Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x - this.speed, this.position.y);
+			Point movementCap = new Point(this.position.x - this.speed - 1, this.position.y);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
 				points.add(p);
@@ -620,7 +621,7 @@ public class Ship  {
 			}
 			
 			//Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x + this.speed, this.position.y);
+			Point movementCap = new Point(this.position.x + this.speed + 1, this.position.y);
 			for(Point p : getLineTo(movementCap).getPoints())
 			{
 				points.add(p);
