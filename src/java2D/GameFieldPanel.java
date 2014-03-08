@@ -31,6 +31,8 @@ import comp361.shared.data.Ship;
 
 public class GameFieldPanel extends JPanel implements Observer {
 
+	private static boolean GOD_MODE = false;
+	
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
@@ -74,7 +76,9 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Calculate the field of vision
 		Set<Point> fov = getFieldOfVision(ownShips);
 		drawShips(g2d, fov);
-		drawFogOfWar(g2d, fov);
+		if (!GOD_MODE) {
+			drawFogOfWar(g2d, fov);
+		}
 		drawSelectionContext(g2d);
 	}
 
@@ -166,7 +170,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		Direction d = ship.getDirection();
 		// Render the head
 		Point head = points.remove(points.size() - 1);
-		if (isOwnShip || fov.contains(head)) {
+		if (isOwnShip || fov.contains(head) || GOD_MODE) {
 			g.drawImage(rm.getHeadImage(ship, isOwnShip), (int) head.getX()
 					* Constants.TILE_SIZE, (int) head.getY()
 					* Constants.TILE_SIZE, null);
@@ -174,7 +178,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		// Render the tail
 		Point tail = points.remove(0);
-		if (isOwnShip || fov.contains(tail)) {
+		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
 			g.drawImage(rm.getTailImage(ship, isOwnShip), (int) tail.getX()
 					* Constants.TILE_SIZE, (int) tail.getY()
 					* Constants.TILE_SIZE, null);
@@ -183,7 +187,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the body
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
-			if (isOwnShip || fov.contains(p)) {
+			if (isOwnShip || fov.contains(p) || GOD_MODE) {
 				g.drawImage(rm.getBodyImage(ship, i+1), (int) p.getX()
 						* Constants.TILE_SIZE, (int) p.getY()
 						* Constants.TILE_SIZE, null);

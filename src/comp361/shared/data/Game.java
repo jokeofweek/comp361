@@ -56,32 +56,19 @@ public class Game {
 		}
 
 		// Setup the ships
-		// TODO: Actually setup the ship
-		Ship[] templates = {Ship.CRUISER_TEMPLATE,Ship.CRUISER_TEMPLATE,Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE, Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE};
-		Ship s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
-		s.setPosition(new Point(10, 10));
-		s.setDirection(Direction.LEFT);
-		ships.add(s);
+		Ship[] templates = {Ship.CRUISER_TEMPLATE,Ship.CRUISER_TEMPLATE,
+				Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, 
+				Ship.TORPEDO_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE, 
+				Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE};
 		
-		s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
-		s.setPosition(new Point(10, 20));
-		s.setDirection(Direction.RIGHT);
-		ships.add(s);
-		
-		s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
-		s.setPosition(new Point(20, 14));
-		s.setDirection(Direction.DOWN);
-		ships.add(s);
-		
-		s = Ship.DESTROYER_TEMPLATE.clone(this, p1);
-		s.setPosition(new Point(24, 14));
-		s.setDirection(Direction.UP);
-		ships.add(s);
-		
-		s = Ship.DESTROYER_TEMPLATE.clone(this, p2);
-		s.setPosition(new Point(24, 10));
-		s.setDirection(Direction.LEFT);
-		ships.add(s);
+		for (int i = 0; i < templates.length; i++) {
+			Ship s = templates[i].clone(this, p1);
+			placeShipAt(s, i);
+			Ship s2 = templates[i].clone(this, p2);
+			placeShipAt(s2, i);
+			ships.add(s);
+			ships.add(s2);
+		}
 	}
 
 	/**
@@ -222,16 +209,16 @@ public class Game {
 		
 		// If the ship was at index 0 or passed the length of the base, we just put it at x.
 		if (index == 0) {
-			s.setPosition(new Point(x + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET - 1));
+			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET - 1));
 			return;
 		} else if (index == Constants.BASE_HEIGHT + 1) {
-			s.setPosition(new Point(x + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
+			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
 			return;
 		}
 		
 		// Position it at the right place on the ship
 		index--;
-		s.setPosition(new Point(x + xOffset + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + index));
+		s.setPosition(new Point(x + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + index));
 	}
 
 	/**
