@@ -335,8 +335,20 @@ public class Ship  {
 	public void moveShip(Point p)
 	{
 		Line trajectory = getLineTo(p);
-		if(!game.hasObstacle(trajectory.getPoints()))
+		List<Point> points = trajectory.getPoints();
+		// Remove the head.
+		points.remove(0);
+		
+		Point obstacle = game.getClosestObstaclePosition(points);
+		if (obstacle == null) {
 			this.position = p;
+		} else {
+			for (int i = 0; i < points.size() - 1; i++) {
+				if (points.get(i + 1).equals(obstacle)) {
+					this.position = points.get(i);
+				}
+			}
+		}
 	}
 	
 	/**

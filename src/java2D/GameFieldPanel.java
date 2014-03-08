@@ -279,6 +279,17 @@ public class GameFieldPanel extends JPanel implements Observer {
 					return;
 				}
 			}
+			
+			// See if we have a selection context and we clicked on it
+			if (context.getShip() != null && context.getType() != null) {
+				if (context.getType() == MoveType.MOVE) {
+					if (context.getShip().getValidMovePoints().contains(p)) {
+						context.getShip().moveShip(p);
+						revalidate();
+						repaint();
+					}
+				}
+			}
 		}
 	}
 	
