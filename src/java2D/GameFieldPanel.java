@@ -63,7 +63,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		List<Ship> ownShips = game.getPlayerShips(game.getP1());
+		List<Ship> ownShips = game.getPlayerShips(isP1 ? game.getP1() : game.getP2());
 
 		drawWater(g2d);
 		drawRectangles(g2d);
