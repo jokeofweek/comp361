@@ -72,7 +72,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		List<Ship> ownShips = game.getPlayerShips(isP1 ? game.getP1() : game.getP2());
 
 		drawWater(g2d);
-		drawRectangles(g2d);
+		drawTiles(g2d);
 
 		// Draw ship outline for selected ship
 		if (context.getShip() != null) {
@@ -132,7 +132,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void drawRectangles(Graphics2D g) {
+	public void drawTiles(Graphics2D g) {
 		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
 			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
 				Rectangle2D rect = new Rectangle2D.Double(x
@@ -140,11 +140,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 						Constants.TILE_SIZE, Constants.TILE_SIZE);
 
 				CellType type = game.getField().getCellTypeArray()[(int) x][(int) y];
-
-				// If the type is water, skip
-				if (type == CellType.WATER) {
-					continue;
-				}
 
 				Color fillColor = null;
 				switch (type) {
@@ -155,8 +150,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 					fillColor = Color.red;
 					break;
 				case REEF:
-					fillColor = Color.black;
-					break;
+					drawReef(g, x, y);
+					continue;
+				default:
+					continue;
 				}
 
 				g.setColor(fillColor);
@@ -199,6 +196,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 						* Constants.TILE_SIZE, null);
 			}
 		}
+	}
+
+	private void drawReef(Graphics2D g, int x, int y) {
+		g.drawImage(ResourceManager.getInstance().getReefImage(),
+				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {

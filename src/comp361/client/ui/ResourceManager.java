@@ -17,6 +17,7 @@ public class ResourceManager {
 	private static ResourceManager instance;
 	
 	private final String WATER_FILENAME = "bg-anim.gif";
+	private final String REEF_FILENAME = "reef.png";
 	
 	private final Direction[] directions = Direction.values();
 	private final String[] colors = {"blue", "red"};
@@ -38,6 +39,7 @@ public class ResourceManager {
 			loadHeadImages();
 			loadBodyImages();
 			loadTailImages();
+			loadReefImage();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -67,6 +69,11 @@ public class ResourceManager {
 		return images.get(filename);
 	}
 	
+	public BufferedImage getReefImage() {
+		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
+		return images.get(filename);
+	}
+
 	private void loadHeadImages() throws IOException {
 		String filename = null;
 		BufferedImage image = null;
@@ -110,6 +117,12 @@ public class ResourceManager {
 		}
 	}
 	
+	private void loadReefImage() throws IOException {
+		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
+		BufferedImage image = ImageIO.read(new File(filename));
+		images.put(filename, image);
+	}
+
 	private String getFilename(String part, Direction dir, String state) {
 		return getFilename(part, dir, null, state);
 	}
