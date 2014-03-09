@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.lobby.LobbyPanel;
+import comp361.shared.Constants;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.shared.MessagePacket;
 
@@ -111,7 +112,7 @@ public class ChatPanel extends JPanel {
 				}
 
 				NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
-				packet.maxPlayers = 2;
+				packet.maxPlayers = Constants.NUM_PLAYERS;
 				packet.name = "" + System.currentTimeMillis();
 				packet.password = "";
 				gameClient.getClient().sendTCP(packet);
