@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -132,11 +135,26 @@ public class ChatPanel extends JPanel {
 				// no HTML in there that shouldn't be there. This will make it so <b> gets shown as 
 				// is instead of bolding text.
 				
-				// Add the sender if it's there.
-				if (packet.senderName != null) {
-					message += "<b>" + StringEscapeUtils.escapeHtml4(packet.senderName) + "</b>: ";
+				if (packet.isSelfAction) {
+					// Message is a self action sent with "/me"
+					String sender = packet.senderName;
+					
+					// Set default sender value
+					if (sender == null) {
+						sender = "A player";
+					}
+					
+					message += "<i>";
+					message += StringEscapeUtils.escapeHtml4(sender + " " + packet.message);
+					message += "</i>";
+				} else {
+					// Add the sender if it's there.
+					if (packet.senderName != null) {
+						message += "<b>" + StringEscapeUtils.escapeHtml4(packet.senderName) + "</b>: ";
+					}
+					message += StringEscapeUtils.escapeHtml4(packet.message);
 				}
-				message += StringEscapeUtils.escapeHtml4(packet.message);
+				
 				// Insert the message then scroll to the bottom.
 				try {
 					
@@ -158,26 +176,56 @@ public class ChatPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// If we have a message, we want to send it
+			String message = messageField.getText();
+			boolean isSelfAction = false;
 			
-			if (!messageField.getText().isEmpty()) {
-				// Send the message
-				MessagePacket messagePacket = new MessagePacket();
-				messagePacket.message = messageField.getText();
-				messagePacket.senderName = gameClient.getPlayerName();
-				gameClient.getClient().sendTCP(messagePacket);
-				publishChatMessage(messagePacket);
-				
-				// Clear the message field
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						messageField.setText("");
-						messageField.requestFocusInWindow();
-					}
-				});
+			// Bail if message is empty
+			if (message.isEmpty()) {
+				return;
 			}
+			
+			// Check for '/' commands
+			if (message.charAt(0) == '/' && message.length() > 1) {
+				// Remote '/' from beginning of message
+				message = message.substring(1);
+				
+				// Tokenize message
+				List<String> tokens = new ArrayList<String>(Arrays.asList(message.split(" ")));
+				String command = tokens.remove(0);
+				
+				if (command.equals("me") && tokens.size() > 1) {
+					message = join(tokens);
+					isSelfAction = true;
+				}
+			}
+
+			// Send the message
+			MessagePacket messagePacket = new MessagePacket();
+			messagePacket.message = message;
+			messagePacket.senderName = gameClient.getPlayerName();
+			messagePacket.isSelfAction = isSelfAction;
+			gameClient.getClient().sendTCP(messagePacket);
+			publishChatMessage(messagePacket);
+			
+			// Clear the message field
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					messageField.setText("");
+					messageField.requestFocusInWindow();
+				}
+			});
 		}
-		
+
+		private String join(List<String> words) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < words.size(); i++) {
+				sb.append(words.get(i));
+				if (i != words.size() - 1) {
+					sb.append(" ");
+				}
+			}
+			return sb.toString();
+		}
 	}
 }
