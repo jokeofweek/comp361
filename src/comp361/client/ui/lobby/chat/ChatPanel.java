@@ -111,11 +111,7 @@ public class ChatPanel extends JPanel {
 					return;
 				}
 
-				NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
-				packet.maxPlayers = Constants.NUM_PLAYERS;
-				packet.name = "" + System.currentTimeMillis();
-				packet.password = "";
-				gameClient.getClient().sendTCP(packet);
+				sendNewGamePacket("" + System.currentTimeMillis(), "");
 			}
 		});
 
@@ -171,7 +167,13 @@ public class ChatPanel extends JPanel {
 		});
 	}
 	
-	
+	private void sendNewGamePacket(String name, String password) {
+		NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
+		packet.maxPlayers = Constants.NUM_PLAYERS;
+		packet.name = name;
+		packet.password = password;
+		gameClient.getClient().sendTCP(packet);
+	}
 	
 	private class SendChatAction extends AbstractAction {
 
@@ -197,6 +199,14 @@ public class ChatPanel extends JPanel {
 				if (command.equals("me") && tokens.size() > 1) {
 					message = join(tokens);
 					isSelfAction = true;
+				} else if (command.equals("newgame") && tokens.size() == 2) {
+					String name = tokens.remove(0);
+					String password = tokens.remove(0);
+					sendNewGamePacket(name, password);
+					return;
+				} else {
+					// Ignore any unrecognized commands
+					return;
 				}
 			}
 
