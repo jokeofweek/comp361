@@ -1,9 +1,9 @@
 package comp361.client.ui.lobby.chat;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
@@ -15,9 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -26,6 +24,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.lobby.LobbyPanel;
+import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class ChatPanel extends JPanel {
@@ -99,6 +98,20 @@ public class ChatPanel extends JPanel {
 		messagePanel.add(messageField, BorderLayout.CENTER);
 		messagePanel.add(sendButton, BorderLayout.EAST);
 		
+		messageField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (!e.isControlDown() || e.getKeyCode() != KeyEvent.VK_1) {
+					return;
+				}
+
+				NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
+				packet.maxPlayers = 2;
+				packet.name = "" + System.currentTimeMillis();
+				packet.password = "";
+				gameClient.getClient().sendTCP(packet);
+			}
+		});
+
 		return messagePanel;
 	}
 	
