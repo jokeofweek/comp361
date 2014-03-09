@@ -8,24 +8,26 @@ public class PlayerUpdatePacketHandler implements ClientPacketHandler<PlayerUpda
 
 	@Override
 	public void handle(GameClient gameClient, PlayerUpdatePacket object) {
+		String message = "";
+
 		// Check if player is logging in, out, or updating
-		MessagePacket message;
 		switch (object.status) {
 		case LOGGED_IN:
 			gameClient.getPlayerManager().addPlayer(object.player);
-			message = new MessagePacket();
-			message.message = object.player.getName() + " has connected.";
-			gameClient.publishMessage(message);
+			message = object.player.getName() + " has connected.";
 			break;
 		case LOGGED_OUT:
 			gameClient.getPlayerManager().removePlayer(object.player.getName());
-			message = new MessagePacket();
-			message.message = object.player.getName() + " has disconnected.";
-			gameClient.publishMessage(message);
+			message = object.player.getName() + " has disconnected.";
 			break;
 		case UPDATE:
 			throw new RuntimeException("Not implemented yet.");
 		}
+
+		MessagePacket messagePacket = new MessagePacket();
+		messagePacket.message = message;
+		messagePacket.isMetaMessage = true;
+		gameClient.publishMessage(messagePacket);
 	}
 
 }

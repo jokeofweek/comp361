@@ -132,17 +132,13 @@ public class ChatPanel extends JPanel {
 				// no HTML in there that shouldn't be there. This will make it so <b> gets shown as 
 				// is instead of bolding text.
 				
-				if (packet.isSelfAction) {
+				if (packet.isMetaMessage) {
 					// Message is a self action sent with "/me"
-					String sender = packet.senderName;
-					
-					// Set default sender value
-					if (sender == null) {
-						sender = "A player";
-					}
-					
 					message += "<i>";
-					message += StringEscapeUtils.escapeHtml4(sender + " " + packet.message);
+					if (packet.senderName != null) {
+						StringEscapeUtils.escapeHtml4(packet.senderName + " ");
+					}
+					message += StringEscapeUtils.escapeHtml4(packet.message);
 					message += "</i>";
 				} else {
 					// Add the sender if it's there.
@@ -180,7 +176,7 @@ public class ChatPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String message = messageField.getText();
-			boolean isSelfAction = false;
+			boolean isMetaMessage = false;
 			
 			// Bail if message is empty
 			if (message.isEmpty()) {
@@ -199,7 +195,7 @@ public class ChatPanel extends JPanel {
 				
 				if (command.equals("me") && numTokens > 1) {
 					message = join(tokens);
-					isSelfAction = true;
+					isMetaMessage = true;
 				} else if (command.equals("newgame")) {
 					// Bail if not enough tokens
 					if (numTokens != 1 && numTokens != 2) {
@@ -217,6 +213,13 @@ public class ChatPanel extends JPanel {
 					return;
 				} else {
 					// Ignore any unrecognized commands
+					messageField.setText("");
+					
+					// Inform player of invalid command
+					MessagePacket invalidCommandPacket = new MessagePacket();
+					invalidCommandPacket.message = "\"" + command + "\" is not a valid command";
+					invalidCommandPacket.isMetaMessage = true;
+					publishChatMessage(invalidCommandPacket);
 					return;
 				}
 			}
@@ -225,7 +228,7 @@ public class ChatPanel extends JPanel {
 			MessagePacket messagePacket = new MessagePacket();
 			messagePacket.message = message;
 			messagePacket.senderName = gameClient.getPlayerName();
-			messagePacket.isSelfAction = isSelfAction;
+			messagePacket.isMetaMessage = isMetaMessage;
 			gameClient.getClient().sendTCP(messagePacket);
 			publishChatMessage(messagePacket);
 			
