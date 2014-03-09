@@ -200,7 +200,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawMine(Graphics2D g, int x, int y) {
 		g.drawImage(ResourceManager.getInstance().getMineImage(), x
-				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
 	private void drawBase(Graphics2D g, int x, int y) {
@@ -209,10 +209,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	public void drawWater(Graphics g, int x, int y) {
-		Image waterImage = ResourceManager.getInstance().getWaterImage()
-				.getImage();
-		g.drawImage(waterImage, x * Constants.TILE_SIZE, y
-				* Constants.TILE_SIZE, this);
+		g.drawImage(ResourceManager.getInstance().getWaterImage(),
+				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {

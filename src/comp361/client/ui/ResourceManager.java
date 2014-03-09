@@ -1,5 +1,6 @@
 package comp361.client.ui;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,14 +19,15 @@ public class ResourceManager {
 	
 	private final String WATER_FILENAME = "bg-anim.gif";
 	private final String REEF_FILENAME = "reef.png";
-	private final String MINE_FILENAME = "mine.png";
+	private final String MINE_FILENAME = "mine-anim.gif";
 	
 	private final Direction[] directions = Direction.values();
 	private final String[] colors = {"blue", "red"};
 	private final String[] states = {null, "hit"};
 	private final String[] baseParts = {"base-top", "base-body", "base-bottom"};
 	
-	private final ImageIcon waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME);
+	private final Image waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME).getImage();
+	private final Image mineImage = new ImageIcon(Constants.GFX_DATA_PATH + MINE_FILENAME).getImage();
 	private final Map<String, BufferedImage> images = new HashMap<String, BufferedImage>();
 
 	public static ResourceManager getInstance() {
@@ -43,7 +45,6 @@ public class ResourceManager {
 			loadTailImages();
 			loadReefImage();
 			loadBaseImages();
-			loadMineImage();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -51,7 +52,7 @@ public class ResourceManager {
 
 	}
 
-	public ImageIcon getWaterImage() {
+	public Image getWaterImage() {
 		return waterImage;
 	}
 
@@ -95,9 +96,8 @@ public class ResourceManager {
 		return images.get(filename);
 	}
 	
-	public BufferedImage getMineImage() {
-		String filename = getFilename("mine", -1, null);
-		return images.get(filename);
+	public Image getMineImage() {
+		return mineImage;
 	}
 
 	private void loadHeadImages() throws IOException {
@@ -158,12 +158,6 @@ public class ResourceManager {
 			image = ImageIO.read(new File(filename));
 			images.put(filename, image);
 		}
-	}
-	
-	private void loadMineImage() throws IOException {
-		String filename = Constants.GFX_DATA_PATH + MINE_FILENAME;
-		BufferedImage image = ImageIO.read(new File(filename));
-		images.put(filename, image);
 	}
 
 	private String getFilename(String part, int variant, String state) {
