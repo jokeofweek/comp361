@@ -32,6 +32,10 @@ public class GameManager extends Observable {
 		return game.getP1().equals(client.getPlayerName());
 	}
 	
+	public boolean isTurn() {
+		return isTurn;
+	}
+	
 	public void applyMove(GameMovePacket packet, boolean isOwn) {
 		// If it's not your turn, do nothing
 		System.out.println(isOwn + "," + isTurn);
