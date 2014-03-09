@@ -4,5 +4,6 @@ public enum MoveType {
 	MOVE,
 	TURN,
 	CANNON,
-	TORPEDO
+	TORPEDO, 
+	REPAIR
 }

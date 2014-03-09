@@ -64,8 +64,8 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			
 			if (context.getShip().hasTorpedoes()) {
 				JButton fireTorpedoButton = new JButton("Fire Torpedo");
+				// On fire torpedo, build a game move packet and apply it.
 				fireTorpedoButton.addActionListener(new ActionListener() {
-					
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						GameMovePacket packet = new GameMovePacket();
@@ -75,6 +75,21 @@ public class ShipInfoPanel extends JPanel implements Observer {
 					}
 				});
 				infoPanel.add(fireTorpedoButton);	
+			}
+			
+			// If we can repair the ship, add the repair button
+			if (client.getGameManager().getGame().canRepair(context.getShip())) {
+				JButton repairButton = new JButton("Repair");
+				repairButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						GameMovePacket packet = new GameMovePacket();
+						packet.ship = client.getGameManager().getGame().getShips().indexOf(context.getShip());
+						packet.moveType = MoveType.REPAIR;
+						client.getGameManager().applyMove(packet, true);
+					}
+				});
+				infoPanel.add(repairButton);
 			}
 						
 		} else {

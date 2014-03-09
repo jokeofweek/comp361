@@ -19,7 +19,7 @@ public class Game {
 	public Game() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * Creates a new game
 	 * 
@@ -57,11 +57,12 @@ public class Game {
 		}
 
 		// Setup the ships
-		Ship[] templates = {Ship.CRUISER_TEMPLATE,Ship.CRUISER_TEMPLATE,
-				Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE, 
-				Ship.TORPEDO_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE, 
-				Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE};
-		
+		Ship[] templates = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
+				Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE,
+				Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE,
+				Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE,
+				Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE };
+
 		for (int i = 0; i < templates.length; i++) {
 			Ship s = templates[i].clone(this, p1);
 			placeShipAt(s, i);
@@ -96,11 +97,10 @@ public class Game {
 	/**
 	 * @return the ships in the game
 	 */
-	public List<Ship> getShips()
-	{
+	public List<Ship> getShips() {
 		return this.ships;
 	}
-	
+
 	/**
 	 * @param ship
 	 * @param line
@@ -134,11 +134,12 @@ public class Game {
 			// Wtf?
 			throw new IllegalArgumentException("Not a valid player.");
 		}
-		
+
 		// Add the points above and below the base
 		points.add(new Point(baseX, Constants.BASE_Y_OFFSET - 1));
-		points.add(new Point(baseX, Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
-		
+		points.add(new Point(baseX, Constants.BASE_Y_OFFSET
+				+ Constants.BASE_HEIGHT));
+
 		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
 			// Add the base itself as well as the point to the left/right of it.
 			points.add(new Point(baseX, y + Constants.BASE_Y_OFFSET));
@@ -202,24 +203,30 @@ public class Game {
 	 *            The index of the position along the base
 	 */
 	public void placeShipAt(Ship s, int index) {
-		int x = s.getOwner().equals(s.getGame().getP1()) ? 0 : Constants.MAP_WIDTH - 1;
+		int x = s.getOwner().equals(s.getGame().getP1()) ? 0
+				: Constants.MAP_WIDTH - 1;
 		int xOffset = s.getOwner().equals(s.getGame().getP1()) ? 1 : -1;
-		Direction facing= s.getOwner().equals(s.getGame().getP1()) ? Direction.RIGHT : Direction.LEFT;
-		
+		Direction facing = s.getOwner().equals(s.getGame().getP1()) ? Direction.RIGHT
+				: Direction.LEFT;
+
 		s.setDirection(facing);
-		
-		// If the ship was at index 0 or passed the length of the base, we just put it at x.
+
+		// If the ship was at index 0 or passed the length of the base, we just
+		// put it at x.
 		if (index == 0) {
-			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET - 1));
+			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()),
+					Constants.BASE_Y_OFFSET - 1));
 			return;
 		} else if (index == Constants.BASE_HEIGHT + 1) {
-			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
+			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()),
+					Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
 			return;
 		}
-		
+
 		// Position it at the right place on the ship
 		index--;
-		s.setPosition(new Point(x + (xOffset * s.getSize()), Constants.BASE_Y_OFFSET + index));
+		s.setPosition(new Point(x + (xOffset * s.getSize()),
+				Constants.BASE_Y_OFFSET + index));
 	}
 
 	/**
@@ -312,26 +319,80 @@ public class Game {
 				playerShips.add(s);
 		return playerShips;
 	}
-	
+
 	/**
 	 * Gets the id of a ship for a {@link GameMovePacket}.
+	 * 
 	 * @param s
 	 * @return
 	 */
 	public int getShipId(Ship s) {
 		return ships.indexOf(s);
 	}
+
+	/**
+	 * Get the set of points representing the base for a player.
+	 * 
+	 * @param player
+	 *            The player's name
+	 * @return The set of points for that player's base.
+	 */
+	public Set<Point> getBasePoints(String player) {
+		Set<Point> points = new HashSet<>();
+
+		if (player.equals(p1)) {
+			for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
+				points.add(new Point(0, y + Constants.BASE_Y_OFFSET));
+			}
+		} else if (player.equals(p2)) {
+			for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
+				points.add(new Point(Constants.MAP_WIDTH - 1, y
+						+ Constants.BASE_Y_OFFSET));
+			}
+		} else {
+			throw new IllegalArgumentException("Invalid player.");
+		}
+
+		return points;
+	}
+
+	/**
+	 * Tests if at least one part of the ship is touching the owner's base, and
+	 * thus it can be repaired.
+	 * 
+	 * @param s
+	 *            The ship in question.
+	 * @return True if the ship is touching the base.
+	 */
+	public boolean canRepair(Ship s) {
+		// Get the base points
+		Set<Point> basePoints = getBasePoints(s.getOwner());
+
+		// Test if the ship is touching the base.
+		for (Point p : s.getShipLine().getPoints()) {
+			for (Point bp : basePoints) {
+				// TODO: Handle a base being damaged.
+				if (Math.abs(p.x - bp.x) + Math.abs(p.y - bp.y) <= 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
+
 	public void applyMove(GameMovePacket packet) {
 		Ship ship = ships.get(packet.ship);
-		
+
 		if (packet.moveType == MoveType.MOVE) {
 			ship.moveShip(packet.contextPoint);
 		} else if (packet.moveType == MoveType.CANNON) {
 			ship.fireCannon(packet.contextPoint);
 		} else if (packet.moveType == MoveType.TORPEDO) {
 			ship.fireTorpedo();
+		} else if (packet.moveType == MoveType.REPAIR) {
+			ship.repair();
 		}
-		
+
 	}
 }

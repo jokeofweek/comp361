@@ -694,4 +694,16 @@ public class Ship  {
 	public int getMaxHealthPerSquare() {
 		return armor.getHealthPointsPerSquare();
 	}
+	
+	/**
+	 * Repairs one block of the ship, starting from the front and ending at the back.
+	 */
+	public void repair() {
+		for (int i = health.length - 1; i >= 0; i--) {
+			if (health[i] < armor.getHealthPointsPerSquare()) {
+				health[i] = armor.getHealthPointsPerSquare();
+				return;
+			}
+		}
+	}
 }
