@@ -195,13 +195,24 @@ public class ChatPanel extends JPanel {
 				// Tokenize message
 				List<String> tokens = new ArrayList<String>(Arrays.asList(message.split(" ")));
 				String command = tokens.remove(0);
+				int numTokens = tokens.size();
 				
-				if (command.equals("me") && tokens.size() > 1) {
+				if (command.equals("me") && numTokens > 1) {
 					message = join(tokens);
 					isSelfAction = true;
-				} else if (command.equals("newgame") && tokens.size() == 2) {
+				} else if (command.equals("newgame")) {
+					// Bail if not enough tokens
+					if (numTokens != 1 && numTokens != 2) {
+						return;
+					}
+
 					String name = tokens.remove(0);
-					String password = tokens.remove(0);
+					String password = "";
+
+					if (numTokens == 2) {
+						password = tokens.remove(0);
+					}
+
 					sendNewGamePacket(name, password);
 					return;
 				} else {
