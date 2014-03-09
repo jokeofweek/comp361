@@ -2,12 +2,8 @@ package comp361.client.data;
 
 import java.util.Observable;
 
-import sun.print.resources.serviceui;
-
 import comp361.client.GameClient;
 import comp361.shared.data.Game;
-import comp361.shared.data.MoveType;
-import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameMovePacket;
 
 public class GameManager extends Observable {
