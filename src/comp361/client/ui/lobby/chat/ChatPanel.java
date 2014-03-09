@@ -90,6 +90,9 @@ public class ChatPanel extends JPanel {
 		JButton sendButton = new JButton(action);
 		sendButton.setText("Send");
 		SwagFactory.style(sendButton);
+
+		// Remove preferred size set by SwagFactory
+		sendButton.setPreferredSize(null);
 		
 		// Create the message field
 		messageField = new JTextField();
