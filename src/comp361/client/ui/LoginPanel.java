@@ -77,6 +77,7 @@ public class LoginPanel extends ClientPanel {
 		
 		loginButton = new JButton("Login");
 		loginButton.addActionListener(new LoginActionListener());
+		passwordField.addActionListener(new LoginActionListener());
 		
 		registerButton = new JButton("Register");
 		registerButton.addActionListener(new RegisterActionListener());
