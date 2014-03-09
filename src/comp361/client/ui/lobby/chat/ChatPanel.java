@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,6 +133,16 @@ public class ChatPanel extends JPanel {
 				// no HTML in there that shouldn't be there. This will make it so <b> gets shown as 
 				// is instead of bolding text.
 				
+				// Check if message is image URL
+				boolean isImageURL = true;
+
+				try {
+					URL url = new URL(packet.message);
+					isImageURL = url.getPath().matches(".*\\.(png|gif|jpg|jpeg)");
+				} catch (Exception e) {
+					isImageURL = false;
+				}
+
 				if (packet.isMetaMessage) {
 					// Message is a self action sent with "/me"
 					message += "<i>";
@@ -145,12 +156,16 @@ public class ChatPanel extends JPanel {
 					if (packet.senderName != null) {
 						message += "<b>" + StringEscapeUtils.escapeHtml4(packet.senderName) + "</b>: ";
 					}
-					message += StringEscapeUtils.escapeHtml4(packet.message);
+
+					if (isImageURL) {
+						message += "<br><img src=\"" + packet.message + "\">";
+					} else {
+						message += StringEscapeUtils.escapeHtml4(packet.message);
+					}
 				}
 				
 				// Insert the message then scroll to the bottom.
 				try {
-					
 					kit.insertHTML(doc, doc.getLength(), message, 0, 0, null);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
