@@ -68,7 +68,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		List<Ship> ownShips = game.getPlayerShips(isP1 ? game.getP1() : game.getP2());
 
-		drawWater(g2d);
+		// Draw CellType tiles (BASE, MINE, REEF, WATER)
 		drawTiles(g2d);
 
 		// Draw ship outline for selected ship
@@ -118,19 +118,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void drawWater(Graphics g) {
-		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
-			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
-				Image waterImage = ResourceManager.getInstance().getWaterImage().getImage();
-				g.drawImage(waterImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
-			}
-		}
-	}
-
 	public void drawTiles(Graphics2D g) {
 		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
 			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
 				CellType type = game.getField().getCellTypeArray()[(int) x][(int) y];
+
+				drawWater(g, x, y);
 
 				switch (type) {
 				case BASE:
@@ -143,6 +136,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 				case REEF:
 					drawReef(g, x, y);
 					break;
+				default:
+					// Because eclipse likes to whine
 				}
 			}
 		}
@@ -194,6 +189,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private void drawBase(Graphics2D g, int x, int y) {
 		g.drawImage(ResourceManager.getInstance().getBaseImage(y),
 				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+	}
+
+	public void drawWater(Graphics g, int x, int y) {
+		Image waterImage = ResourceManager.getInstance().getWaterImage().getImage();
+		g.drawImage(waterImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {
