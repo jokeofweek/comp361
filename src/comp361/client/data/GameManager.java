@@ -2,6 +2,8 @@ package comp361.client.data;
 
 import java.util.Observable;
 
+import sun.print.resources.serviceui;
+
 import comp361.client.GameClient;
 import comp361.shared.data.Game;
 import comp361.shared.data.MoveType;
@@ -35,15 +37,22 @@ public class GameManager extends Observable {
 	}
 	
 	public void applyMove(GameMovePacket packet, boolean isOwn) {
-		Ship ship = game.getShips().get(packet.ship);
-		if (packet.moveType == MoveType.MOVE) {
-			ship.moveShip(packet.contextPoint);
-		} else if (packet.moveType == MoveType.CANNON) {
-			ship.fireCannon(packet.contextPoint);
-		} else if (packet.moveType == MoveType.TORPEDO) {
-			ship.fireTorpedo();
+		// If it's not your turn, do nothing
+		System.out.println(isOwn + "," + isTurn);
+		if (isOwn && !isTurn) {
+			return;
 		}
 		
+		game.applyMove(packet);
+
+		// If it was your own move, send to server
+		if (isOwn) {
+			client.getClient().sendTCP(packet);
+			isTurn = false;
+		} else {
+			isTurn = true;
+		}
+				
 		setChanged();
 		notifyObservers();
 	}

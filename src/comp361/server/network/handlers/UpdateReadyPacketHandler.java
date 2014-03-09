@@ -39,6 +39,7 @@ public class UpdateReadyPacketHandler implements
 				if (s.getSessionType() == SessionType.GAME_SETUP && s.getGameDescriptorId() == session.getGameDescriptorId()) {
 					gameServer.getServer().sendToTCP(s.getID(), startPacket);
 				}
+				s.setSessionType(SessionType.GAME);
 			}
 			
 		} else {

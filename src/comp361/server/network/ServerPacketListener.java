@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import comp361.server.GameServer;
 import comp361.server.network.handlers.ChangeSeedPacketHandler;
+import comp361.server.network.handlers.GameMovePacketHandler;
 import comp361.server.network.handlers.JoinGamePacketHandler;
 import comp361.server.network.handlers.LeaveGamePacketHandler;
 import comp361.server.network.handlers.LoginPacketHandler;
@@ -25,6 +26,7 @@ import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
 import comp361.shared.packets.client.UpdateReadyPacket;
 import comp361.shared.packets.shared.ChangeSeedPacket;
+import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -109,6 +111,7 @@ public class ServerPacketListener extends Listener {
 	 */
 	private Map<Class, ServerPacketHandler> setupGamePacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
+		handlers.put(GameMovePacket.class, new GameMovePacketHandler());
 		return handlers;
 	}
 

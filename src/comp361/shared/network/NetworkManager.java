@@ -19,6 +19,7 @@ import comp361.shared.data.Direction;
 import comp361.shared.data.Field;
 import comp361.shared.data.Game;
 import comp361.shared.data.GameDescriptor;
+import comp361.shared.data.MoveType;
 import comp361.shared.data.Player;
 import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.data.Ship;
@@ -44,6 +45,7 @@ import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.ChangeSeedPacket;
+import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -100,36 +102,12 @@ public class NetworkManager {
 		kryo.register(SetupMessagePacket.class);
 		kryo.register(GameDescriptorStartPacket.class);
 		kryo.register(GameStartPacket.class);
+		kryo.register(MoveType.class);
+		kryo.register(GameMovePacket.class);
 	}
 
 	private NetworkManager() {
 	}
 
-	private static class JavaSerializer extends Serializer {
-		private ObjectOutputStream objectStream;
-		private Output lastOutput;
-
-		public void write (Kryo kryo, Output output, Object object) {
-			try {
-				if (output != lastOutput) {
-					objectStream = new ObjectOutputStream(output);
-					lastOutput = output;
-				} else
-					objectStream.reset();
-				objectStream.writeObject(object);
-				objectStream.flush();
-			} catch (Exception ex) {
-				throw new KryoException("Error during Java serialization.", ex);
-			}
-		}
-
-		public Object read (Kryo kryo, Input input, Class type) {
-			try {
-				return new ObjectInputStream(input).readObject();
-			} catch (Exception ex) {
-				throw new KryoException("Error during Java deserialization.", ex);
-			}
-		}
-	}
 	
 }

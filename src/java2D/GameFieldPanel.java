@@ -303,7 +303,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private void sendMove(Point p) {
 		GameMovePacket packet = new GameMovePacket();
 		packet.ship = client.getGameManager().getGame().getShips().indexOf(context.getShip());
-		packet.moveType = MoveType.MOVE;
+		packet.moveType = context.getType();
 		packet.contextPoint = p;
 		client.getGameManager().applyMove(packet, true);
 	}

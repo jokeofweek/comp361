@@ -8,6 +8,7 @@ import java.util.Set;
 
 import comp361.client.ui.setup.CoralReefGenerator;
 import comp361.shared.Constants;
+import comp361.shared.packets.shared.GameMovePacket;
 
 public class Game {
 	private String p1;
@@ -310,5 +311,27 @@ public class Game {
 			if (s.getOwner().equals(p))
 				playerShips.add(s);
 		return playerShips;
+	}
+	
+	/**
+	 * Gets the id of a ship for a {@link GameMovePacket}.
+	 * @param s
+	 * @return
+	 */
+	public int getShipId(Ship s) {
+		return ships.indexOf(s);
+	}
+	
+	public void applyMove(GameMovePacket packet) {
+		Ship ship = ships.get(packet.ship);
+		
+		if (packet.moveType == MoveType.MOVE) {
+			ship.moveShip(packet.contextPoint);
+		} else if (packet.moveType == MoveType.CANNON) {
+			ship.fireCannon(packet.contextPoint);
+		} else if (packet.moveType == MoveType.TORPEDO) {
+			ship.fireTorpedo();
+		}
+		
 	}
 }
