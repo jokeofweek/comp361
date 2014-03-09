@@ -53,10 +53,12 @@ public class GameInfoPanel extends JPanel implements Observer {
 		model.clear();
 		// Add all players in the game descriptor
 		for (String player : descriptor.getPlayers()) {
-			if (descriptor.getReadyPlayers().contains(player)) {
-				model.addElement(player + "<ready>");
-			} else {
-				model.addElement(player + " ");
+			if (player != null) {
+				if (descriptor.getReadyPlayers().contains(player)) {
+					model.addElement(player + "<ready>");
+				} else {
+					model.addElement(player + " ");
+				}
 			}
 		}
 	}

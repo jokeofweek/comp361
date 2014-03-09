@@ -43,7 +43,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		refreshData();
 	}
 	
-	private void refreshData() {
+	public void refreshData() {
 		infoPanel.removeAll();
 		
 		infoPanel.setLayout(new GridLayout(0, 1));

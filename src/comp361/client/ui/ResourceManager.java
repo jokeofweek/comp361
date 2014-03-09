@@ -62,13 +62,13 @@ public class ResourceManager {
 	}
 
 	public BufferedImage getHeadImage(Ship s, boolean isOwner) {
-		String state = s.getHealth(0) < s.getMaxHealthPerSquare() ? "hit" : null;
+		String state = s.getHealth(s.getSize() - 1) < s.getMaxHealthPerSquare() ? "hit" : null;
 		String filename = getFilename("ship-head", s.getDirection().ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
 	public BufferedImage getTailImage(Ship s, boolean isOwner) {
-		String state = s.getHealth(s.getSize() - 2) < s.getMaxHealthPerSquare() ? "hit" : null;
+		String state = s.getHealth(0) < s.getMaxHealthPerSquare() ? "hit" : null;
 		String filename = getFilename("ship-tail", s.getDirection().ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
