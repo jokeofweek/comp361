@@ -25,7 +25,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 	private GameClient client;
 	
 	public ShipInfoPanel(GameClient client, SelectionContext context) {
-		super(new BorderLayout());
+		super();
 		
 		this.client = client;
 		this.context = context;
@@ -36,31 +36,28 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		setPreferredSize(d);
 		setMaximumSize(d);
 		setMinimumSize(d);
-		
-		infoPanel = new JPanel();
-		add(infoPanel);
-		
+				
 		refreshData();
 	}
 	
 	public void refreshData() {
-		infoPanel.removeAll();
+		removeAll();
 		
-		infoPanel.setLayout(new GridLayout(0, 1));
+		setLayout(new GridLayout(0, 1));
 		
 		if (context.getShip() != null) {
-			infoPanel.add(new JLabel(context.getShip().getName()));
+			add(new JLabel(context.getShip().getName()));
 
 			JButton moveShipButton = new JButton("Move");
 			moveShipButton.addActionListener(new MoveContextActionListener(MoveType.MOVE));
-			infoPanel.add(moveShipButton);
+			add(moveShipButton);
 			
 			JButton turnShipButton = new JButton("Turn");
-			infoPanel.add(turnShipButton);
+			add(turnShipButton);
 			
 			JButton fireCannonButton = new JButton("Fire Cannon");
 			fireCannonButton.addActionListener(new MoveContextActionListener(MoveType.CANNON));
-			infoPanel.add(fireCannonButton);
+			add(fireCannonButton);
 			
 			if (context.getShip().hasTorpedoes()) {
 				JButton fireTorpedoButton = new JButton("Fire Torpedo");
@@ -74,7 +71,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 						client.getGameManager().applyMove(packet, true);
 					}
 				});
-				infoPanel.add(fireTorpedoButton);	
+				add(fireTorpedoButton);	
 			}
 			
 			// If we can repair the ship, add the repair button
@@ -89,11 +86,11 @@ public class ShipInfoPanel extends JPanel implements Observer {
 						client.getGameManager().applyMove(packet, true);
 					}
 				});
-				infoPanel.add(repairButton);
+				add(repairButton);
 			}
 						
 		} else {
-			infoPanel.add(new JLabel("No selected ship"));
+			add(new JLabel("No selected ship"));
 		}
 		
 		revalidate();

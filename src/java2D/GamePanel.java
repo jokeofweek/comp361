@@ -3,6 +3,7 @@ package java2D;
 import java.awt.BorderLayout;
 import java.util.Observable;
 
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
@@ -29,8 +30,12 @@ public class GamePanel extends ClientPanel {
 		fieldPanel = new GameFieldPanel(client, context, client.getGameManager().isPlayer1());
 		add(fieldPanel, BorderLayout.CENTER);
 		
-		infoPanel = new ShipInfoPanel(client, context); 
-		add(infoPanel, BorderLayout.WEST );
+		JPanel leftBarPanel = new JPanel(new BorderLayout());
+
+		infoPanel = new ShipInfoPanel(client, context);
+		leftBarPanel.add(infoPanel, BorderLayout.NORTH);
+		 
+		add(leftBarPanel, BorderLayout.WEST );
 	}
 
 	@Override
@@ -51,7 +56,7 @@ public class GamePanel extends ClientPanel {
 				context.setShip(null);
 			}
 		}
-		infoPanel.refreshData();
+		infoPanel.update(source, object);
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
