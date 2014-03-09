@@ -9,10 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
-import comp361.client.ui.SwagFactory;
 import comp361.client.data.GameDescriptorManager;
+import comp361.client.ui.SwagFactory;
 import comp361.shared.data.GameDescriptor;
 
 public class GameInfoPanel extends JPanel implements Observer {
