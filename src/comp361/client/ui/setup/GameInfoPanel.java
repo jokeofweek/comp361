@@ -29,9 +29,14 @@ public class GameInfoPanel extends JPanel implements Observer {
 		this.manager = manager;
 		this.gameDescriptorId = gameDescriptorId;
 
+		GameDescriptor desc = manager.getGameDescriptor(gameDescriptorId);
+		String name = desc.getName();
+		if (desc.isPrivate()) {
+			name += " (private)";
+		}
+
 		// Put the game name at the top
-		JLabel gameNameLabel = new JLabel(manager.getGameDescriptor(
-				gameDescriptorId).getName());
+		JLabel gameNameLabel = new JLabel(name);
 		SwagFactory.style(gameNameLabel);
 		gameNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		add(gameNameLabel, BorderLayout.NORTH);

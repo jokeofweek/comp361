@@ -116,7 +116,8 @@ public class GameDescriptor {
 		}
 		return count;
 	}
-	
-	
-	
+
+	public boolean isPrivate() {
+		return !getPassword().isEmpty();
+	}
 }
