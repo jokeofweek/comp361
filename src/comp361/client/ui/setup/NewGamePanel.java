@@ -173,8 +173,15 @@ public class NewGamePanel extends ClientPanel {
 		// Sends message when triggered
 		ActionListener messageSendHandler = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String message = messageField.getText();
+
+				// Avoid sending default text or empty message
+				if (messageField.getForeground() == Color.GRAY || message.isEmpty()) {
+					return;
+				}
+
 				SetupMessagePacket packet = new SetupMessagePacket();
-				packet.message = messageField.getText();
+				packet.message = message;
 				packet.senderName = getGameClient().getPlayerName();
 
 				// Send message packet
