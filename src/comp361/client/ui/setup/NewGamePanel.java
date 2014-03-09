@@ -169,7 +169,9 @@ public class NewGamePanel extends ClientPanel {
 
 		// Message send button
 		final JButton sendButton = new JButton("Send");
-		sendButton.addActionListener(new ActionListener() {
+
+		// Sends message when triggered
+		ActionListener messageSendHandler = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SetupMessagePacket packet = new SetupMessagePacket();
 				packet.message = messageField.getText();
@@ -181,7 +183,11 @@ public class NewGamePanel extends ClientPanel {
 				// Clear message text field
 				messageField.setText("");
 			}
-		});
+		};
+
+		// Attach message send handler
+		sendButton.addActionListener(messageSendHandler);
+		messageField.addActionListener(messageSendHandler);
 
 		inputPanel.add(messageField);
 		inputPanel.add(sendButton);
@@ -189,7 +195,7 @@ public class NewGamePanel extends ClientPanel {
 		container.add(new JLabel("Chat Area:"), BorderLayout.NORTH);
 		container.add(getChatPanel(), BorderLayout.CENTER);
 		container.add(inputPanel, BorderLayout.SOUTH);
-		
+
 		return container;
 	}
 
