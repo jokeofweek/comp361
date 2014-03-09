@@ -89,9 +89,7 @@ public class SwagFactory {
 		button.setSize(d);
 	}
 	
-	private static void styleEditorPane(JEditorPane pane)
-	{
-		Font font = new Font(FONT.getFontName(), Font.PLAIN, 12);
+	private static void styleEditorPane(JEditorPane pane) {
 		pane.setFont(FONT);
 	}
 	
