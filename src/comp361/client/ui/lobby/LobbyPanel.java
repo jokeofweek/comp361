@@ -26,7 +26,6 @@ import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
 import comp361.client.ui.setup.NewGamePanel;
 import comp361.shared.Constants;
-import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GenericError;
 import comp361.shared.packets.shared.MessagePacket;
@@ -227,15 +226,7 @@ public class LobbyPanel extends ClientPanel {
 	private class NewGameActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
-
-			packet.name = JOptionPane.showInputDialog("Name of the game:");
-			packet.password = JOptionPane
-					.showInputDialog("Password (leave empty for none):");
-			packet.maxPlayers = 2;
-
-			getGameClient().getClient().sendTCP(packet);
-
+			NewGameDialog d = new NewGameDialog(getClientWindow(), getGameClient());
 		}
 	}
 }
