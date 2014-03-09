@@ -144,8 +144,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 				Color fillColor = null;
 				switch (type) {
 				case BASE:
-					fillColor = Color.green;
-					break;
+					drawBase(g, x, y);
+					continue;
 				case MINE:
 					fillColor = Color.red;
 					break;
@@ -200,6 +200,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawReef(Graphics2D g, int x, int y) {
 		g.drawImage(ResourceManager.getInstance().getReefImage(),
+				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+	}
+
+	private void drawBase(Graphics2D g, int x, int y) {
+		g.drawImage(ResourceManager.getInstance().getBaseImage(y),
 				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
 	}
 
