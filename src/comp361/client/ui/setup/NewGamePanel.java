@@ -1,11 +1,12 @@
 package comp361.client.ui.setup;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.Observable;
 import java2D.GamePanel;
@@ -17,7 +18,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
@@ -48,7 +48,6 @@ public class NewGamePanel extends ClientPanel {
 
 	private JScrollPane chatScrollPane;
 	private JEditorPane chatEditorPane;
-	private JTextField messageField;
 	private HTMLEditorKit kit;
 	private HTMLDocument doc;
 
@@ -152,77 +151,46 @@ public class NewGamePanel extends ClientPanel {
 	}
 
 	private JPanel buildChatUI() {
-		JPanel chatContainer = new JPanel(new BorderLayout());
+		JPanel container = new JPanel(new BorderLayout());
+		JPanel inputPanel = new JPanel(new GridLayout(1, 2));
 
-		JLabel chatLabel = new JLabel("Chat Area:");
-		chatContainer.add(chatLabel, BorderLayout.BEFORE_FIRST_LINE);
-
-		chatContainer.add(getChatPanel(), BorderLayout.CENTER);
-
-		// Build the containers for the buttons
-		JPanel buttonContainer = new JPanel(new GridLayout(1, 1,
-				COMPONENT_SPACING, COMPONENT_SPACING));
-
-		// The send text field
-		final JTextField chatField = new JTextField("Type some stuff");
-		chatField.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
+		// Message text field
+		final JTextField messageField = new JTextField("u wot m8?");
+		messageField.setForeground(Color.GRAY);
+		messageField.addMouseListener(new MouseAdapter() {
+			private boolean cleared = false;
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				chatField.setText("");
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
+				if (!cleared) {
+					messageField.setText("");
+					messageField.setForeground(Color.BLACK);
+				}
 			}
 		});
 
-		buttonContainer.add(chatField);
-
-		// The send button
+		// Message send button
 		final JButton sendButton = new JButton("Send");
-
 		sendButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				SetupMessagePacket packet = new SetupMessagePacket();
-				packet.message = chatField.getText();
-				packet.senderName = (getGameClient().getPlayerName());
+				packet.message = messageField.getText();
+				packet.senderName = getGameClient().getPlayerName();
 
+				// Send message packet
 				getGameClient().getClient().sendTCP(packet);
-				// publishChatMessage(packet);
 
-				chatField.setText("");
+				// Clear message text field
+				messageField.setText("");
 			}
 		});
 
-		// Add the send button
-		buttonContainer.add(sendButton);
+		inputPanel.add(messageField);
+		inputPanel.add(sendButton);
 
-		chatContainer.add(buttonContainer, BorderLayout.SOUTH);
-		return chatContainer;
+		container.add(new JLabel("Chat Area:"), BorderLayout.NORTH);
+		container.add(getChatPanel(), BorderLayout.CENTER);
+		container.add(inputPanel, BorderLayout.SOUTH);
+		
+		return container;
 	}
 
 	private JComponent getChatPanel() {
