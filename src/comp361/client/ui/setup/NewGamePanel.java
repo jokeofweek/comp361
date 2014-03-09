@@ -58,8 +58,17 @@ public class NewGamePanel extends ClientPanel {
 			int gameDescriptorId) {
 		super(gameClient, window, new BorderLayout());
 
+		// Get the player's index to determine if they are player 1 or 2
+		boolean flipped = false;
+		String[] players =  gameClient.getGameDescriptorManager().getGameDescriptor(gameDescriptorId).getPlayers();
+		for (int i = 0; i < players.length; i++) {
+			if (players[i] != null && players[i].equals(gameClient.getPlayerName())) {
+				flipped = (i == 1);
+			}
+		}
+				
 		this.gameDescriptorId = gameDescriptorId;
-		this.reefGenerator = new CoralReefGenerator();
+		this.reefGenerator = new CoralReefGenerator(flipped);
 		this.reefGenerator.regenerateReef(gameClient.getGameDescriptorManager()
 				.getGameDescriptor(gameDescriptorId).getSeed());
 

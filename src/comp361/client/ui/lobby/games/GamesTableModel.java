@@ -75,7 +75,15 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		if (columnIndex == 0) {
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
-			return descriptor.getPlayers().size() + " / " + descriptor.getMaxPlayers();
+			// Caclulate number of players
+			String[] players = descriptor.getPlayers();
+			int count = 0;
+			for (int i = 0; i < players.length; i++) {
+				if (players[i] != null) {
+					count++;
+				}
+			}
+			return count + " / " + descriptor.getMaxPlayers();
 		} else if (columnIndex == 2) {
 			if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
 				return "\u2713";

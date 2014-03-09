@@ -88,6 +88,7 @@ public class NetworkManager {
 		kryo.register(ArrayList.class);
 		kryo.register(HashMap.class);
 		kryo.register(HashSet.class);
+		kryo.register(String[].class);
 		kryo.register(int[].class);
 		kryo.register(int[][].class);
 		kryo.register(NewGameDescriptorPacket.class);

@@ -11,8 +11,14 @@ public class CoralReefGenerator extends Observable {
 	
 	private boolean[][] hasCoral;
 	private long seed;
+	private boolean flipped;
 	
 	public CoralReefGenerator() {
+		this(false);
+	}
+	
+	public CoralReefGenerator(boolean flipped) {
+		this.flipped = flipped;
 	}
 	
 	public void regenerateReef() {
@@ -33,6 +39,9 @@ public class CoralReefGenerator extends Observable {
 		while (remainingBlocks > 0) {
 			x = random.nextInt(Constants.CORAL_WIDTH);
 			y = random.nextInt(Constants.CORAL_HEIGHT);
+			if (flipped) {
+				x = Constants.CORAL_WIDTH - x - 1;
+			}
 			if (!hasCoral[x][y]) {
 				hasCoral[x][y] = true;
 				remainingBlocks--;

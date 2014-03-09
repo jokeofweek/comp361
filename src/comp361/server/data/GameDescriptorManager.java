@@ -49,7 +49,7 @@ public class GameDescriptorManager {
 	 * @return True if there are less players in the game.
 	 */
 	public boolean hasSpace(int id) {
-		return gameDescriptors.get(id).getPlayers().size() < gameDescriptors
+		return gameDescriptors.get(id).getPlayerCount() < gameDescriptors
 				.get(id).getMaxPlayers();
 	}
 
@@ -106,7 +106,7 @@ public class GameDescriptorManager {
 	public void removePlayer(int id, String name) {
 		gameDescriptors.get(id).removePlayer(name);
 		// Remove the descriptor if no players left
-		if (!gameDescriptors.get(id).hasPlayers()) {
+		if (gameDescriptors.get(id).getPlayerCount() == 0) {
 			gameDescriptors.remove(id);
 		}
 	}
@@ -157,9 +157,9 @@ public class GameDescriptorManager {
 	 */
 	public Game createGame(int id) {
 		GameDescriptor d = gameDescriptors.get(id);
-		List<String> players = new ArrayList<>(d.getPlayers());
 		
-		Game g = new Game(players.get(0), players.get(1), d.getSeed());
+		
+		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed());
 		return g;
 	}
 }

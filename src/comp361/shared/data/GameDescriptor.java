@@ -14,7 +14,7 @@ public class GameDescriptor {
 	private int id;
 	private String name;
 	private String password;
-	private Set<String> players;
+	private String[] players;
 	private Set<String> readyPlayers;
 	private long seed;
 	private int maxPlayers;
@@ -30,7 +30,7 @@ public class GameDescriptor {
 		this.id = id;
 		this.name = name;
 		this.password = password;
-		this.players = new HashSet<>();
+		this.players = new String[maxPlayers];
 		this.readyPlayers = new HashSet<>();
 		this.maxPlayers = maxPlayers;
 		this.seed = seed;
@@ -48,8 +48,8 @@ public class GameDescriptor {
 		return password;
 	}
 
-	public Set<String> getPlayers() {
-		return new HashSet<>(players);
+	public String[] getPlayers() {
+		return players.clone();
 	}
 	
 	public Set<String> getReadyPlayers() {
@@ -57,11 +57,21 @@ public class GameDescriptor {
 	}
 
 	public void addPlayer(String name) {
-		players.add(name);
+		for (int i = 0; i < players.length; i++) {
+			if (players[i] == null) {
+				players[i] = name;
+				return;
+			}
+		}
 	}
 	
 	public void removePlayer(String name) {
-		players.remove(name);
+		for (int i = 0; i < players.length; i++) {
+			if (players[i].equals(name)) {
+				players[i] = null;
+				break;
+			}
+		}
 		removeReadyPlayer(name);
 	}
 	
@@ -97,12 +107,16 @@ public class GameDescriptor {
 		this.seed = seed;
 	}
 
-	/**
-	 * @return true if the game descriptor has players, else false.
-	 */
-	public boolean hasPlayers() {
-		return players.size() > 0;
-	}	
+	
+	public int getPlayerCount() {
+		int count = 0;
+		for (int i = 0; i < players.length; i++) {
+			if (players[i] != null) {
+				count++;
+			}
+		}
+		return count;
+	}
 	
 	
 	

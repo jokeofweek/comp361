@@ -78,7 +78,7 @@ public class GameDescriptorManager extends Observable {
 				gameDescriptors.get(packet.id).removePlayer(packet.name);
 
 				// If it was the last player, remove the game.
-				if (!gameDescriptors.get(packet.id).hasPlayers()) {
+				if (gameDescriptors.get(packet.id).getPlayerCount() == 0) {
 					gameDescriptors.remove(packet.id);
 				}
 			}
