@@ -11,16 +11,27 @@ import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
 
-public class Ship  {
+public class Ship {
 
-	public static final Ship CRUISER_TEMPLATE = new Ship("Cruiser", 5, 10, 0, ArmorType.HEAVY, false, false, false, false, true, false, false, false, new TailRange(10, 3), null, new CenterRange(15, 11));
-	public static final Ship DESTROYER_TEMPLATE = new Ship("Destroyer", 4, 8, 0, ArmorType.NORMAL, false, false, false, false, false, true, false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
+	public static final Ship CRUISER_TEMPLATE = new Ship("Cruiser", 5, 10, 0,
+			ArmorType.HEAVY, false, false, false, false, true, false, false,
+			false, new TailRange(10, 3), null, new CenterRange(15, 11));
+	public static final Ship DESTROYER_TEMPLATE = new Ship("Destroyer", 4, 8,
+			0, ArmorType.NORMAL, false, false, false, false, false, true,
+			false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	// TODO: Fix torpedo cannon range
-	public static final Ship TORPEDO_TEMPLATE = new Ship("Torpedo", 3, 9, 0, ArmorType.NORMAL, true, false, false, false, false, true, false, false, new TailRange(6, 3), null, new CenterRange(5, 5));
-	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6, 5, ArmorType.HEAVY, false, true, false, false, false, true, true, false, new CenterRange(6, 5), null, new CenterRange(4, 5));
-	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3, 0, ArmorType.NORMAL, true, false, true, false, false, false, false, false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(5, 3));
+	public static final Ship TORPEDO_TEMPLATE = new Ship("Torpedo", 3, 9, 0,
+			ArmorType.NORMAL, true, false, false, false, false, true, false,
+			false, new TailRange(6, 3), null, new CenterRange(5, 5));
+	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
+			5, ArmorType.HEAVY, false, true, false, false, false, true, true,
+			false, new CenterRange(6, 5), null, new CenterRange(4, 5));
+	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3,
+			0, ArmorType.NORMAL, true, false, true, false, false, false, false,
+			false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
+					5, 3));
 	private static final int TORPEDO_RANGE = 10;
-	
+
 	// This is the position of the head of the ship.
 	private Point position;
 	private String owner;
@@ -43,13 +54,13 @@ public class Ship  {
 	private Range radar;
 	private Range longRadar;
 	private Range cannonRange;
-	
+
 	public Ship() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Ship(String name, int size, int speed, int mineCount, ArmorType armor,
-			boolean turnsOnCenter, boolean isMineLayer,
+
+	public Ship(String name, int size, int speed, int mineCount,
+			ArmorType armor, boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
 			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
 			boolean canTurn180, Range radar, Range longRadar, Range cannonRange) {
@@ -71,277 +82,266 @@ public class Ship  {
 		this.radar = radar;
 		this.longRadar = longRadar;
 		this.cannonRange = cannonRange;
-		
+
 		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
 
-	
-	public Ship clone(Game game, String owner)
-	{
-		Ship s = new Ship(name, size, speed, mineCount, armor, turnsOnCenter, isMineLayer, hasLongRangeRadar, longRangeRadarEnabled, hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar, longRadar, cannonRange);
+	public Ship clone(Game game, String owner) {
+		Ship s = new Ship(name, size, speed, mineCount, armor, turnsOnCenter,
+				isMineLayer, hasLongRangeRadar, longRangeRadarEnabled,
+				hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar,
+				longRadar, cannonRange);
 		s.owner = owner;
 		s.game = game;
 		return s;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * @return the size of the ship
 	 */
-	public int getSize()
-	{
+	public int getSize() {
 		return this.size;
 	}
-	
+
 	/**
 	 * @return the game in which the ship is
 	 */
-	public Game getGame()
-	{
+	public Game getGame() {
 		return this.game;
 	}
-	
+
 	public void setGame(Game game) {
 		this.game = game;
 	}
-	
+
 	/**
 	 * @return the owner of the ship
 	 */
-	public String getOwner()
-	{
+	public String getOwner() {
 		return this.owner;
 	}
-	
+
 	/**
 	 * @return the speed of the ship
 	 */
-	public int getSpeed()
-	{
+	public int getSpeed() {
 		return this.speed;
 	}
-	
+
 	/**
 	 * @return the direction the ship is facing
 	 */
-	public Direction getDirection()
-	{
+	public Direction getDirection() {
 		return this.facing;
 	}
-	
+
 	/**
-	 * @param direction the new direction the ship should face
+	 * @param direction
+	 *            the new direction the ship should face
 	 */
-	public void setDirection(Direction direction)
-	{
+	public void setDirection(Direction direction) {
 		this.facing = direction;
 	}
-	
+
 	/**
 	 * @return the position of the head of the ship
 	 */
-	public Point getPosition()
-	{
+	public Point getPosition() {
 		return this.position;
 	}
-	
+
 	/**
 	 * @return the numbers of mines the ship is carrying
 	 */
-	public int getMineCount()
-	{
+	public int getMineCount() {
 		return this.mineCount;
 	}
-	
+
 	/**
-	 * @param mineCount the new number of mines the ship carries
+	 * @param mineCount
+	 *            the new number of mines the ship carries
 	 */
-	public void setMineCount(int mineCount)
-	{
+	public void setMineCount(int mineCount) {
 		this.mineCount = mineCount;
 	}
-	
+
 	/**
 	 * @return true if the ship is a Mine Layer, false otherwise
 	 */
-	public boolean isMineLayer()
-	{
+	public boolean isMineLayer() {
 		return this.isMineLayer;
 	}
-	
+
 	/**
 	 * @return true if the ship is equipped with a heavy cannon, false otherwise
 	 */
-	public boolean hasHeavyCannon()
-	{
+	public boolean hasHeavyCannon() {
 		return this.hasHeavyCannon();
 	}
-	
+
 	/**
 	 * @return true if the ship can perform 180 degrees turns, false otherwise
 	 */
-	public boolean canTurn180()
-	{
+	public boolean canTurn180() {
 		return this.canTurn180;
 	}
-	
+
 	/**
 	 * @return the set of points reachable by the ship's cannon
 	 */
-	public Range getCannonRange()
-	{
+	public Range getCannonRange() {
 		return cannonRange;
 	}
-	
+
 	/**
-	 * @param p the target location of the cannon ball
+	 * @param p
+	 *            the target location of the cannon ball
 	 * @return true if the operation succeeds, false otherwise
 	 */
-	public boolean fireCannon(Point p)
-	{
-		if(this.getCannonRange().getRectangle(this).contains(p))
-		{
-			if(this.game.getField().getCellType(p) == CellType.MINE)
-				//destroy the mine
+	public boolean fireCannon(Point p) {
+		if (this.getCannonRange().getRectangle(this).contains(p)) {
+			if (this.game.getField().getCellType(p) == CellType.MINE)
+				// destroy the mine
 				this.game.getField().setCellType(p, CellType.WATER);
-			else if(this.game.getField().getCellType(p) == CellType.BASE)
-				//damage the base
+			else if (this.game.getField().getCellType(p) == CellType.BASE)
+				// damage the base
 				this.game.getField().damageBase(p);
-			for(Ship s : this.game.getShips())
-				if(s.pointBelongsToShip(p))
+			for (Ship s : this.game.getShips())
+				if (s.pointBelongsToShip(p))
 					s.hitWithCannon(p, this.hasHeavyCannon);
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
-	 * @param p the target point of the enemy cannon ball
-	 * @param isHeavyCannon true if the enemy cannon ball is HEAVY, false otherwise
+	 * @param p
+	 *            the target point of the enemy cannon ball
+	 * @param isHeavyCannon
+	 *            true if the enemy cannon ball is HEAVY, false otherwise
 	 */
-	public void hitWithCannon(Point p, boolean isHeavyCannon)
-	{
-		if(health[getShipLine().getPoints().indexOf(p)] > 0)
-		{
-			if(isHeavyCannon)
+	public void hitWithCannon(Point p, boolean isHeavyCannon) {
+		if (health[getShipLine().getPoints().indexOf(p)] > 0) {
+			if (isHeavyCannon)
 				health[getShipLine().getPoints().indexOf(p)] = 0;
-			else health[getShipLine().getPoints().indexOf(p)]--;
+			else
+				health[getShipLine().getPoints().indexOf(p)]--;
 		}
 	}
-	
+
 	/**
 	 * @return true if the ship is equipped with torpedoes, false otherwise
 	 */
-	public boolean hasTorpedoes()
-	{
+	public boolean hasTorpedoes() {
 		return this.hasTorpedoes;
 	}
-	
+
 	/**
 	 * @return the trajectory of the ship's torpedoes
 	 */
-	public Line getTorpedoLine()
-	{
+	public Line getTorpedoLine() {
 		Point firstPoint;
-		if(facing == Direction.LEFT)
-			firstPoint = new Point(position.x-1, position.y);
-		else if(facing == Direction.UP)
-			firstPoint = new Point(position.x, position.y-1);
-		else if(facing == Direction.RIGHT)
-			firstPoint = new Point(position.x+1, position.y);
+		if (facing == Direction.LEFT)
+			firstPoint = new Point(position.x - 1, position.y);
+		else if (facing == Direction.UP)
+			firstPoint = new Point(position.x, position.y - 1);
+		else if (facing == Direction.RIGHT)
+			firstPoint = new Point(position.x + 1, position.y);
 		else
-			firstPoint = new Point(position.x, position.y+1);
+			firstPoint = new Point(position.x, position.y + 1);
 		return new Line(firstPoint, facing, TORPEDO_RANGE);
 	}
-	
+
 	/**
 	 * Fires a torpedo
 	 */
-	public void fireTorpedo()
-	{
-		if(this.hasTorpedoes)
-		{
-			for(Point p : getTorpedoLine().getPoints())
-			{
-				if(game.getField().getCellType(p) == CellType.BASE) 
+	public void fireTorpedo() {
+		if (this.hasTorpedoes) {
+			for (Point p : getTorpedoLine().getPoints()) {
+				if (game.getField().getCellType(p) == CellType.BASE)
 					game.getField().damageBase(p);
-				for(Ship s : game.getShips()) {
-					if(s.pointBelongsToShip(p)) { 
+				for (Ship s : game.getShips()) {
+					if (s.pointBelongsToShip(p)) {
 						s.hitWithTorpedo(p, this.facing);
 						return;
 					}
 				}
-			}		
+			}
 		}
 	}
-	
+
 	/**
-	 * @param p the target position of the enemy torpedo
-	 * @param shootingDirection the direction of the incoming torpedo
+	 * @param p
+	 *            the target position of the enemy torpedo
+	 * @param shootingDirection
+	 *            the direction of the incoming torpedo
 	 */
-	public void hitWithTorpedo(Point p, Direction shootingDirection)
-	{
-		//damage the right square
-		if(health[getShipLine().getPoints().indexOf(p)] > 0)
+	public void hitWithTorpedo(Point p, Direction shootingDirection) {
+		// damage the right square
+		if (health[getShipLine().getPoints().indexOf(p)] > 0)
 			health[getShipLine().getPoints().indexOf(p)]--;
-		//if perpendicular, damage another adjacent square
-		if(Math.abs(shootingDirection.angleBetween(facing)) == Math.PI/2)
-		{
-			if(Math.abs(facing.angle()) == Math.PI)
-			{
-				//try to damage two potential points
-				Point secondP1 = new Point(p.x,p.y+1);
-				Point secondP2 = new Point(p.x,p.y-1);
-				if(pointBelongsToShip(secondP1) && health[getShipLine().getPoints().indexOf(secondP1)] > 0)
+		// if perpendicular, damage another adjacent square
+		if (Math.abs(shootingDirection.angleBetween(facing)) == Math.PI / 2) {
+			if (Math.abs(facing.angle()) == Math.PI) {
+				// try to damage two potential points
+				Point secondP1 = new Point(p.x, p.y + 1);
+				Point secondP2 = new Point(p.x, p.y - 1);
+				if (pointBelongsToShip(secondP1)
+						&& health[getShipLine().getPoints().indexOf(secondP1)] > 0)
 					health[getShipLine().getPoints().indexOf(secondP1)]--;
-				else if(pointBelongsToShip(secondP2) && health[getShipLine().getPoints().indexOf(secondP2)] > 0)
-					health[getShipLine().getPoints().indexOf(secondP2)]--;	
-			}
-			else
-			{
-				//try to damage two potential points
-				Point secondP1 = new Point(p.x+1,p.y);
-				Point secondP2 = new Point(p.x-1,p.y);
-				if(pointBelongsToShip(secondP1) && health[getShipLine().getPoints().indexOf(secondP1)] > 0)
+				else if (pointBelongsToShip(secondP2)
+						&& health[getShipLine().getPoints().indexOf(secondP2)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP2)]--;
+			} else {
+				// try to damage two potential points
+				Point secondP1 = new Point(p.x + 1, p.y);
+				Point secondP2 = new Point(p.x - 1, p.y);
+				if (pointBelongsToShip(secondP1)
+						&& health[getShipLine().getPoints().indexOf(secondP1)] > 0)
 					health[getShipLine().getPoints().indexOf(secondP1)]--;
-				else if(pointBelongsToShip(secondP2) && health[getShipLine().getPoints().indexOf(secondP2)] > 0)
-					health[getShipLine().getPoints().indexOf(secondP2)]--;	
+				else if (pointBelongsToShip(secondP2)
+						&& health[getShipLine().getPoints().indexOf(secondP2)] > 0)
+					health[getShipLine().getPoints().indexOf(secondP2)]--;
 			}
 		}
 	}
-	
+
 	/**
 	 * @return returns the line segment that the ship occupies
 	 */
-	public Line getShipLine()
-	{
+	public Line getShipLine() {
 		Point tail = new Point(position);
-		if(this.facing == Direction.UP)
-			tail = new Point((int)position.getX(), (int)(position.getY()+size - 1));
-		else if(this.facing == Direction.DOWN)
-			tail = new Point((int)position.getX(), (int)(position.getY()-size + 1));
-		else if(this.facing == Direction.LEFT)
-			tail = new Point((int)position.getX()+size - 1, (int)position.getY());
-		else if(this.facing == Direction.RIGHT)
-			tail = new Point((int)position.getX()-size + 1, (int)position.getY());
+		if (this.facing == Direction.UP)
+			tail = new Point((int) position.getX(), (int) (position.getY()
+					+ size - 1));
+		else if (this.facing == Direction.DOWN)
+			tail = new Point((int) position.getX(), (int) (position.getY()
+					- size + 1));
+		else if (this.facing == Direction.LEFT)
+			tail = new Point((int) position.getX() + size - 1,
+					(int) position.getY());
+		else if (this.facing == Direction.RIGHT)
+			tail = new Point((int) position.getX() - size + 1,
+					(int) position.getY());
 		return new Line(tail, position);
 	}
-	
-	
+
 	/**
 	 * Moves the ship to the position, given there are no obstacles on the path.
-	 * @param p the new position of the ship
+	 * 
+	 * @param p
+	 *            the new position of the ship
 	 */
-	public void moveShip(Point p)
-	{
+	public void moveShip(Point p) {
 		Line trajectory = getLineTo(p);
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
 		points.remove(0);
-		
+
 		Point obstacle = game.getClosestObstaclePosition(points);
 		if (obstacle == null) {
 			this.position = p;
@@ -353,92 +353,83 @@ public class Ship  {
 			}
 		}
 	}
-	
+
 	/**
 	 * This sets the position of the ship's head.
-	 * @param position The new position.
+	 * 
+	 * @param position
+	 *            The new position.
 	 */
 	public void setPosition(Point position) {
 		this.position = position;
 	}
-	
+
 	/**
-	 * @param p the target point
+	 * @param p
+	 *            the target point
 	 * @return the line segment between the ship and p
 	 */
-	public Line getLineTo(Point p)
-	{
+	public Line getLineTo(Point p) {
 		return new Line(this.position, p);
 	}
-	
+
 	/**
 	 * @return true if the ship has a long range radar, false otherwise
 	 */
-	public boolean hasLongRangeRadar()
-	{
+	public boolean hasLongRangeRadar() {
 		return this.hasLongRangeRadar;
 	}
-	
+
 	/**
 	 * @return true if the toggle operation is successful, false otherwise
 	 */
-	public boolean toggleLongRangeRadar()
-	{
-		try
-		{
+	public boolean toggleLongRangeRadar() {
+		try {
 			this.longRangeRadarEnabled = !longRangeRadarEnabled;
 			return true;
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @return true if the long-range radar is enabled, false otherwise
 	 */
-	public boolean isLongRangeRadarEnabled()
-	{
+	public boolean isLongRangeRadarEnabled() {
 		return this.longRangeRadarEnabled;
 	}
-	
+
 	/**
 	 * @return true if the ship has a sonar, false otherwise
 	 */
-	public boolean hasSonar()
-	{
+	public boolean hasSonar() {
 		return this.hasSonar;
 	}
-	
+
 	/**
-	 * @param index index of a square in the ship
+	 * @param index
+	 *            index of a square in the ship
 	 * @return the health of the square at index
 	 */
-	public int getHealth(int index)
-	{
+	public int getHealth(int index) {
 		return health[index];
 	}
 
 	/**
-	 * @param d the new direction of the ship
+	 * @param d
+	 *            the new direction of the ship
 	 * @return true if the turning operation succeeds, false otherwise
 	 */
-	public boolean turnShip(Direction d)
-	{
-		if(this.canTurnToFace(d))
-		{
+	public boolean turnShip(Direction d) {
+		if (this.canTurnToFace(d)) {
 			Point pivot;
 			this.facing = d;
-			if(this.turnsOnCenter)
-			{
-				//ship turns on its center
-				pivot = getShipLine().getPoints().get(this.size/2);
-				this.position = new Line(pivot, d, this.size/2).getHead();
-			}
-			else
-			{
-				//ship turns on its tail
+			if (this.turnsOnCenter) {
+				// ship turns on its center
+				pivot = getShipLine().getPoints().get(this.size / 2);
+				this.position = new Line(pivot, d, this.size / 2).getHead();
+			} else {
+				// ship turns on its tail
 				pivot = getShipLine().getTail();
 				this.position = new Line(pivot, d, this.size).getHead();
 			}
@@ -446,74 +437,72 @@ public class Ship  {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * @param d the direction the ship would face
+	 * @param d
+	 *            the direction the ship would face
 	 * @return true if the ship can turn to the direction, false otherwise
 	 */
-	public boolean canTurnToFace(Direction d)
-	{
-		if(d == this.facing.opposite() && !canTurn180)
+	public boolean canTurnToFace(Direction d) {
+		if (d == this.facing.opposite() && !canTurn180)
 			return false;
-		return !(game.hasObstacle(getPointsInTurnRadius(d))) ;
+		return !(game.hasObstacle(getPointsInTurnRadius(d)));
 	}
-	
+
 	/**
-	 * @param d the direction the ship would face
+	 * @param d
+	 *            the direction the ship would face
 	 * @return the list points the ship would traverse if it turned
 	 */
-	public List<Point> getPointsInTurnRadius(Direction d)
-	{
+	public List<Point> getPointsInTurnRadius(Direction d) {
 		List<Point> points = new ArrayList<Point>();
 		Point pivot, corner1, corner2;
-		if(turnsOnCenter)
-		{
-			pivot = getShipLine().getPoints().get(this.size/2);
-			//if(d == facing.opposite())
-				
-		}
-		else 
-		{
+		if (turnsOnCenter) {
+			pivot = getShipLine().getPoints().get(this.size / 2);
+			// if(d == facing.opposite())
+
+		} else {
 			pivot = getShipLine().getTail();
 		}
 		return points;
 	}
-	
+
 	/**
-	 * @param p the position of the colliding object
+	 * @param p
+	 *            the position of the colliding object
 	 * @return the position of the square on the ship colliding with p
 	 */
-	public Point getCollidingBlockPosition(Point p)
-	{
+	public Point getCollidingBlockPosition(Point p) {
 		Point point = new Point();
-		//TODO: implement this
+		// TODO: implement this
 		return point;
 	}
-	
+
 	/**
-	 * @param p the position where the mine will be dropped
+	 * @param p
+	 *            the position where the mine will be dropped
 	 * @return true if the mine drop operation succeeds, false otherwise
 	 */
-	public boolean dropMine(Point p)
-	{
-		if(this.isMineLayer() /*do more validation on position p*/)
-		{
-			//drop mine
+	public boolean dropMine(Point p) {
+		if (this.isMineLayer() /* do more validation on position p */) {
+			// drop mine
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
-	 * @param p A point on the field
+	 * @param p
+	 *            A point on the field
 	 * @return true if the point belongs to the ship, false otherwise
 	 */
 	public boolean pointBelongsToShip(Point p) {
 		return getShipLine().contains(p);
 	}
-	
+
 	/**
-	 * @return the active radar, whether it's the long range or the regular range.
+	 * @return the active radar, whether it's the long range or the regular
+	 *         range.
 	 */
 	public Range getActiveRadar() {
 		if (longRangeRadarEnabled) {
@@ -522,181 +511,162 @@ public class Ship  {
 			return radar;
 		}
 	}
-	
+
 	/**
 	 * @return a set containing all points a ship can move to.
 	 */
 	public Set<Point> getValidMovePoints() {
-		
+
 		Set<Point> points = new HashSet<Point>();
-		
-		if(this.facing == Direction.UP)
-		{
-			//The point below (behind) the ship
+
+		if (this.facing == Direction.UP) {
+			// The point below (behind) the ship
 			int backY = this.position.y + this.size;
 			Point backPoint = new Point(this.position.x, backY);
 			points.add(backPoint);
-			
-			//Add all the points to the right of the ship
+
+			// Add all the points to the right of the ship
 			int rightX = this.position.x + 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point rightPoint = new Point(rightX, p.y);
 				points.add(rightPoint);
 			}
-			
-			//Add all the points to the left of the ship
+
+			// Add all the points to the left of the ship
 			int leftX = this.position.x - 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point leftPoint = new Point(leftX, p.y);
 				points.add(leftPoint);
 			}
-			
-			//Add all the points above(in front of) the ship
-			Point movementCap = new Point(this.position.x, this.position.y - this.speed);
-			for(Point p : getLineTo(movementCap).getPoints())
-			{
-				if(this.getShipLine().contains(p))
-				{
+
+			// Add all the points above(in front of) the ship
+			Point movementCap = new Point(this.position.x, this.position.y
+					- this.speed);
+			for (Point p : getLineTo(movementCap).getPoints()) {
+				if (this.getShipLine().contains(p)) {
 					continue;
 				}
-				
-				else
-				{
+
+				else {
 					points.add(p);
 				}
 			}
 		}
-		
-		else if(this.facing == Direction.DOWN)
-		{
-			//Add the point above (behind) the ship
+
+		else if (this.facing == Direction.DOWN) {
+			// Add the point above (behind) the ship
 			int backY = this.position.y - this.size;
 			Point backPoint = new Point(this.position.x, backY);
 			points.add(backPoint);
-			
-			//Add all the points to the right of the ship
+
+			// Add all the points to the right of the ship
 			int rightX = this.position.x + 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point rightPoint = new Point(rightX, p.y);
 				points.add(rightPoint);
 			}
-			
-			//Add all the points to the left of the ship
+
+			// Add all the points to the left of the ship
 			int leftX = this.position.x - 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point leftPoint = new Point(leftX, p.y);
 				points.add(leftPoint);
 			}
-			
-			//Add all the points below(in front of) the ship
-			Point movementCap = new Point(this.position.x, this.position.y + this.speed);
-			for(Point p : getLineTo(movementCap).getPoints())
-			{
-				if(this.getShipLine().contains(p))
-				{
+
+			// Add all the points below(in front of) the ship
+			Point movementCap = new Point(this.position.x, this.position.y
+					+ this.speed);
+			for (Point p : getLineTo(movementCap).getPoints()) {
+				if (this.getShipLine().contains(p)) {
 					continue;
 				}
-				
-				else
-				{
+
+				else {
 					points.add(p);
-				}			
+				}
 			}
 		}
-		
-		else if(this.facing == Direction.LEFT)
-		{
-			//Add the point to the right of (behind) the ship
+
+		else if (this.facing == Direction.LEFT) {
+			// Add the point to the right of (behind) the ship
 			int backX = this.position.x + this.size;
 			Point backPoint = new Point(backX, this.position.y);
 			points.add(backPoint);
-			
-			//Add all the points right above the ship
+
+			// Add all the points right above the ship
 			int topY = this.position.y - 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point topPoint = new Point(p.x, topY);
 				points.add(topPoint);
 			}
-			
-			//Add all the points right below the ship
+
+			// Add all the points right below the ship
 			int bottomY = this.position.y + 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point bottomPoint = new Point(p.x, bottomY);
 				points.add(bottomPoint);
 			}
-			
-			//Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x - this.speed, this.position.y);
-			for(Point p : getLineTo(movementCap).getPoints())
-			{
-				if(this.getShipLine().contains(p))
-				{
+
+			// Add all the points in front of the ship
+			Point movementCap = new Point(this.position.x - this.speed,
+					this.position.y);
+			for (Point p : getLineTo(movementCap).getPoints()) {
+				if (this.getShipLine().contains(p)) {
 					continue;
 				}
-				
-				else
-				{
+
+				else {
 					points.add(p);
 				}
 			}
 		}
-		
-		else
-		{
-			//Add the points to the left of (behind) the ship
+
+		else {
+			// Add the points to the left of (behind) the ship
 			int backX = this.position.x - this.size;
 			Point backPoint = new Point(backX, this.position.y);
 			points.add(backPoint);
-			
-			//Add all the points right above the ship
+
+			// Add all the points right above the ship
 			int topY = this.position.y - 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point topPoint = new Point(p.x, topY);
 				points.add(topPoint);
 			}
-			
-			//Add all the points below the ship
+
+			// Add all the points below the ship
 			int bottomY = this.position.y + 1;
-			for(Point p : this.getShipLine().getPoints())
-			{
+			for (Point p : this.getShipLine().getPoints()) {
 				Point bottomPoint = new Point(p.x, bottomY);
 				points.add(bottomPoint);
 			}
-			
-			//Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x + this.speed, this.position.y);
-			for(Point p : getLineTo(movementCap).getPoints())
-			{
-				if(this.getShipLine().contains(p))
-				{
+
+			// Add all the points in front of the ship
+			Point movementCap = new Point(this.position.x + this.speed,
+					this.position.y);
+			for (Point p : getLineTo(movementCap).getPoints()) {
+				if (this.getShipLine().contains(p)) {
 					continue;
 				}
-				
-				else
-				{
+
+				else {
 					points.add(p);
 				}
 			}
 		}
 		return points;
 	}
-	
+
 	/**
 	 * @return the max health of each square of the ship
 	 */
 	public int getMaxHealthPerSquare() {
 		return armor.getHealthPointsPerSquare();
 	}
-	
+
 	/**
-	 * Repairs one block of the ship, starting from the front and ending at the back.
+	 * Repairs one block of the ship, starting from the front and ending at the
+	 * back.
 	 */
 	public void repair() {
 		for (int i = health.length - 1; i >= 0; i--) {
@@ -706,4 +676,56 @@ public class Ship  {
 			}
 		}
 	}
+
+	/**
+	 * @return a set containing the points directly adjacent to the ship.
+	 */
+	private Set<Point> getSurroundingPoints() {
+		Set<Point> points = new HashSet<>();
+
+		// Get the points all along the ship line
+		List<Point> linePoints = getShipLine().getPoints();
+
+		// Add the head and tail based on direction
+		if (facing == Direction.LEFT) {
+			points.add(new Point(linePoints.get(0).x + 1, linePoints.get(0).y));
+			points.add(new Point(position.x - 1, position.y));
+		} else if (facing == Direction.RIGHT) {
+			points.add(new Point(linePoints.get(0).x - 1, linePoints.get(0).y));
+			points.add(new Point(position.x + 1, position.y));
+		} else if (facing == Direction.UP) {
+			points.add(new Point(linePoints.get(0).x, linePoints.get(0).y + 1));
+			points.add(new Point(position.x, position.y - 1));
+		} else {
+			points.add(new Point(linePoints.get(0).x, linePoints.get(0).y - 1));
+			points.add(new Point(position.x, position.y + 1));
+		}
+
+		// Add points on both sides of body
+		int yOffset = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 1
+				: 0;
+		int xOffset = (facing == Direction.UP || facing == Direction.DOWN) ? 1
+				: 0;
+
+		for (Point p : linePoints) {
+			points.add(new Point(p.x + (xOffset * 1), p.y + (yOffset * 1)));
+			points.add(new Point(p.x + (xOffset * -1), p.y + (yOffset * -1)));
+		}
+
+		return points;
+	}
+
+	/**
+	 * @return the set of all adjacent points where a mine pickup action can be performed.
+	 */
+	public Set<Point> getValidMinePickupPoints() {
+		Set<Point> points = new HashSet<>();
+		for (Point p : getSurroundingPoints()) {
+			if (game.getField().getCellType(p) == CellType.MINE) {
+				points.add(p);
+			}
+		}
+		return points;
+	}
+
 }

@@ -48,6 +48,11 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		if (context.getShip() != null) {
 			add(new JLabel(context.getShip().getName()));
 
+			// If the ship is a mine layer, add info about number of mines
+			if (context.getShip().isMineLayer()) {
+				add(new JLabel("Mines: " + context.getShip().getMineCount()));
+			}
+			
 			JButton moveShipButton = new JButton("Move");
 			moveShipButton.addActionListener(new MoveContextActionListener(MoveType.MOVE));
 			add(moveShipButton);
@@ -72,6 +77,19 @@ public class ShipInfoPanel extends JPanel implements Observer {
 					}
 				});
 				add(fireTorpedoButton);	
+			}
+			
+//			JButton dropMineButton = new JButton("Drop Mine");
+//			dropMineButton.addActionListener(new MoveContextActionListener(MoveType.DROP_MINE));
+//			add(dropMineButton);
+			
+			// If we can pickup mines and there is a mine to pickup, show the button
+			if (context.getShip().isMineLayer()) {
+				if (context.getShip().getValidMinePickupPoints().size() > 0) {
+					JButton pickupMineButton = new JButton("Pickup Mine");
+					pickupMineButton.addActionListener(new MoveContextActionListener(MoveType.PICKUP_MINE));
+					add(pickupMineButton);
+				}
 			}
 			
 			// If we can repair the ship, add the repair button

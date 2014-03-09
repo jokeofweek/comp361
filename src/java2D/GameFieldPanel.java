@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -31,14 +32,15 @@ import comp361.shared.packets.shared.GameMovePacket;
 public class GameFieldPanel extends JPanel implements Observer {
 
 	private static boolean GOD_MODE = false;
-	
+
 	private GameClient client;
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
 	private long lastImageUpdate = 0;
 
-	public GameFieldPanel(GameClient client, SelectionContext context, boolean isP1) {
+	public GameFieldPanel(GameClient client, SelectionContext context,
+			boolean isP1) {
 		SwagFactory.style(this);
 
 		this.client = client;
@@ -66,18 +68,22 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		List<Ship> ownShips = game.getPlayerShips(isP1 ? game.getP1() : game.getP2());
+		List<Ship> ownShips = game.getPlayerShips(isP1 ? game.getP1() : game
+				.getP2());
 
+		// Calculate the field of vision
+		Set<Point> fov = new HashSet<>();
+		Set<Point> sonarFov = new HashSet<>();
+		buildFieldsOfVision(ownShips, fov, sonarFov);
+		
 		// Draw CellType tiles (BASE, MINE, REEF, WATER)
-		drawTiles(g2d);
+		drawTiles(g2d, sonarFov);
 
 		// Draw ship outline for selected ship
 		if (context.getShip() != null) {
 			drawShipSelection(g2d, context.getShip());
 		}
-
-		// Calculate the field of vision
-		Set<Point> fov = getFieldOfVision(ownShips);
+		
 		drawShips(g2d, fov);
 		if (!GOD_MODE) {
 			drawFogOfWar(g2d, fov);
@@ -85,26 +91,29 @@ public class GameFieldPanel extends JPanel implements Observer {
 		drawSelectionContext(g2d);
 	}
 
-	private Set<Point> getFieldOfVision(List<Ship> ships) {
-		Set<Point> points = game.getPointsVisibleFromBase(isP1 ? game.getP1()
-				: game.getP2());
+	private void buildFieldsOfVision(List<Ship> ships, Set<Point> fov,
+			Set<Point> sonarFov) {
+		fov.addAll(game.getPointsVisibleFromBase(isP1 ? game.getP1() : game
+				.getP2()));
 
 		// Add all the points visible from the ship
 		for (int x = 0; x < Constants.MAP_WIDTH; x++) {
 			for (int y = 0; y < Constants.MAP_HEIGHT; y++) {
 				Point p = new Point(x, y);
-				if (!points.contains(p)) {
-					for (Ship s : ships) {
-						if (s.getActiveRadar().inRange(s, x, y)) {
-							points.add(p);
+				for (Ship s : ships) {
+					if (s.getActiveRadar().inRange(s, x, y)) {
+						fov.add(p);
+						// If this is a sonar ship, add it down there as well.
+						if (s.hasSonar()) {
+							sonarFov.add(p);
 						}
 					}
 				}
 			}
+			
 		}
-
-		return points;
 	}
+	
 
 	private void drawShips(Graphics g, Set<Point> fov) {
 		for (Ship ship : game
@@ -118,20 +127,27 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void drawTiles(Graphics2D g) {
+	public void drawTiles(Graphics2D g, Set<Point> sonarFov) {
 		for (int x = 0; x < game.getField().getCellTypeArray().length; x++) {
 			for (int y = 0; y < game.getField().getCellTypeArray()[x].length; y++) {
 				CellType type = game.getField().getCellTypeArray()[(int) x][(int) y];
 
 				drawWater(g, x, y);
 
+				// If the point is in the sonar fov, add overlay
+				if (sonarFov.contains(new Point(x, y))) {
+					g.setColor(Constants.SONAR_COLOR);
+					g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+				}
+				
 				switch (type) {
 				case BASE:
 					drawBase(g, x, y);
 					break;
 				case MINE:
-					System.out.println("Rendering mine");
-					drawMine(g, x, y);
+					if (GOD_MODE || sonarFov.contains(new Point(x, y))) {
+						drawMine(g, x, y);
+					}
 					break;
 				case REEF:
 					drawReef(g, x, y);
@@ -139,6 +155,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 				default:
 					// Because eclipse likes to whine
 				}
+				
 			}
 		}
 	}
@@ -169,7 +186,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				g.drawImage(rm.getBodyImage(ship, i+1), (int) p.getX()
+				g.drawImage(rm.getBodyImage(ship, i + 1), (int) p.getX()
 						* Constants.TILE_SIZE, (int) p.getY()
 						* Constants.TILE_SIZE, null);
 			}
@@ -177,23 +194,25 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	private void drawReef(Graphics2D g, int x, int y) {
-		g.drawImage(ResourceManager.getInstance().getReefImage(),
-				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+		g.drawImage(ResourceManager.getInstance().getReefImage(), x
+				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
 	}
 
 	private void drawMine(Graphics2D g, int x, int y) {
-		g.drawImage(ResourceManager.getInstance().getMineImage(),
-				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+		g.drawImage(ResourceManager.getInstance().getMineImage(), x
+				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
 	}
 
 	private void drawBase(Graphics2D g, int x, int y) {
-		g.drawImage(ResourceManager.getInstance().getBaseImage(y),
-				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+		g.drawImage(ResourceManager.getInstance().getBaseImage(y), x
+				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
 	}
 
 	public void drawWater(Graphics g, int x, int y) {
-		Image waterImage = ResourceManager.getInstance().getWaterImage().getImage();
-		g.drawImage(waterImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
+		Image waterImage = ResourceManager.getInstance().getWaterImage()
+				.getImage();
+		g.drawImage(waterImage, x * Constants.TILE_SIZE, y
+				* Constants.TILE_SIZE, this);
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {
@@ -226,30 +245,38 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawSelectionSquare(Graphics2D g, int x, int y) {
 		g.setColor(Constants.MOVE_COLOR);
-		g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+		g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
+				Constants.TILE_SIZE, Constants.TILE_SIZE);
 		g.setColor(Constants.MOVE_BORDER_COLOR);
-		g.drawRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+		g.drawRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
+				Constants.TILE_SIZE, Constants.TILE_SIZE);
 	}
-	
+
 	private void drawSelectionContext(Graphics2D g) {
 		if (context.getShip() != null) {
 			if (context.getType() == MoveType.TORPEDO) {
-				// Render a move square at each 
+				// Render a move square at each
 				for (Point p : context.getShip().getTorpedoLine().getPoints()) {
 					drawSelectionSquare(g, p.x, p.y);
 				}
 			} else if (context.getType() == MoveType.CANNON) {
 				// Get the cannon range
-				Rectangle cannonRangeRect = context.getShip().getCannonRange().getRectangle(context.getShip());
+				Rectangle cannonRangeRect = context.getShip().getCannonRange()
+						.getRectangle(context.getShip());
 				for (int x = 0; x < cannonRangeRect.getWidth(); x++) {
 					for (int y = 0; y < cannonRangeRect.getHeight(); y++) {
-						drawSelectionSquare(g, cannonRangeRect.x + x, cannonRangeRect.y + y);							
+						drawSelectionSquare(g, cannonRangeRect.x + x,
+								cannonRangeRect.y + y);
 					}
 				}
 			} else if (context.getType() == MoveType.MOVE) {
 				for (Point p : context.getShip().getValidMovePoints()) {
 					drawSelectionSquare(g, p.x, p.y);
 				}
+			} else if (context.getType() == MoveType.PICKUP_MINE) {
+				for (Point p : context.getShip().getValidMinePickupPoints()) {
+					drawSelectionSquare(g, p.x, p.y);
+				}				
 			}
 		}
 	}
@@ -270,17 +297,18 @@ public class GameFieldPanel extends JPanel implements Observer {
 			// Get the tile that we pressed
 			int x = e.getX() / Constants.TILE_SIZE;
 			int y = e.getY() / Constants.TILE_SIZE;
-			
+
 			// See if we selected one of our ships
 			Point p = new Point(x, y);
-			for (Ship s : game.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
+			for (Ship s : game.getPlayerShips(isP1 ? game.getP1() : game
+					.getP2())) {
 				if (s.pointBelongsToShip(p)) {
 					// Select the ship!
 					context.setShip(s);
 					return;
 				}
 			}
-			
+
 			// See if we have a selection context and we clicked on it
 			if (context.getShip() != null && context.getType() != null) {
 				if (context.getType() == MoveType.MOVE) {
@@ -288,31 +316,38 @@ public class GameFieldPanel extends JPanel implements Observer {
 						sendMove(p);
 					}
 				} else if (context.getType() == MoveType.CANNON) {
-					if (context.getShip().getCannonRange().inRange(context.getShip(), p.x, p.y)) {
+					if (context.getShip().getCannonRange()
+							.inRange(context.getShip(), p.x, p.y)) {
+						sendMove(p);
+					}
+				} else if (context.getType() == MoveType.PICKUP_MINE) {
+					if (context.getShip().getValidMinePickupPoints().contains(p)) {
 						sendMove(p);
 					}
 				}
 			}
 		}
 	}
-	
+
 	private void sendMove(Point p) {
 		GameMovePacket packet = new GameMovePacket();
-		packet.ship = client.getGameManager().getGame().getShips().indexOf(context.getShip());
+		packet.ship = client.getGameManager().getGame().getShips()
+				.indexOf(context.getShip());
 		packet.moveType = context.getType();
 		packet.contextPoint = p;
 		client.getGameManager().applyMove(packet, true);
 	}
-	
+
 	@Override
-	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
+	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w,
+			int h) {
 		long now = System.currentTimeMillis();
-		
+
 		if (now - lastImageUpdate > 100) {
 			repaint();
 			lastImageUpdate = now;
 		}
-		
+
 		return true;
 	}
 }

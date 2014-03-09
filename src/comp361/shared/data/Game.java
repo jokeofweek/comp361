@@ -55,6 +55,8 @@ public class Game {
 				}
 			}
 		}
+		
+		field.setCellType(new Point(7, Constants.BASE_Y_OFFSET + 5), CellType.MINE);
 
 		// Setup the ships
 		Ship[] templates = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
@@ -392,6 +394,9 @@ public class Game {
 			ship.fireTorpedo();
 		} else if (packet.moveType == MoveType.REPAIR) {
 			ship.repair();
+		} else if (packet.moveType == MoveType.PICKUP_MINE) {
+			ship.setMineCount(ship.getMineCount() + 1);
+			ship.getGame().getField().setCellType(packet.contextPoint, CellType.WATER);
 		}
 
 	}

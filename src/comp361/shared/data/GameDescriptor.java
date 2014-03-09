@@ -33,7 +33,6 @@ public class GameDescriptor {
 		this.players = new String[maxPlayers];
 		this.readyPlayers = new HashSet<>();
 		this.maxPlayers = maxPlayers;
-		this.seed = seed;
 	}
 	
 	public int getId() {

@@ -157,8 +157,7 @@ public class GameDescriptorManager {
 	 */
 	public Game createGame(int id) {
 		GameDescriptor d = gameDescriptors.get(id);
-		
-		
+				
 		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed());
 		return g;
 	}
