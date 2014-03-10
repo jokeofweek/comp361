@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -33,6 +34,10 @@ import comp361.shared.packets.shared.GameMovePacket;
 public class GameFieldPanel extends JPanel implements Observer {
 
 	private static boolean GOD_MODE = false;
+	
+	// Transforms
+	private static final RescaleOp SUNKEN_SHIP_TRANSFORM = 
+			new RescaleOp(new float[]{0f, 0f, 0f, Constants.SUNKEN_SHIP_ALPHA}, new float[4], null);
 
 	private GameClient client;
 	private Game game;
@@ -109,7 +114,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			for (int y = 0; y < Constants.MAP_HEIGHT; y++) {
 				Point p = new Point(x, y);
 				for (Ship s : ships) {
-					if (s.getActiveRadar().inRange(s, x, y)) {
+					if (!s.isSunk() && s.getActiveRadar().inRange(s, x, y)) {
 						fov.add(p);
 						// If this is a sonar ship, add it down there as well.
 						if (s.hasSonar()) {
@@ -183,44 +188,37 @@ public class GameFieldPanel extends JPanel implements Observer {
 	public void drawShip(Graphics g, Ship ship, boolean isOwnShip, boolean sunk,
 			Set<Point> fov) {
 
+		Graphics2D g2d = (Graphics2D) g;
+		
 		ResourceManager rm = ResourceManager.getInstance();
 		// Get the ship's line
 		List<Point> points = ship.getShipLine().getPoints();
 		// Render the head
 		Point head = points.remove(points.size() - 1);
 		
+		// Create a filter if the ship is sunk
+		RescaleOp op = null;
+		if (sunk) {
+			op = SUNKEN_SHIP_TRANSFORM;
+		}
+		
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
-			if (sunk) {
-				g.setColor(Color.BLACK);
-				g.fillRect((int) head.getX()
-						* Constants.TILE_SIZE, (int) head.getY()
-						* Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
-			} else {
-				BufferedImage headImage = rm.getHeadImage(ship.getDirection(),
-						ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
+			
+			BufferedImage headImage = rm.getHeadImage(ship.getDirection(),
+					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
 
-				g.drawImage(headImage, (int) head.getX()
-						* Constants.TILE_SIZE, (int) head.getY()
-						* Constants.TILE_SIZE, null);
-			}
+			g2d.drawImage(headImage, op, (int)head.x * Constants.TILE_SIZE,  (int)head.y * Constants.TILE_SIZE);		
 		}
 
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			if (sunk) {
-				g.setColor(Color.BLACK);
-				g.fillRect((int) tail.getX()
-						* Constants.TILE_SIZE, (int) tail.getY()
-						* Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
-			} else {
-				BufferedImage tailImage = rm.getTailImage(ship.getDirection(),
-						ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
+			BufferedImage tailImage = rm.getTailImage(ship.getDirection(),
+					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
 
-				g.drawImage(tailImage, (int) tail.getX()
-						* Constants.TILE_SIZE, (int) tail.getY()
-						* Constants.TILE_SIZE, null);
-			}
+			g2d.drawImage(tailImage, op, (int) tail.getX()
+					* Constants.TILE_SIZE, (int) tail.getY()
+					* Constants.TILE_SIZE);
 		}
 
 		// Render the body
@@ -228,19 +226,13 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				if (sunk) {
-					g.setColor(Color.BLACK);
-					g.fillRect((int) p.getX()
-							* Constants.TILE_SIZE, (int) p.getY()
-							* Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
-				} else {
-					bodyImage = rm.getBodyImage(ship.getDirection(),
-							ship.getHealth(i+1), ship.getMaxHealthPerSquare());
+				bodyImage = rm.getBodyImage(ship.getDirection(),
+						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
 
-					g.drawImage(bodyImage, (int) p.getX()
-							* Constants.TILE_SIZE, (int) p.getY()
-							* Constants.TILE_SIZE, null);
-				}
+				g2d.drawImage(bodyImage, op, (int) p.getX()
+						* Constants.TILE_SIZE, (int) p.getY()
+						* Constants.TILE_SIZE);
+			
 			}
 		}
 	}
