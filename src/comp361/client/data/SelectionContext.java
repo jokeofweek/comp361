@@ -48,6 +48,8 @@ public class SelectionContext extends Observable {
 			points = ship.getValidMovePoints();
 		} else if (getType() == MoveType.CANNON) {
 			points = ship.getCannonRange().getPoints(ship);
+		} else if (getType() == MoveType.DROP_MINE) {
+			points = ship.getValidMineDropPoints();
 		} else if (getType() == MoveType.PICKUP_MINE) {
 			points = ship.getValidMinePickupPoints();
 		} else {

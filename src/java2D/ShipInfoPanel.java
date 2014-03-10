@@ -77,9 +77,12 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				add(fireTorpedoButton);	
 			}
 			
-//			JButton dropMineButton = new JButton("Drop Mine");
-//			dropMineButton.addActionListener(new MoveContextActionListener(MoveType.DROP_MINE));
-//			add(dropMineButton);
+			// If we have mines and there is a place we can drop the mine, show the button
+			if (context.getShip().isMineLayer() && context.getShip().getMineCount() > 0 && !context.getShip().getValidMineDropPoints().isEmpty()) {
+				JButton dropMineButton = new JButton("Drop Mine");
+				dropMineButton.addActionListener(new MoveContextActionListener(MoveType.DROP_MINE));
+				add(dropMineButton);
+			}
 			
 			// If we can pickup mines and there is a mine to pickup, show the button
 			if (context.getShip().isMineLayer()) {

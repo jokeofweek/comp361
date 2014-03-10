@@ -654,7 +654,8 @@ public class Ship {
 				}
 			}
 		}
-		return points;
+
+		return game.getField().filterInBoundPoints(points);
 	}
 
 	/**
@@ -725,7 +726,39 @@ public class Ship {
 				points.add(p);
 			}
 		}
-		return points;
+		
+		return game.getField().filterInBoundPoints(points);
 	}
 
+	/**
+	 * @return the set of all points where a mine can be dropped.
+	 */
+	public Set<Point> getValidMineDropPoints() {
+		Set<Point> points = new HashSet<>();
+		for (Point p : getSurroundingPoints()) {
+			// Can only drop in water
+			if (game.getField().getCellType(p) == CellType.WATER) {
+				boolean isValid = true;
+				for (Point adjP : game.getField().getAdjacentPoints(p)) {
+					// Adjacent point must also be water
+					if (game.getField().getCellType(adjP) != CellType.WATER) {
+						isValid = false;
+						break;
+					}
+
+					// Ensure no ship on any adjacent point
+					for (Ship s : game.getShips()) {
+						if (s != this && s.pointBelongsToShip(adjP)) {
+							isValid = false;
+						}
+					}
+				}
+				
+				if (isValid) {
+					points.add(p);
+				}
+			}
+		}
+		return game.getField().filterInBoundPoints(points);
+	}
 }

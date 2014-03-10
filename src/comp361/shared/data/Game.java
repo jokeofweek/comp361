@@ -188,12 +188,18 @@ public class Game {
 	}
 
 	/**
-	 * @param p
-	 * @return
+	 * This obtains the direction that the player should be facing at the beginning.
+	 * @param p The player.
+	 * @return The direciton ships will start facing.
 	 */
 	public Direction getInitialDirection(String p) {
-		// TODO: implement this
-		return Direction.RIGHT;
+		if (p.equals(p1)) {
+			return Direction.RIGHT;
+		} else if (p.equals(p2)) {
+			return Direction.LEFT;
+		} else {
+			throw new IllegalArgumentException("Not a valid player.");
+		}
 	}
 
 	/**
@@ -205,30 +211,8 @@ public class Game {
 	 *            The index of the position along the base
 	 */
 	public void placeShipAt(Ship s, int index) {
-		int x = s.getOwner().equals(s.getGame().getP1()) ? 0
-				: Constants.MAP_WIDTH - 1;
-		int xOffset = s.getOwner().equals(s.getGame().getP1()) ? 1 : -1;
-		Direction facing = s.getOwner().equals(s.getGame().getP1()) ? Direction.RIGHT
-				: Direction.LEFT;
-
-		s.setDirection(facing);
-
-		// If the ship was at index 0 or passed the length of the base, we just
-		// put it at x.
-		if (index == 0) {
-			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()),
-					Constants.BASE_Y_OFFSET - 1));
-			return;
-		} else if (index == Constants.BASE_HEIGHT + 1) {
-			s.setPosition(new Point(x - xOffset + (xOffset * s.getSize()),
-					Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT));
-			return;
-		}
-
-		// Position it at the right place on the ship
-		index--;
-		s.setPosition(new Point(x + (xOffset * s.getSize()),
-				Constants.BASE_Y_OFFSET + index));
+		s.setDirection(getInitialDirection(s.getOwner()));
+		s.setPosition(field.getIndexPosition(s, index));
 	}
 
 	/**
@@ -397,6 +381,9 @@ public class Game {
 		} else if (packet.moveType == MoveType.PICKUP_MINE) {
 			ship.setMineCount(ship.getMineCount() + 1);
 			ship.getGame().getField().setCellType(packet.contextPoint, CellType.WATER);
+		} else if (packet.moveType == MoveType.DROP_MINE) {
+			ship.setMineCount(ship.getMineCount() - 1);
+			ship.getGame().getField().setCellType(packet.contextPoint, CellType.MINE);
 		}
 
 	}
