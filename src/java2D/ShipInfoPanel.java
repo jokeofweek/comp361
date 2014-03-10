@@ -1,6 +1,5 @@
 package java2D;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -29,7 +28,6 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		
 		this.client = client;
 		this.context = context;
-		context.addObserver(this);
 		
 		Dimension d = new Dimension(Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE), Constants.SCREEN_HEIGHT);
 		setSize(d);

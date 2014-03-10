@@ -21,6 +21,9 @@ public class GamePanel extends ClientPanel {
 	public GamePanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
 		initUI(gameClient);
+		
+		// Add this as an observer of the context
+		context.addObserver(this);
 	}
 
 	private void initUI(GameClient client) {
@@ -56,7 +59,9 @@ public class GamePanel extends ClientPanel {
 				context.setShip(null);
 			}
 		}
+		// Update the info panel
 		infoPanel.update(source, object);
+		fieldPanel.update(source, object);
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override

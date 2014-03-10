@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
 import comp361.client.GameClient;
+import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ResourceManager;
 import comp361.client.ui.SwagFactory;
@@ -35,9 +36,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private GameClient client;
 	private Game game;
+	private long lastImageUpdate = 0;
 	private boolean isP1;
 	private SelectionContext context;
-	private long lastImageUpdate = 0;
+	private Set<Point> fov;
+	private Set<Point> sonarFov;
 
 	public GameFieldPanel(GameClient client, SelectionContext context,
 			boolean isP1) {
@@ -59,6 +62,9 @@ public class GameFieldPanel extends JPanel implements Observer {
 		this.context.addObserver(this);
 
 		this.addMouseListener(new MouseAdapter());
+		
+		// Calculate the FOV
+		recalculateFieldsOfVision();
 	}
 
 	@Override
@@ -68,13 +74,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		List<Ship> ownShips = game.getPlayerShips(isP1 ? game.getP1() : game
-				.getP2());
-
-		// Calculate the field of vision
-		Set<Point> fov = new HashSet<>();
-		Set<Point> sonarFov = new HashSet<>();
-		buildFieldsOfVision(ownShips, fov, sonarFov);
 		
 		// Draw CellType tiles (BASE, MINE, REEF, WATER)
 		drawTiles(g2d, sonarFov);
@@ -91,8 +90,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 		drawSelectionContext(g2d);
 	}
 
-	private void buildFieldsOfVision(List<Ship> ships, Set<Point> fov,
-			Set<Point> sonarFov) {
+	private void recalculateFieldsOfVision() {
+		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game.getP2());
+		fov = new HashSet<>();
+		sonarFov = new HashSet<>();
+		
 		fov.addAll(game.getPointsVisibleFromBase(isP1 ? game.getP1() : game
 				.getP2()));
 
@@ -281,12 +283,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				repaint();
-			}
-		});
+		// Only update the field panel if a turn actually passed
+		if (o instanceof GameManager) {
+			recalculateFieldsOfVision();
+		}
 	}
 
 	private class MouseAdapter extends MouseInputAdapter {
