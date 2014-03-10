@@ -5,16 +5,21 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
 import comp361.client.ui.ResourceManager;
 import comp361.shared.Constants;
+import comp361.shared.data.Direction;
+import comp361.shared.data.Ship;
 
 public class CoralPanel extends JPanel implements Observer {
 	// Number of tiles along the x and y of the panel
@@ -71,31 +76,8 @@ public class CoralPanel extends JPanel implements Observer {
 		drawReef(g2d);
 		drawBase(g2d);
 		drawValidShipPositionSquares(g2d);
-
-		// Draw the ships
-		g.setColor(Color.pink);
-		int[] renderOffsets;
-		for (int i = 0; i < shipPositions.length; i++) {
-			renderOffsets = getShipRenderOffsets(shipPositions[i]);
-			g.fillRect(
-					 // Need to test if we're at the top or the bottom to determine x
-					renderOffsets[0],
-					renderOffsets[1],
-					shipWidths[i] * Constants.TILE_SIZE,
-					Constants.TILE_SIZE);
-		}
-
-		// Draw a border around the selected ship
-		g.setColor(Color.green);
-		if (selectedShip >= 0 && selectedShip < shipWidths.length) {
-			renderOffsets = getShipRenderOffsets(shipPositions[selectedShip]);
-
-			g.drawRect(renderOffsets[0] - 2, renderOffsets[1] - 2,
-					(shipWidths[selectedShip] * Constants.TILE_SIZE) + 3, Constants.TILE_SIZE + 3);
-			g.drawRect(renderOffsets[0] - 1, renderOffsets[1] - 1,
-					(shipWidths[selectedShip] * Constants.TILE_SIZE) + 1, Constants.TILE_SIZE + 1);
-		}
-		
+		drawSelectedShipHighlight(g2d);
+		drawShips(g2d);
 	}
 
 	private void drawWater(Graphics2D g) {
@@ -150,6 +132,47 @@ public class CoralPanel extends JPanel implements Observer {
 
 		// Set color back
 		g.setColor(oldColor);
+	}
+
+	private void drawSelectedShipHighlight(Graphics2D g) {
+		Color oldColor = g.getColor();
+		g.setColor(Constants.SHIP_SELECTION_COLOR);
+
+		int[] renderOffsets;
+
+		// Draw a border around the selected ship
+		if (selectedShip >= 0 && selectedShip < shipWidths.length) {
+			renderOffsets = getShipRenderOffsets(shipPositions[selectedShip]);
+
+			g.fillRect(renderOffsets[0], renderOffsets[1],
+					shipWidths[selectedShip] * Constants.TILE_SIZE, Constants.TILE_SIZE);
+		}
+
+		// Set color back
+		g.setColor(oldColor);
+	}
+
+	private void drawShips(Graphics2D g) {
+		int[] renderOffsets;
+
+		for (int i = 0; i < shipPositions.length; i++) {
+			renderOffsets = getShipRenderOffsets(shipPositions[i]);
+			drawShip(g, renderOffsets, shipWidths[i]);
+		}
+	}
+
+	private void drawShip(Graphics2D g, int[] offsets, int shipWidth) {
+		ResourceManager rm = ResourceManager.getInstance();
+		BufferedImage headImage = rm.getHeadImage(Direction.RIGHT, 1, 1, true);
+		g.drawImage(headImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
+		
+		BufferedImage tailImage = rm.getTailImage(Direction.RIGHT, 1, 1, true);
+		g.drawImage(tailImage, offsets[0], offsets[1], null);
+		
+		BufferedImage bodyImage = rm.getBodyImage(Direction.RIGHT, 1, 1);
+		for (int i = 1; i < shipWidth - 1; i++) {
+			g.drawImage(bodyImage, (i * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
+		}
 	}
 
 	/**

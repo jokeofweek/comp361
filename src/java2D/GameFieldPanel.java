@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -176,7 +177,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the head
 		Point head = points.remove(points.size() - 1);
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
-			g.drawImage(rm.getHeadImage(ship, isOwnShip), (int) head.getX()
+			BufferedImage headImage = rm.getHeadImage(ship.getDirection(),
+					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
+
+			g.drawImage(headImage, (int) head.getX()
 					* Constants.TILE_SIZE, (int) head.getY()
 					* Constants.TILE_SIZE, null);
 		}
@@ -184,16 +188,23 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			g.drawImage(rm.getTailImage(ship, isOwnShip), (int) tail.getX()
+			BufferedImage tailImage = rm.getTailImage(ship.getDirection(),
+					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
+
+			g.drawImage(tailImage, (int) tail.getX()
 					* Constants.TILE_SIZE, (int) tail.getY()
 					* Constants.TILE_SIZE, null);
 		}
 
 		// Render the body
+		BufferedImage bodyImage;
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				g.drawImage(rm.getBodyImage(ship, i + 1), (int) p.getX()
+				bodyImage = rm.getBodyImage(ship.getDirection(),
+						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
+
+				g.drawImage(bodyImage, (int) p.getX()
 						* Constants.TILE_SIZE, (int) p.getY()
 						* Constants.TILE_SIZE, null);
 			}

@@ -56,21 +56,21 @@ public class ResourceManager {
 		return waterImage;
 	}
 
-	public BufferedImage getBodyImage(Ship s, int index) {
-		String state = s.getHealth(index) < s.getMaxHealthPerSquare() ? "hit" : null;
-		String filename = getFilename("ship-body", s.getDirection().ordinal()+1, state);
+	public BufferedImage getBodyImage(Direction dir, int health, int maxHealth) {
+		String state = health < maxHealth ? "hit" : null;
+		String filename = getFilename("ship-body", dir.ordinal()+1, state);
 		return images.get(filename);
 	}
 
-	public BufferedImage getHeadImage(Ship s, boolean isOwner) {
-		String state = s.getHealth(s.getSize() - 1) < s.getMaxHealthPerSquare() ? "hit" : null;
-		String filename = getFilename("ship-head", s.getDirection().ordinal()+1, isOwner, state);
+	public BufferedImage getHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+		String state = health < maxHealth ? "hit" : null;
+		String filename = getFilename("ship-head", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
-	public BufferedImage getTailImage(Ship s, boolean isOwner) {
-		String state = s.getHealth(0) < s.getMaxHealthPerSquare() ? "hit" : null;
-		String filename = getFilename("ship-tail", s.getDirection().ordinal()+1, isOwner, state);
+	public BufferedImage getTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+		String state = health < maxHealth ? "hit" : null;
+		String filename = getFilename("ship-tail", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
