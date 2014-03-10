@@ -1,5 +1,6 @@
 package java2D;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -176,24 +177,41 @@ public class GameFieldPanel extends JPanel implements Observer {
 		List<Point> points = ship.getShipLine().getPoints();
 		// Render the head
 		Point head = points.remove(points.size() - 1);
+		
+		boolean sunk = ship.isSunk();
+		
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
-			BufferedImage headImage = rm.getHeadImage(ship.getDirection(),
-					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
+			if (sunk) {
+				g.setColor(Color.BLACK);
+				g.fillRect((int) head.getX()
+						* Constants.TILE_SIZE, (int) head.getY()
+						* Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+			} else {
+				BufferedImage headImage = rm.getHeadImage(ship.getDirection(),
+						ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
 
-			g.drawImage(headImage, (int) head.getX()
-					* Constants.TILE_SIZE, (int) head.getY()
-					* Constants.TILE_SIZE, null);
+				g.drawImage(headImage, (int) head.getX()
+						* Constants.TILE_SIZE, (int) head.getY()
+						* Constants.TILE_SIZE, null);
+			}
 		}
 
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			BufferedImage tailImage = rm.getTailImage(ship.getDirection(),
-					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
+			if (sunk) {
+				g.setColor(Color.BLACK);
+				g.fillRect((int) tail.getX()
+						* Constants.TILE_SIZE, (int) tail.getY()
+						* Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+			} else {
+				BufferedImage tailImage = rm.getTailImage(ship.getDirection(),
+						ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
 
-			g.drawImage(tailImage, (int) tail.getX()
-					* Constants.TILE_SIZE, (int) tail.getY()
-					* Constants.TILE_SIZE, null);
+				g.drawImage(tailImage, (int) tail.getX()
+						* Constants.TILE_SIZE, (int) tail.getY()
+						* Constants.TILE_SIZE, null);
+			}
 		}
 
 		// Render the body
@@ -201,12 +219,19 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				bodyImage = rm.getBodyImage(ship.getDirection(),
-						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
+				if (sunk) {
+					g.setColor(Color.BLACK);
+					g.fillRect((int) p.getX()
+							* Constants.TILE_SIZE, (int) p.getY()
+							* Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+				} else {
+					bodyImage = rm.getBodyImage(ship.getDirection(),
+							ship.getHealth(i+1), ship.getMaxHealthPerSquare());
 
-				g.drawImage(bodyImage, (int) p.getX()
-						* Constants.TILE_SIZE, (int) p.getY()
-						* Constants.TILE_SIZE, null);
+					g.drawImage(bodyImage, (int) p.getX()
+							* Constants.TILE_SIZE, (int) p.getY()
+							* Constants.TILE_SIZE, null);
+				}
 			}
 		}
 	}

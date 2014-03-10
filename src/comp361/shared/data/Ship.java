@@ -761,4 +761,16 @@ public class Ship {
 		}
 		return game.getField().filterInBoundPoints(points);
 	}
+	
+	/**
+	 * @return true if a ship is sunk (eg. no squares have health)
+	 */
+	public boolean isSunk() {
+		for (int i = 0; i < health.length; i++) {
+			if (health[i] != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
