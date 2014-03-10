@@ -208,7 +208,7 @@ public class ChatPanel extends JPanel {
 				String command = tokens.remove(0);
 				int numTokens = tokens.size();
 				
-				if (command.equals("me") && numTokens > 1) {
+				if (command.equals("me") && numTokens > 0) {
 					message = join(tokens);
 					isMetaMessage = true;
 				} else if (command.equals("newgame")) {
