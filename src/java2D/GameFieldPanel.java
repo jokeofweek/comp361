@@ -1,6 +1,5 @@
 package java2D;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -129,19 +128,13 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawShips(Graphics g, Set<Point> fov) {
 		// Draw sunken ships first
-		Set<Ship> sunkenShips = new HashSet<>();
 		Set<Ship> liveShips = new HashSet<>();
 		for (Ship ship : game.getShips()) {
 			if (ship.isSunk()) {
-				sunkenShips.add(ship);
+				drawShip(g, ship, isP1 == ship.getOwner().equals(game.getP1()), true, fov);
 			} else {
 				liveShips.add(ship);
 			}
-		}
-		
-		// Render sunken ships
-		for (Ship ship : sunkenShips) {
-			drawShip(g, ship, isP1 == ship.getOwner().equals(game.getP1()), true, fov);
 		}
 		
 		// Render live ships
