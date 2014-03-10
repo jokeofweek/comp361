@@ -2,6 +2,7 @@ package comp361.shared.data.range;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.HashSet;
 import java.util.Set;
 
 import comp361.shared.data.Ship;
@@ -47,4 +48,20 @@ public abstract class Range {
 	 * @return A rectangle representing the visible area.
 	 */
 	public abstract Rectangle getRectangle(Ship source);
+	
+	/**
+	 * Creates a set of all the points contained in the range for a given range.
+	 * @param source The source ship.
+	 * @return The set of all points in the rectangle returned by getRectnagle.
+	 */
+	public Set<Point> getPoints(Ship source) {
+		Rectangle rect = getRectangle(source);
+		Set<Point> points = new HashSet<>(rect.width * rect.height);
+		for (int x = 0; x < rect.width; x++) {
+			for (int y = 0; y < rect.height; y++) {
+				points.add(new Point(rect.x + x, rect.y + y));
+			}
+		}
+		return points;
+	}
 }
