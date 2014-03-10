@@ -56,8 +56,6 @@ public class Game {
 			}
 		}
 		
-		field.setCellType(new Point(7, Constants.BASE_Y_OFFSET + 5), CellType.MINE);
-
 		// Setup the ships
 		Ship[] templates = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
 				Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE,

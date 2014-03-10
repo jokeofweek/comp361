@@ -123,15 +123,26 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	private void drawShips(Graphics g, Set<Point> fov) {
-		for (Ship ship : game
-				.getPlayerShips(isP1 ? game.getP1() : game.getP2())) {
-			drawShip(g, ship, true, fov);
+		// Draw sunken ships first
+		Set<Ship> sunkenShips = new HashSet<>();
+		Set<Ship> liveShips = new HashSet<>();
+		for (Ship ship : game.getShips()) {
+			if (ship.isSunk()) {
+				sunkenShips.add(ship);
+			} else {
+				liveShips.add(ship);
+			}
 		}
-
-		for (Ship ship : game.getPlayerShips(!isP1 ? game.getP1() : game
-				.getP2())) {
-			drawShip(g, ship, false, fov);
+		
+		// Render sunken ships
+		for (Ship ship : sunkenShips) {
+			drawShip(g, ship, isP1 == ship.getOwner().equals(game.getP1()), true, fov);
 		}
+		
+		// Render live ships
+		for (Ship ship : liveShips) {
+			drawShip(g, ship, isP1 == ship.getOwner().equals(game.getP1()), false, fov);
+		}		
 	}
 
 	public void drawTiles(Graphics2D g, Set<Point> sonarFov) {
@@ -169,7 +180,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void drawShip(Graphics g, Ship ship, boolean isOwnShip,
+	public void drawShip(Graphics g, Ship ship, boolean isOwnShip, boolean sunk,
 			Set<Point> fov) {
 
 		ResourceManager rm = ResourceManager.getInstance();
@@ -177,8 +188,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 		List<Point> points = ship.getShipLine().getPoints();
 		// Render the head
 		Point head = points.remove(points.size() - 1);
-		
-		boolean sunk = ship.isSunk();
 		
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
 			if (sunk) {
