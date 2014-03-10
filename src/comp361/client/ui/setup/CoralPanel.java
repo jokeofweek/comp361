@@ -4,30 +4,46 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import comp361.client.ui.ResourceManager;
 import comp361.shared.Constants;
 
 public class CoralPanel extends JPanel implements Observer {
+	// Number of tiles along the x and y of the panel
+	private static final int PANEL_TILES_X = Constants.CORAL_WIDTH + Constants.CORAL_X_OFFSET;
+	private static final int PANEL_TILES_Y = Constants.CORAL_HEIGHT;
 
-	private static final int PANEL_WIDTH = (Constants.CORAL_WIDTH + Constants.CORAL_X_OFFSET) * Constants.TILE_SIZE;
-	private static final int PANEL_HEIGHT = Constants.CORAL_HEIGHT * Constants.TILE_SIZE;
-	private boolean first = true;
-	
+	// Calculate base offset
+	private static final int BASE_OFFSET = Constants.BASE_Y_OFFSET - Constants.CORAL_Y_OFFSET;
+
+	// Size of the panel (in pixels)
+	private static final int PANEL_WIDTH = (PANEL_TILES_X) * Constants.TILE_SIZE;
+	private static final int PANEL_HEIGHT = PANEL_TILES_Y * Constants.TILE_SIZE;
+
+	// Preload images
+	private Image waterImage = ResourceManager.getInstance().getWaterImage();
+	private BufferedImage reefImage = ResourceManager.getInstance().getReefImage();
+
 	private CoralReefGenerator reefGenerator;
-	
-	// Hardcoded ships for now
+
+	// Hard coded ships for now
 	private int[] shipWidths = {3, 4, 2, 5};
 	private int[] shipPositions = {0, 2, 3, Constants.BASE_HEIGHT + 1};
 	private int selectedShip = 2;
+	private boolean[][] reefMask;
+	private long lastImageUpdate = 0;
 
 	public CoralPanel(CoralReefGenerator reefGenerator) {
 		this.reefGenerator = reefGenerator;
+		this.reefMask = reefGenerator.getReef();
 		
 		// Add self as listener to the reef
 		this.reefGenerator.addObserver(this);
@@ -47,44 +63,15 @@ public class CoralPanel extends JPanel implements Observer {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		// Fill the background with black
-		// TODO: Fill the background with water tile
-		g.setColor(Color.black);
-		g.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-		
-		// Paint the coral tiles
-		g.setColor(Color.green);
-		for (int x = 0; x < Constants.CORAL_WIDTH; x++) {
-			for (int y = 0; y < Constants.CORAL_HEIGHT; y++) {
-				if (reefGenerator.getReef()[x][y]) {
-					g.fillRect((x + Constants.CORAL_X_OFFSET) * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
-							Constants.TILE_SIZE, Constants.TILE_SIZE);
-				}
-			}
-		}
-		
-		// Draw the base. To do this, we need to calculate how far away
-		// the base is from the top, but since we're only drawing the map
-		// portion starting at the top of the coral, we have to make sure
-		// to draw the base at the right offset.
-		int baseOffset = Constants.BASE_Y_OFFSET - Constants.CORAL_Y_OFFSET;
-		g.setColor(Color.red);
-		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
-			g.fillRect(0, (y + baseOffset) * Constants.TILE_SIZE, 
-					Constants.TILE_SIZE, Constants.TILE_SIZE);
-		}
-		
-		// Draw the squares where a ship can be placed
-		g.setColor(Color.blue);
-		g.fillRect(0, (-1 + baseOffset) * Constants.TILE_SIZE, 
-				Constants.TILE_SIZE, Constants.TILE_SIZE);
-		g.fillRect(0, (Constants.BASE_HEIGHT + baseOffset) * Constants.TILE_SIZE, 
-				Constants.TILE_SIZE, Constants.TILE_SIZE);
-		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
-			g.fillRect(Constants.TILE_SIZE, (y + baseOffset) * Constants.TILE_SIZE, 
-					Constants.TILE_SIZE, Constants.TILE_SIZE);
-		}
-		
+		g.clearRect(0, 0, getWidth(), getHeight());
+
+		Graphics2D g2d = (Graphics2D) g;
+
+		drawWater(g2d);
+		drawReef(g2d);
+		drawBase(g2d);
+		drawValidShipPositionSquares(g2d);
+
 		// Draw the ships
 		g.setColor(Color.pink);
 		int[] renderOffsets;
@@ -97,7 +84,7 @@ public class CoralPanel extends JPanel implements Observer {
 					shipWidths[i] * Constants.TILE_SIZE,
 					Constants.TILE_SIZE);
 		}
-		
+
 		// Draw a border around the selected ship
 		g.setColor(Color.green);
 		if (selectedShip >= 0 && selectedShip < shipWidths.length) {
@@ -110,7 +97,61 @@ public class CoralPanel extends JPanel implements Observer {
 		}
 		
 	}
-	
+
+	private void drawWater(Graphics2D g) {
+		// Draw water everywhere
+		for (int x = 0; x < PANEL_TILES_X; x++) {
+			for (int y = 0; y < PANEL_TILES_Y; y++) {
+				g.drawImage(waterImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
+			}
+		}
+	}
+
+	private void drawReef(Graphics2D g) {
+		// Draw reef
+		for (int x = 0; x < Constants.CORAL_WIDTH; x++) {
+			for (int y = 0; y < Constants.CORAL_HEIGHT; y++) {
+				// Draw reef at (x,y) if present
+				if (reefMask[x][y]) {
+					// Calculate panel x and y position
+					int xPos = (x + Constants.CORAL_X_OFFSET) * Constants.TILE_SIZE;
+					int yPos = y * Constants.TILE_SIZE;
+					g.drawImage(reefImage, xPos, yPos, null);
+				}
+			}
+		}
+	}
+
+	private void drawBase(Graphics2D g) {
+		// Draw base image on left of screen
+		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
+			g.drawImage(ResourceManager.getInstance().getBaseImage(y + Constants.BASE_Y_OFFSET),
+					0, (y + BASE_OFFSET) * Constants.TILE_SIZE, null);
+		}
+	}
+
+	private void drawValidShipPositionSquares(Graphics2D g) {
+		Color oldColor = g.getColor();
+		g.setColor(Constants.SHIP_PLACE_OK_COLOR);
+
+		// Draw valid ship position above base
+		g.fillRect(0, (BASE_OFFSET - 1) * Constants.TILE_SIZE,
+				Constants.TILE_SIZE, Constants.TILE_SIZE);
+
+		// Draw valid ship position below base
+		g.fillRect(0, (Constants.BASE_HEIGHT + BASE_OFFSET) * Constants.TILE_SIZE, 
+				Constants.TILE_SIZE, Constants.TILE_SIZE);
+
+		// Draw valid ship positions along right side of base
+		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
+			g.fillRect(Constants.TILE_SIZE, (y + BASE_OFFSET) * Constants.TILE_SIZE, 
+					Constants.TILE_SIZE, Constants.TILE_SIZE);
+		}
+
+		// Set color back
+		g.setColor(oldColor);
+	}
+
 	/**
 	 * This determines the x and y position of the top left corner for a given ship
 	 * position.
@@ -173,6 +214,7 @@ public class CoralPanel extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		// Repaint on update from the reef generator
 		if (o == this.reefGenerator && this.isVisible()) {
+			reefMask = reefGenerator.getReef();
 			repaint();
 		}
 	}
@@ -196,8 +238,18 @@ public class CoralPanel extends JPanel implements Observer {
 				repaint();
 				return;
 			}
-			
 		}
 	}
-	
+
+	@Override
+	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
+		long now = System.currentTimeMillis();
+
+		if (now - lastImageUpdate > 100) {
+			repaint();
+			lastImageUpdate = now;
+		}
+
+		return true;
+	}
 }

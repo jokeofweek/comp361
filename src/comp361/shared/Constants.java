@@ -32,6 +32,7 @@ public class Constants {
 	public static final Color FOG_OF_WAR_COLOR = new Color(0f, 0f, 0f, 0.5f);
 	public static final Color SONAR_COLOR = new Color(1.0f, 0.0f, 0f, 0.1f);
 	public static final Color SHIP_SELECTION_COLOR = new Color(1.0f, 1.0f, 0f, 0.5f);
+	public static final Color SHIP_PLACE_OK_COLOR = new Color(1.0f, 1.0f, 0f, 0.1f);
 	public static final Color MOVE_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.5f);
 	public static final Color MOVE_HOVER_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 	public static final Color MOVE_BORDER_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.5f);
