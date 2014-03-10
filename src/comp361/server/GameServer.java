@@ -58,8 +58,8 @@ public class GameServer {
 		try {
 			server.bind(port);
 		} catch (IOException e) {
-			logger.debug("Error occured while creating socket, shutting down...");
-			e.printStackTrace();
+			logger.error("Error occured while creating socket, shutting down...");
+			logger.debug(e.getMessage());
 			System.exit(1);
 		}
 		server.start();
