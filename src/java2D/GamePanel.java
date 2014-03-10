@@ -59,6 +59,10 @@ public class GamePanel extends ClientPanel {
 				context.setShip(null);
 			}
 		}
+		// If a turn passed, update the context points
+		if (source instanceof GameManager) {
+			context.updatePoints();
+		}
 		// Update the info panel
 		infoPanel.update(source, object);
 		fieldPanel.update(source, object);

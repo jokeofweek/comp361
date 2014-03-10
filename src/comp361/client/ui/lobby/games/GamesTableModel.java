@@ -3,6 +3,7 @@ package comp361.client.ui.lobby.games;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,6 +72,9 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (descriptors.size() == 0) {
+			return null;
+		}
 		GameDescriptor descriptor = manager.getGameDescriptor(descriptors.get(rowIndex));
 		if (columnIndex == 0) {
 			return descriptor.getName();

@@ -266,29 +266,9 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawSelectionContext(Graphics2D g) {
 		if (context.getShip() != null) {
-			if (context.getType() == MoveType.TORPEDO) {
-				// Render a move square at each
-				for (Point p : context.getShip().getTorpedoLine().getPoints()) {
-					drawSelectionSquare(g, p.x, p.y);
-				}
-			} else if (context.getType() == MoveType.CANNON) {
-				// Get the cannon range
-				Rectangle cannonRangeRect = context.getShip().getCannonRange()
-						.getRectangle(context.getShip());
-				for (int x = 0; x < cannonRangeRect.getWidth(); x++) {
-					for (int y = 0; y < cannonRangeRect.getHeight(); y++) {
-						drawSelectionSquare(g, cannonRangeRect.x + x,
-								cannonRangeRect.y + y);
-					}
-				}
-			} else if (context.getType() == MoveType.MOVE) {
-				for (Point p : context.getShip().getValidMovePoints()) {
-					drawSelectionSquare(g, p.x, p.y);
-				}
-			} else if (context.getType() == MoveType.PICKUP_MINE) {
-				for (Point p : context.getShip().getValidMinePickupPoints()) {
-					drawSelectionSquare(g, p.x, p.y);
-				}
+			// Render a selection square on all the points for the context
+			for (Point p : context.getPoints()) {
+				drawSelectionSquare(g, p.x, p.y);
 			}
 		}
 	}
@@ -319,22 +299,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 				}
 			}
 
-			// See if we have a selection context and we clicked on it
+			// See if we have a selection context and we clicked on a point in the context
 			if (context.getShip() != null && context.getType() != null) {
-				if (context.getType() == MoveType.MOVE) {
-					if (context.getShip().getValidMovePoints().contains(p)) {
-						sendMove(p);
-					}
-				} else if (context.getType() == MoveType.CANNON) {
-					if (context.getShip().getCannonRange()
-							.inRange(context.getShip(), p.x, p.y)) {
-						sendMove(p);
-					}
-				} else if (context.getType() == MoveType.PICKUP_MINE) {
-					if (context.getShip().getValidMinePickupPoints()
-							.contains(p)) {
-						sendMove(p);
-					}
+				if (context.getPoints().contains(p)) {
+					sendMove(p);
 				}
 			}
 		}
@@ -352,8 +320,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 			final int newX = e.getX() / Constants.TILE_SIZE;
 			final int newY = e.getY() / Constants.TILE_SIZE;
 			
-			System.out.println("New " + newX + "," + newY);
-
 			// Repaint if it changed
 			boolean changed = (newX != cursorX || newY != cursorY);
 			
@@ -362,7 +328,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						System.out.println("Repainting " + newX + "," + newY);
 						cursorX = newX;
 						cursorY = newY;
 
