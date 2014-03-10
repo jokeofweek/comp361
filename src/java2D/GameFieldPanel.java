@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -26,7 +25,6 @@ import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;
 import comp361.shared.data.Game;
-import comp361.shared.data.MoveType;
 import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameMovePacket;
 
