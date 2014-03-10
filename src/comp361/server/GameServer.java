@@ -4,10 +4,11 @@ import java.io.IOException;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
-import comp361.server.console.Console;
+
 import comp361.server.data.AccountManager;
 import comp361.server.data.GameDescriptorManager;
 import comp361.server.data.store.AccountDataStore;
+import comp361.server.logger.Logger;
 import comp361.server.network.ServerPacketListener;
 import comp361.server.session.Session;
 import comp361.shared.data.GameDescriptor;
@@ -16,7 +17,7 @@ import comp361.shared.network.NetworkManager;
 public class GameServer {
 
 	private Server server;
-	private Console console;
+	private Logger logger;
 	private AccountManager accountManager;
 	private AccountDataStore accountDataStore;
 	private GameDescriptorManager gameDescriptorManager;
@@ -30,8 +31,8 @@ public class GameServer {
 	 *            The port to use.
 	 * @param accountDataStore The account data store to use.
 	 */
-	public GameServer(final Console console, int port, AccountDataStore accountDataStore) {
-		this.console = console;
+	public GameServer(final Logger logger, int port, AccountDataStore accountDataStore) {
+		this.logger = logger;
 		this.accountDataStore = accountDataStore;
 		this.accountManager = new AccountManager();
 		this.gameDescriptorManager = new GameDescriptorManager();
@@ -42,7 +43,7 @@ public class GameServer {
 		final GameServer self = this;
 		server = new Server() {
 			protected Connection newConnection() {
-				console.println("Connection established.");
+				logger.debug("Connection established.");
 				return new Session(self);
 			};			
 		};
@@ -57,20 +58,20 @@ public class GameServer {
 		try {
 			server.bind(port);
 		} catch (IOException e) {
-			console.println("Error occured while creating socket, shutting down...");
+			logger.debug("Error occured while creating socket, shutting down...");
 			e.printStackTrace();
 			System.exit(1);
 		}
 		server.start();
 
-		console.println("Listening for connections on port " + port + "...");
+		logger.debug("Listening for connections on port " + port + "...");
 	}
 
 	/**
 	 * @return the console associated with this server application.
 	 */
-	public Console getConsole() {
-		return console;
+	public Logger getLogger() {
+		return logger;
 	}
 
 	/**

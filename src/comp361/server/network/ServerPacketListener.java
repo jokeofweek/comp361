@@ -152,7 +152,7 @@ public class ServerPacketListener extends Listener {
 		// Properly disconnect the session
 		((Session) connection).disconnect();
 
-		gameServer.getConsole().println("Socket disconnected.");
+		gameServer.getLogger().debug("Socket disconnected.");
 	}
 
 }
