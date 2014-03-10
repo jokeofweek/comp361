@@ -147,7 +147,7 @@ public class ChatPanel extends JPanel {
 					// Message is a self action sent with "/me"
 					message += "<i>";
 					if (packet.senderName != null) {
-						StringEscapeUtils.escapeHtml4(packet.senderName + " ");
+						message += StringEscapeUtils.escapeHtml4(packet.senderName + " ");
 					}
 					message += StringEscapeUtils.escapeHtml4(packet.message);
 					message += "</i>";
