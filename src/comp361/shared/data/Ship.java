@@ -494,10 +494,10 @@ public class Ship {
 	/**
 	 * @param p
 	 *            A point on the field
-	 * @return true if the point belongs to the ship, false otherwise
+	 * @return true if the point belongs to the ship and the ship is not sunk, false otherwise
 	 */
 	public boolean pointBelongsToShip(Point p) {
-		return getShipLine().contains(p);
+		return getShipLine().contains(p) && !isSunk();
 	}
 
 	/**

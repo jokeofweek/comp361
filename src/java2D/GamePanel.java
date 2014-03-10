@@ -68,6 +68,10 @@ public class GamePanel extends ClientPanel {
 				context.setShip(null);
 			}
 		}
+		// If the ship in the context is sunk, clear it
+		if (context.getShip() != null && context.getShip().isSunk()) {
+			context.setShip(null);
+		}
 		// If a turn passed, update the context points
 		if (source instanceof GameManager) {
 			context.updatePoints();
