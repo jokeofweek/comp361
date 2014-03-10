@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.HashSet;
@@ -16,7 +17,6 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.MouseInputAdapter;
 
 import comp361.client.GameClient;
 import comp361.client.data.GameManager;
@@ -39,8 +39,14 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private long lastImageUpdate = 0;
 	private boolean isP1;
 	private SelectionContext context;
+
+	// Cached field of vision
 	private Set<Point> fov;
 	private Set<Point> sonarFov;
+
+	// The cursor position
+	int cursorX = -1;
+	int cursorY = -1;
 
 	public GameFieldPanel(GameClient client, SelectionContext context,
 			boolean isP1) {
@@ -60,9 +66,9 @@ public class GameFieldPanel extends JPanel implements Observer {
 		this.isP1 = isP1;
 		this.context = context;
 		this.context.addObserver(this);
+		this.addMouseListener(new FieldMouseAdapter());
+		this.addMouseMotionListener(new FieldMouseAdapter());
 
-		this.addMouseListener(new MouseAdapter());
-		
 		// Calculate the FOV
 		recalculateFieldsOfVision();
 	}
@@ -74,7 +80,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		
 		// Draw CellType tiles (BASE, MINE, REEF, WATER)
 		drawTiles(g2d, sonarFov);
 
@@ -82,7 +87,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		if (context.getShip() != null) {
 			drawShipSelection(g2d, context.getShip());
 		}
-		
+
 		drawShips(g2d, fov);
 		if (!GOD_MODE) {
 			drawFogOfWar(g2d, fov);
@@ -91,10 +96,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	private void recalculateFieldsOfVision() {
-		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game.getP2());
+		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game
+				.getP2());
 		fov = new HashSet<>();
 		sonarFov = new HashSet<>();
-		
+
 		fov.addAll(game.getPointsVisibleFromBase(isP1 ? game.getP1() : game
 				.getP2()));
 
@@ -112,10 +118,9 @@ public class GameFieldPanel extends JPanel implements Observer {
 					}
 				}
 			}
-			
+
 		}
 	}
-	
 
 	private void drawShips(Graphics g, Set<Point> fov) {
 		for (Ship ship : game
@@ -139,9 +144,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 				// If the point is in the sonar fov, add overlay
 				if (sonarFov.contains(new Point(x, y))) {
 					g.setColor(Constants.SONAR_COLOR);
-					g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+					g.fillRect(x * Constants.TILE_SIZE,
+							y * Constants.TILE_SIZE, Constants.TILE_SIZE,
+							Constants.TILE_SIZE);
 				}
-				
+
 				switch (type) {
 				case BASE:
 					drawBase(g, x, y);
@@ -157,7 +164,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 				default:
 					// Because eclipse likes to whine
 				}
-				
+
 			}
 		}
 	}
@@ -211,8 +218,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	public void drawWater(Graphics g, int x, int y) {
-		g.drawImage(ResourceManager.getInstance().getWaterImage(),
-				x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
+		g.drawImage(ResourceManager.getInstance().getWaterImage(), x
+				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {
@@ -244,7 +251,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	private void drawSelectionSquare(Graphics2D g, int x, int y) {
-		g.setColor(Constants.MOVE_COLOR);
+		// If we are where the cursor is, change the color
+		if (x == cursorX && y == cursorY) {
+			g.setColor(Constants.MOVE_HOVER_COLOR);
+		} else {
+			g.setColor(Constants.MOVE_COLOR);
+		}
 		g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE,
 				Constants.TILE_SIZE, Constants.TILE_SIZE);
 		g.setColor(Constants.MOVE_BORDER_COLOR);
@@ -276,7 +288,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			} else if (context.getType() == MoveType.PICKUP_MINE) {
 				for (Point p : context.getShip().getValidMinePickupPoints()) {
 					drawSelectionSquare(g, p.x, p.y);
-				}				
+				}
 			}
 		}
 	}
@@ -289,7 +301,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	private class MouseAdapter extends MouseInputAdapter {
+	private class FieldMouseAdapter extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// Get the tile that we pressed
@@ -319,10 +331,44 @@ public class GameFieldPanel extends JPanel implements Observer {
 						sendMove(p);
 					}
 				} else if (context.getType() == MoveType.PICKUP_MINE) {
-					if (context.getShip().getValidMinePickupPoints().contains(p)) {
+					if (context.getShip().getValidMinePickupPoints()
+							.contains(p)) {
 						sendMove(p);
 					}
 				}
+			}
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// When we exit the component, set the cursor to -1
+			cursorX = -1;
+			cursorY = -1;
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// Calculate the cursor position.
+			final int newX = e.getX() / Constants.TILE_SIZE;
+			final int newY = e.getY() / Constants.TILE_SIZE;
+			
+			System.out.println("New " + newX + "," + newY);
+
+			// Repaint if it changed
+			boolean changed = (newX != cursorX || newY != cursorY);
+			
+
+			if (changed) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						System.out.println("Repainting " + newX + "," + newY);
+						cursorX = newX;
+						cursorY = newY;
+
+						repaint();
+					}
+				});
 			}
 		}
 	}
