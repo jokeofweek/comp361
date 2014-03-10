@@ -3,6 +3,7 @@ package java2D;
 import java.awt.BorderLayout;
 import java.util.Observable;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -15,6 +16,7 @@ import comp361.client.ui.ClientWindow;
 public class GamePanel extends ClientPanel {
 	
 	private SelectionContext context;
+	private JLabel turnLabel;
 	private GameFieldPanel fieldPanel;
 	private ShipInfoPanel infoPanel;
 	
@@ -34,9 +36,12 @@ public class GamePanel extends ClientPanel {
 		add(fieldPanel, BorderLayout.CENTER);
 		
 		JPanel leftBarPanel = new JPanel(new BorderLayout());
-
+		
+		turnLabel = new JLabel();
+		updateTurnLabel();
+		leftBarPanel.add(turnLabel, BorderLayout.NORTH);
 		infoPanel = new ShipInfoPanel(client, context);
-		leftBarPanel.add(infoPanel, BorderLayout.NORTH);
+		leftBarPanel.add(infoPanel, BorderLayout.CENTER);
 		 
 		add(leftBarPanel, BorderLayout.WEST );
 	}
@@ -49,6 +54,10 @@ public class GamePanel extends ClientPanel {
 	@Override
 	public void exit() {
 		getGameClient().getGameManager().deleteObserver(this);
+	}
+	
+	private void updateTurnLabel() {
+		turnLabel.setText(getGameClient().getGameManager().isTurn() ? "Your turn" : "Enemy's turn");
 	}
 	
 	@Override
@@ -64,6 +73,7 @@ public class GamePanel extends ClientPanel {
 			context.updatePoints();
 		}
 		// Update the info panel
+		updateTurnLabel();
 		infoPanel.update(source, object);
 		fieldPanel.update(source, object);
 		SwingUtilities.invokeLater(new Runnable() {
