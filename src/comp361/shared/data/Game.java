@@ -102,13 +102,27 @@ public class Game {
 	}
 
 	/**
-	 * @param ship
-	 * @param line
-	 * @return
+	 * Gets the furthest position along which a ship can move.
+	 * @param ship THe ship to move.
+	 * @param line The line along which it wants to move.
+	 * @return The point up to which the ship can move to, or null if it can't move.
 	 */
 	public Point getFurthestPosition(Ship ship, Line line) {
-		// TODO: implement this
-		return null;
+		
+		// Iterate through all points, trying to find the furthest possible move
+		Point last = null;
+		for (Point p : line.getPoints()) {
+			// If the point isn't water, then can't move past it.
+			if (field.getCellType(p) != CellType.WATER) {
+				return last;
+			}
+			last = p;
+			// If we can move to it, but we aren't a mine layer and there are adjacnet mines, we need to explode!
+			if (!ship.isMineLayer() && !field.getAdjacentMines(p).isEmpty()) {
+				return last;
+			}
+		}
+		return last;
 	}
 
 	/**
@@ -216,11 +230,23 @@ public class Game {
 	/**
 	 * Explodes the mine at position p
 	 * 
-	 * @param p
+	 * @param minePoint
 	 *            The position of the mine to explode
 	 */
-	public void explodeMine(Point p) {
-		// TODO: implement this
+	public void explodeMine(Point minePoint) {
+		// Get the adjacent points
+		for (Point p : field.getAdjacentPoints(minePoint)) {
+			// Look through each ship, testing if they touch the mine
+			// and if so destroying the square that touched it.
+			for (Ship s : ships) {
+				if (s.pointBelongsToShip(p)) {
+					s.doMineDamage(p);
+					break;
+				}
+			}
+		}
+		// Update the field
+		field.setCellType(minePoint, CellType.WATER);
 	}
 
 	/**

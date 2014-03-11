@@ -137,8 +137,8 @@ public class Ship {
 			}
 		}
 		// Reduce speed by percentage of squares broken
-		int speedReducation = (int)Math.round((((double)damagedSquares)/health.length) * this.speed);
-		return this.speed - speedReducation;
+		int speedReduction = (int)Math.round((((double)damagedSquares)/health.length) * this.speed);
+		return this.speed - speedReduction;
 	}
 
 	/**
@@ -350,16 +350,16 @@ public class Ship {
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
 		points.remove(0);
-
-		Point obstacle = game.getClosestObstaclePosition(points);
-		if (obstacle == null) {
-			this.position = p;
-		} else {
-			for (int i = 0; i < points.size() - 1; i++) {
-				if (points.get(i + 1).equals(obstacle)) {
-					this.position = points.get(i);
-				}
-			}
+		
+		// Get the furthest possible position
+		Point endPoint = game.getFurthestPosition(this, new Line(points.get(0), points.get(points.size() - 1)));
+		if (endPoint != null) {
+			setPosition(endPoint);
+		}
+		
+		// Once we've moved, explode any adjacent mines
+		for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
+			game.explodeMine(minePoint);
 		}
 	}
 
@@ -485,19 +485,6 @@ public class Ship {
 		Point point = new Point();
 		// TODO: implement this
 		return point;
-	}
-
-	/**
-	 * @param p
-	 *            the position where the mine will be dropped
-	 * @return true if the mine drop operation succeeds, false otherwise
-	 */
-	public boolean dropMine(Point p) {
-		if (this.isMineLayer() /* do more validation on position p */) {
-			// drop mine
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -781,5 +768,22 @@ public class Ship {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Apply mine damage to a square of the ship.
+	 * @param p The ship point to be damaged.
+	 */
+	public void doMineDamage(Point p) {
+		// Iterate through the ship line, finding the point to damage.
+		int i = 0;
+		for (Point shipP : getShipLine().getPoints()) {
+			if (shipP.equals(p)) {
+				health[i] = 0;
+				return;
+			} else {
+				i++;
+			}
+		}
 	}
 }
