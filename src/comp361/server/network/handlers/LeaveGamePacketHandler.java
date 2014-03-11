@@ -1,11 +1,13 @@
 package comp361.server.network.handlers;
 
+import com.esotericsoftware.kryonet.Connection;
+
 import comp361.server.GameServer;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
-import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
+import comp361.shared.packets.shared.GameOverPacket;
 
 public class LeaveGamePacketHandler implements
 		ServerPacketHandler<LeaveGamePacket> {
@@ -28,10 +30,19 @@ public class LeaveGamePacketHandler implements
 			updatePacket.joined = false;
 
 			gameServer.getServer().sendToAllTCP(updatePacket);
+			gameServer.getLogger().debug("Player " + session.getAccount().getName() + " left game " + descriptorId);
 		} else {
-			// TODO Handle game already started
+			GameOverPacket gameOverPacket = new GameOverPacket();
+			gameOverPacket.winnerName = null;
+			
+			for (Connection c : gameServer.getServer().getConnections()) {
+				Session s = (Session) c;
+				if (s.getSessionType() == SessionType.GAME && s.getGameDescriptorId() == descriptorId) {
+					gameServer.getServer().sendToTCP(s.getID(), gameOverPacket);
+				}
+			}
+			
+			gameServer.getLogger().debug("Player " + session.getAccount().getName() + " ended game " + descriptorId);
 		}
-
-		gameServer.getLogger().debug("Player " + session.getAccount().getName() + " left game " + descriptorId);
 	}
 }
