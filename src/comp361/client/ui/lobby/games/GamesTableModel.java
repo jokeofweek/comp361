@@ -105,12 +105,12 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		descriptors = new ArrayList<>(manager.getGameDescriptorIds());
 		Collections.sort(descriptors);
 		// Remove full games
-		/*for (int i = descriptors.size() - 1; i >= 0; i--) {
+		for (int i = descriptors.size() - 1; i >= 0; i--) {
 			GameDescriptor d = manager.getGameDescriptor(descriptors.get(i));
 			if (d.isStarted() || (d.getMaxPlayers() - d.getPlayerCount() == 0)) {
 				descriptors.remove(i);
 			}
-		}*/
+		}
 		// We've updated our list, so trigger a refresh of the table
 		// data.
 		SwingUtilities.invokeLater(new Runnable() {
