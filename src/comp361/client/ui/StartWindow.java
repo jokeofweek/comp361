@@ -114,7 +114,6 @@ public class StartWindow extends JFrame {
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(null,
 							"An error occured connecting to the server.");
-					ex.printStackTrace();
 				}
 			}
 		});
