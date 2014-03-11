@@ -58,16 +58,18 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 		return false;
 	}
 	
-	public void refreshData(PlayerManager playerManager) {
-		this.playerManager = playerManager;
-		// Get the list of player names and sort them
-		playerNames = new ArrayList<String>(playerManager.getPlayers());
-		Collections.sort(playerNames);
+	public void refreshData(final PlayerManager playerManager) {
+		final PlayersTableModel self = this;
 		// We've updated our list of player names, so trigger a refresh of the table
 		// data.
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				self.playerManager = playerManager;
+				// Get the list of player names and sort them
+				playerNames = new ArrayList<String>(playerManager.getPlayers());
+				Collections.sort(playerNames);
+				
 				fireTableDataChanged();
 			}
 		});

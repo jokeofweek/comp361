@@ -9,7 +9,7 @@ public class GameDescriptorCreatedPacketHandler implements
 
 	@Override
 	public void handle(GameClient gameClient, GameDescriptorCreatedPacket packet) {
-		gameClient.getGameDescriptorManager().addDescriptor(packet.descriptor);
+		gameClient.getGameDescriptorManager().addGameDescriptor(packet.descriptor);
 
 		// If you created the game, then we auto-join.
 		if (packet.isCreator) {

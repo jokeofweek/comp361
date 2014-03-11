@@ -66,7 +66,7 @@ public class GameDescriptor {
 	
 	public void removePlayer(String name) {
 		for (int i = 0; i < players.length; i++) {
-			if (players[i].equals(name)) {
+			if (players[i] != null && players[i].equals(name)) {
 				players[i] = null;
 				break;
 			}

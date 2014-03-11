@@ -1,22 +1,15 @@
 package comp361.client.ui.lobby.games;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import comp361.client.data.GameDescriptorManager;
-import comp361.client.ui.SwagFactory;
 import comp361.shared.data.GameDescriptor;
 
 public class GamesTableModel extends AbstractTableModel implements Observer {
@@ -112,12 +105,12 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		descriptors = new ArrayList<>(manager.getGameDescriptorIds());
 		Collections.sort(descriptors);
 		// Remove full games
-		for (int i = descriptors.size() - 1; i >= 0; i--) {
+		/*for (int i = descriptors.size() - 1; i >= 0; i--) {
 			GameDescriptor d = manager.getGameDescriptor(descriptors.get(i));
 			if (d.isStarted() || (d.getMaxPlayers() - d.getPlayerCount() == 0)) {
 				descriptors.remove(i);
 			}
-		}
+		}*/
 		// We've updated our list, so trigger a refresh of the table
 		// data.
 		SwingUtilities.invokeLater(new Runnable() {

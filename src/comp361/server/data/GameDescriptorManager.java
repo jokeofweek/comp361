@@ -14,6 +14,7 @@ import comp361.shared.data.GameDescriptor;
 import comp361.shared.data.GameResult;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
+import comp361.shared.packets.server.GameDescriptorRemovedPacket;
 import comp361.shared.packets.shared.GameOverPacket;
 
 /**
@@ -204,6 +205,12 @@ public class GameDescriptorManager {
 				s.setSessionType(SessionType.LOBBY);
 			}
 		}
+		
+		// Remove the game descriptor
+		gameDescriptors.remove(id);
+		GameDescriptorRemovedPacket packet = new GameDescriptorRemovedPacket();
+		packet.id = id;
+		server.getServer().sendToAllTCP(packet);
 		
 		// Lawg dawg
 		server.getLogger().debug("Game " + id + " is over. Message: " + message);

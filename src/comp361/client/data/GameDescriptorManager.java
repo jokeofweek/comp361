@@ -13,19 +13,25 @@ import comp361.shared.packets.server.GameDescriptorStartPacket;
 
 public class GameDescriptorManager extends Observable {
 
-	public Map<Integer, GameDescriptor> gameDescriptors;
-	public int currentId;
+	private Map<Integer, GameDescriptor> gameDescriptors;
+	private int currentId;
 
 	public GameDescriptorManager() {
 		this.gameDescriptors = new HashMap<>();
 	}
 
-	public void addDescriptor(GameDescriptor descriptor) {
+	public void addGameDescriptor(GameDescriptor descriptor) {
 		this.internalAddDescriptor(descriptor);
 		setChanged();
 		notifyObservers();
 	}
 
+	public void removeGameDescriptor(int id) {
+		this.gameDescriptors.remove(id);
+		setChanged();
+		notifyObservers();
+	}
+	
 	public Collection<GameDescriptor> getGameDescriptors() {
 		return gameDescriptors.values();
 	}

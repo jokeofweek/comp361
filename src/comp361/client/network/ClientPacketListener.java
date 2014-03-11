@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-
 import comp361.client.GameClient;
 import comp361.client.network.handlers.ChangeSeedPacketHandler;
 import comp361.client.network.handlers.ClientPacketHandler;
@@ -13,6 +12,7 @@ import comp361.client.network.handlers.GameDescriptorCreatedPacketHandler;
 import comp361.client.network.handlers.GameDescriptorListPacketHandler;
 import comp361.client.network.handlers.GameDescriptorPlayerUpdatePacketHandler;
 import comp361.client.network.handlers.GameDescriptorReadyUpdatePacketHandler;
+import comp361.client.network.handlers.GameDescriptorRemovedPacketHandler;
 import comp361.client.network.handlers.GameDescriptorStartPacketHandler;
 import comp361.client.network.handlers.GameMovePacketHandler;
 import comp361.client.network.handlers.GameOverPacketHandler;
@@ -24,6 +24,7 @@ import comp361.shared.packets.server.GameDescriptorCreatedPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
+import comp361.shared.packets.server.GameDescriptorRemovedPacket;
 import comp361.shared.packets.server.GameDescriptorStartPacket;
 import comp361.shared.packets.server.GameStartPacket;
 import comp361.shared.packets.server.GenericError;
@@ -77,6 +78,7 @@ public class ClientPacketListener extends Listener {
 		handlers.put(GameMovePacket.class,
 				new GameMovePacketHandler());
 		handlers.put(GameOverPacket.class, new GameOverPacketHandler());
+		handlers.put(GameDescriptorRemovedPacket.class, new GameDescriptorRemovedPacketHandler());
 
 		return handlers;
 	}

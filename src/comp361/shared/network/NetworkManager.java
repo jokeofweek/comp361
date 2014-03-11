@@ -32,6 +32,7 @@ import comp361.shared.packets.server.GameDescriptorCreatedPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
+import comp361.shared.packets.server.GameDescriptorRemovedPacket;
 import comp361.shared.packets.server.GameDescriptorStartPacket;
 import comp361.shared.packets.server.GameStartPacket;
 import comp361.shared.packets.server.GenericError;
@@ -103,6 +104,7 @@ public class NetworkManager {
 		kryo.register(GameMovePacket.class);
 		kryo.register(GameResult.class);
 		kryo.register(GameOverPacket.class);
+		kryo.register(GameDescriptorRemovedPacket.class);
 	}
 
 	private NetworkManager() {
