@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -25,6 +27,7 @@ public class StartWindow extends JFrame {
 	private JTextField hostTextField;
 	private JTextField portTextField;
 	private JButton connectButton;
+	private JButton remoteButton;
 	
 	private static final String REMOTE_IP = "107.170.48.190";
 	private static boolean USE_REMOTE = false;
@@ -70,6 +73,15 @@ public class StartWindow extends JFrame {
 		portTextField.setText(Constants.PORT + "");
 		fieldsPanel.add(hostTextField);
 		fieldsPanel.add(portTextField);
+		
+		hostTextField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				// ctrl + r -> connect to remote
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
+					remoteButton.doClick();
+				}
+			}
+		});
 
 		return fieldsPanel;
 	}
@@ -81,6 +93,9 @@ public class StartWindow extends JFrame {
 		JPanel panel = new JPanel();
 		connectButton = new JButton("Connect");
 		panel.add(connectButton);
+		
+		remoteButton = new JButton("Remote");
+		panel.add(remoteButton);
 
 		final StartWindow window = this;
 
@@ -115,6 +130,13 @@ public class StartWindow extends JFrame {
 					JOptionPane.showMessageDialog(null,
 							"An error occured connecting to the server.");
 				}
+			}
+		});
+		
+		remoteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				hostTextField.setText(REMOTE_IP);
+				connectButton.doClick();
 			}
 		});
 
