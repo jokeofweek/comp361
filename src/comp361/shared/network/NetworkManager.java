@@ -1,18 +1,13 @@
 package comp361.shared.network;
 
 import java.awt.Point;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.KryoException;
-import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryonet.EndPoint;
+
 import comp361.shared.data.ArmorType;
 import comp361.shared.data.CellType;
 import comp361.shared.data.Direction;
@@ -46,6 +41,7 @@ import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
+import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -105,6 +101,7 @@ public class NetworkManager {
 		kryo.register(GameStartPacket.class);
 		kryo.register(MoveType.class);
 		kryo.register(GameMovePacket.class);
+		kryo.register(GameOverPacket.class);
 	}
 
 	private NetworkManager() {

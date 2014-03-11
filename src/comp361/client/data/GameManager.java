@@ -5,6 +5,7 @@ import java.util.Observable;
 import comp361.client.GameClient;
 import comp361.shared.data.Game;
 import comp361.shared.packets.shared.GameMovePacket;
+import comp361.shared.packets.shared.GameOverPacket;
 
 public class GameManager extends Observable {
 
@@ -57,6 +58,9 @@ public class GameManager extends Observable {
 		notifyObservers();
 	}
 	
-	
+	public void gameOver(GameOverPacket packet) {
+		System.out.println("Game is over!");
+		// TODO handle game over
+	}
 	
 }
