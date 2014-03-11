@@ -7,13 +7,13 @@ import java.util.HashSet;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-
 import comp361.shared.data.ArmorType;
 import comp361.shared.data.CellType;
 import comp361.shared.data.Direction;
 import comp361.shared.data.Field;
 import comp361.shared.data.Game;
 import comp361.shared.data.GameDescriptor;
+import comp361.shared.data.GameResult;
 import comp361.shared.data.MoveType;
 import comp361.shared.data.Player;
 import comp361.shared.data.PlayerUpdateStatus;
@@ -101,6 +101,7 @@ public class NetworkManager {
 		kryo.register(GameStartPacket.class);
 		kryo.register(MoveType.class);
 		kryo.register(GameMovePacket.class);
+		kryo.register(GameResult.class);
 		kryo.register(GameOverPacket.class);
 	}
 

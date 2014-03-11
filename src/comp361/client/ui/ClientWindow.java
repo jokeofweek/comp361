@@ -46,10 +46,6 @@ public class ClientWindow extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Shutting down client.");
-				// Shut down the client on window closing.
-				GameOverPacket gameOverPacket = new GameOverPacket();
-				gameOverPacket.winnerName = null;
-				gameClient.getClient().sendTCP(gameOverPacket);
 				
 				gameClient.getClient().stop();
 			}

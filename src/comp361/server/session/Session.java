@@ -6,6 +6,7 @@ import comp361.server.data.Account;
 import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
+import comp361.shared.packets.shared.GameOverPacket;
 
 public class Session extends Connection {
 
@@ -61,11 +62,11 @@ public class Session extends Connection {
 			this.gameServer.getAccountManager().addAccount(this.account);
 		}
 	}
-	
+
 	public int getGameDescriptorId() {
 		return gameDescriptorId;
 	}
-	
+
 	public void setGameDescriptorId(int gameDescriptorId) {
 		this.gameDescriptorId = gameDescriptorId;
 	}
@@ -74,8 +75,8 @@ public class Session extends Connection {
 	 * Effectively disconnects the session, changing the session type and
 	 * performing any required processing.
 	 */
-	public void disconnect() {	
-		
+	public void disconnect() {
+
 		// Notify all other players
 		if (this.getAccount() != null) {
 			// Handle player disconnecting during game setup
@@ -84,21 +85,28 @@ public class Session extends Connection {
 				gdPacket.id = gameDescriptorId;
 				gdPacket.name = getAccount().getName();
 				gdPacket.joined = false;
-				gameServer.getGameDescriptorManager().removePlayer(gdPacket.id, gdPacket.name);
-				gameServer.getServer().sendToAllExceptTCP(this.getID(), gdPacket);
+				gameServer.getGameDescriptorManager().removePlayer(gdPacket.id,
+						gdPacket.name);
+				gameServer.getServer().sendToAllExceptTCP(this.getID(),
+						gdPacket);
+			} else if (sessionType == SessionType.GAME) {
+				gameServer.getGameDescriptorManager().endGame(
+						getGameDescriptorId(), gameServer, false,
+						this.getAccount().getName(),
+						this.getAccount().getName() + " disconnected", true);
 			}
-			
+
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
 			updatePacket.player = account.getPlayer();
 			updatePacket.status = PlayerUpdateStatus.LOGGED_OUT;
-			gameServer.getServer().sendToAllExceptTCP(this.getID(), updatePacket);
+			gameServer.getServer().sendToAllExceptTCP(this.getID(),
+					updatePacket);
 		}
-		
+
 		// Update the session type.
 		this.setSessionType(SessionType.DISCONNECTED);
 		// Update the account to be null (removing it from the manager)
 		this.setAccount(null);
-		
-		
+
 	}
 }

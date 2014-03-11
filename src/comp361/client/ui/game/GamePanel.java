@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.util.Observable;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -12,6 +13,9 @@ import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
+import comp361.client.ui.lobby.LobbyPanel;
+import comp361.shared.data.GameResult;
+import comp361.shared.packets.shared.GameOverPacket;
 
 public class GamePanel extends ClientPanel {
 	
@@ -62,6 +66,17 @@ public class GamePanel extends ClientPanel {
 	
 	@Override
 	public void update(Observable source, Object object) {
+		// If we received a game over packet
+		if (object instanceof GameOverPacket) {
+			// As long as we didn't disconnect (and therefore lose), show a message
+			GameOverPacket packet = (GameOverPacket) object;
+			if (packet.result != GameResult.LOSS || !packet.fromDisconnect) {
+				JOptionPane.showMessageDialog(null, packet.message);
+				getClientWindow().setPanel(new LobbyPanel(getGameClient(), getClientWindow()));
+			}
+			return;
+		}
+		
 		// If it is no longer our turn, clear the context
 		if (context.getShip() != null && context.getType() != null && source instanceof GameManager) {
 			if (!((GameManager)source).isTurn()) {

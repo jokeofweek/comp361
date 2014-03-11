@@ -17,12 +17,13 @@ public class LeaveGamePacketHandler implements
 		int descriptorId = session.getGameDescriptorId();
 		// If the game hasn't started, it's simple
 		if (!gameServer.getGameDescriptorManager().hasStarted(descriptorId)) {
-			gameServer.getGameDescriptorManager().removePlayer(descriptorId, session.getAccount().getName());
-			
+			gameServer.getGameDescriptorManager().removePlayer(descriptorId,
+					session.getAccount().getName());
+
 			// Set the session back to lobby
 			session.setSessionType(SessionType.LOBBY);
 			session.setGameDescriptorId(0);
-			
+
 			// Create the update packet
 			GameDescriptorPlayerUpdatePacket updatePacket = new GameDescriptorPlayerUpdatePacket();
 			updatePacket.id = descriptorId;
@@ -30,19 +31,14 @@ public class LeaveGamePacketHandler implements
 			updatePacket.joined = false;
 
 			gameServer.getServer().sendToAllTCP(updatePacket);
-			gameServer.getLogger().debug("Player " + session.getAccount().getName() + " left game " + descriptorId);
+			gameServer.getLogger().debug(
+					"Player " + session.getAccount().getName() + " left game "
+							+ descriptorId);
 		} else {
-			GameOverPacket gameOverPacket = new GameOverPacket();
-			gameOverPacket.winnerName = null;
-			
-			for (Connection c : gameServer.getServer().getConnections()) {
-				Session s = (Session) c;
-				if (s.getSessionType() == SessionType.GAME && s.getGameDescriptorId() == descriptorId) {
-					gameServer.getServer().sendToTCP(s.getID(), gameOverPacket);
-				}
-			}
-			
-			gameServer.getLogger().debug("Player " + session.getAccount().getName() + " ended game " + descriptorId);
+			gameServer.getGameDescriptorManager().endGame(
+					session.getGameDescriptorId(), gameServer, false,
+					session.getAccount().getName(),
+					session.getAccount().getName() + " left the game.", false);
 		}
 	}
 }

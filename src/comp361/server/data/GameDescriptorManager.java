@@ -2,13 +2,19 @@ package comp361.server.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.esotericsoftware.kryonet.Connection;
+import comp361.server.GameServer;
+import comp361.server.session.Session;
+import comp361.server.session.SessionType;
 import comp361.shared.data.Game;
 import comp361.shared.data.GameDescriptor;
+import comp361.shared.data.GameResult;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
+import comp361.shared.packets.shared.GameOverPacket;
 
 /**
  * This class handles all the {@link GameDescriptor} information on the server.
@@ -160,5 +166,46 @@ public class GameDescriptorManager {
 				
 		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed());
 		return g;
+	}
+	
+	/**
+	 * This ends a game, sending the appropriate packets to all involved players.
+	 * @param id The ID of the game.
+	 * @param server The game server.
+	 * @param draw True if the game ended in a draw.
+	 * @param loser The loser, if there was one.
+	 * @param message The message to include
+	 * @param fromDisconnect Whether the game was over from an early disconnect
+	 */
+	public void endGame(int id, GameServer server, boolean draw, String loser, String message, boolean fromDisconnect) {
+		// Create a packet for the winner
+		GameOverPacket winPacket = new GameOverPacket();
+		winPacket.result = draw ? GameResult.DRAW : GameResult.WIN;
+		winPacket.message = message;
+		winPacket.fromDisconnect = fromDisconnect;
+		
+		// Create a packet for the loser
+		GameOverPacket lossPacket = new GameOverPacket();
+		lossPacket.result = GameResult.LOSS;
+		lossPacket.message = message;
+		lossPacket.fromDisconnect = fromDisconnect;
+			
+		// Send to all players
+		for (Connection c : server.getServer().getConnections()) {
+			Session s = (Session) c;
+			if (s.getSessionType() == SessionType.GAME && s.getGameDescriptorId() == id) {
+				if (!draw && s.getAccount().getName().equals(loser)) {
+					s.sendTCP(lossPacket);
+				} else {
+					s.sendTCP(winPacket);
+				}
+				
+				// Update the session type back to lobby
+				s.setSessionType(SessionType.LOBBY);
+			}
+		}
+		
+		// Lawg dawg
+		server.getLogger().debug("Game " + id + " is over. Message: " + message);
 	}
 }
