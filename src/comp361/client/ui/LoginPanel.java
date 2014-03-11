@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
-import java2D.GamePanel;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -22,6 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import comp361.client.GameClient;
+import comp361.client.ui.game.GamePanel;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.RegisterPacket;

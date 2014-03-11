@@ -1,4 +1,4 @@
-package java2D;
+package comp361.client.ui.game;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;

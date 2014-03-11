@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Observable;
-import java2D.GamePanel;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -30,6 +29,7 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.game.GamePanel;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.client.UpdateReadyPacket;
