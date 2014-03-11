@@ -129,7 +129,16 @@ public class Ship {
 	 * @return the speed of the ship
 	 */
 	public int getSpeed() {
-		return this.speed;
+		// We have to reduce the speed depending on damage.
+		int damagedSquares = 0;
+		for (int i = 0; i < health.length; i++) {
+			if (health[i] == 0) {
+				damagedSquares++;
+			}
+		}
+		// Reduce speed by percentage of squares broken
+		int speedReducation = (int)Math.round((((double)damagedSquares)/health.length) * this.speed);
+		return this.speed - speedReducation;
 	}
 
 	/**
@@ -541,7 +550,7 @@ public class Ship {
 
 			// Add all the points above(in front of) the ship
 			Point movementCap = new Point(this.position.x, this.position.y
-					- this.speed);
+					- this.getSpeed());
 			for (Point p : getLineTo(movementCap).getPoints()) {
 				if (this.getShipLine().contains(p)) {
 					continue;
@@ -575,7 +584,7 @@ public class Ship {
 
 			// Add all the points below(in front of) the ship
 			Point movementCap = new Point(this.position.x, this.position.y
-					+ this.speed);
+					+ this.getSpeed());
 			for (Point p : getLineTo(movementCap).getPoints()) {
 				if (this.getShipLine().contains(p)) {
 					continue;
@@ -608,7 +617,7 @@ public class Ship {
 			}
 
 			// Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x - this.speed,
+			Point movementCap = new Point(this.position.x - this.getSpeed(),
 					this.position.y);
 			for (Point p : getLineTo(movementCap).getPoints()) {
 				if (this.getShipLine().contains(p)) {
@@ -642,7 +651,7 @@ public class Ship {
 			}
 
 			// Add all the points in front of the ship
-			Point movementCap = new Point(this.position.x + this.speed,
+			Point movementCap = new Point(this.position.x + this.getSpeed(),
 					this.position.y);
 			for (Point p : getLineTo(movementCap).getPoints()) {
 				if (this.getShipLine().contains(p)) {
