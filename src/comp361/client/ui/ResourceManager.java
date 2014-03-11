@@ -58,6 +58,7 @@ public class ResourceManager {
 
 	public BufferedImage getBodyImage(Direction dir, int health, int maxHealth) {
 		String state = health < maxHealth ? "hit" : null;
+		if (health == 0) { state = "dead"; }
 		String filename = getFilename("ship-body", dir.ordinal()+1, state);
 		return images.get(filename);
 	}
@@ -125,6 +126,10 @@ public class ResourceManager {
 				image = ImageIO.read(new File(filename));
 				images.put(filename, image);
 			}
+
+			filename = getFilename("ship-body", dir.ordinal()+1, "dead");
+			image = ImageIO.read(new File(filename));
+			images.put(filename, image);
 		}
 	}
 	
