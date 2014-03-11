@@ -23,6 +23,7 @@ public class SetupMessagePacketHandler implements ServerPacketHandler<SetupMessa
 				if(id == s.getGameDescriptorId())
 				{
 					gameServer.getServer().sendToTCP(s.getID(), packet);
+					gameServer.getLogger().debug("Player " + packet.senderName + " sent message \"" + packet.message + "\" in game " + id);
 				}
 			}
 		}

@@ -27,6 +27,7 @@ public class UpdateReadyPacketHandler implements
 			GameDescriptorStartPacket gdStartPacket = new GameDescriptorStartPacket();
 			gdStartPacket.id = session.getGameDescriptorId();
 			gameServer.getServer().sendToAllTCP(gdStartPacket);
+			gameServer.getLogger().debug("Game " + session.getGameDescriptorId() + " started");
 			// Create the game
 			Game game = gameServer.getGameDescriptorManager().createGame(
 					session.getGameDescriptorId());
@@ -49,6 +50,12 @@ public class UpdateReadyPacketHandler implements
 			outPacket.name = session.getAccount().getName();
 			outPacket.ready = packet.ready;
 			gameServer.getServer().sendToAllTCP(outPacket);
+			
+			if (packet.ready) {
+				gameServer.getLogger().debug("Player " + session.getAccount().getName() + " ready in game " + session.getGameDescriptorId());
+			} else {
+				gameServer.getLogger().debug("Player " + session.getAccount().getName() + " not ready in game " + session.getGameDescriptorId());
+			}
 		}
 
 	}

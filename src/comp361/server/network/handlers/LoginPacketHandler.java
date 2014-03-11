@@ -21,9 +21,11 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 		
 		// Check if the account exists
 		if (!store.accountExists(object.accountName)) {
+			gameServer.getLogger().warn("Account " + object.accountName + " not found");
 			session.sendTCP(LoginError.NO_SUCH_ACCOUNT);
 		// Check if the account is in use
 		} else if (manager.isAccountConnected(object.accountName)) {
+			gameServer.getLogger().warn("Account " + object.accountName + " in use");
 			session.sendTCP(LoginError.ACCOUNT_IN_USE);
 		} else {
 			// Try to load the account
@@ -33,11 +35,13 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 			} catch (DataStoreException e) {
 				// If any loading error occurs, exit.
 				session.sendTCP(LoginError.LOAD_ERROR);
+				gameServer.getLogger().error("Could not load account " + object.accountName);
 				return;
 			}
 			
 			// Check credentials
 			if (!account.getPassword().equals(object.password)) {
+				gameServer.getLogger().error("Invalid credentials for account " + object.accountName);
 				session.sendTCP(LoginError.INVALID_CREDENTIALS);
 				return;
 			}
@@ -55,6 +59,7 @@ public class LoginPacketHandler implements ServerPacketHandler<LoginPacket> {
 			updatePacket.player = account.getPlayer();
 			updatePacket.status = PlayerUpdateStatus.LOGGED_IN;
 			gameServer.getServer().sendToAllTCP(updatePacket);
+			gameServer.getLogger().debug("Account " + object.accountName + " logged in");
 		}
 	}
 }

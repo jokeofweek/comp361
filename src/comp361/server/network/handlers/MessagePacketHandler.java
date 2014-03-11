@@ -11,6 +11,7 @@ public class MessagePacketHandler implements ServerPacketHandler<MessagePacket> 
 			MessagePacket object) {
 		// Send to everyone except for the sender.
 		gameServer.getServer().sendToAllExceptTCP(session.getID(), object);
+		gameServer.getLogger().debug("Player " + object.senderName + " sent " + (object.isMetaMessage ? "meta " : "") + "message \"" + object.message + "\"");
 	}
 
 }

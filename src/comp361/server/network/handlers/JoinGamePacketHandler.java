@@ -17,6 +17,7 @@ public class JoinGamePacketHandler implements
 
 		// Try to join the game, errorring out if it is full
 		if (!manager.addPlayer(object.id, session.getAccount().getName())) {
+			gameServer.getLogger().debug("Cannot join full game " + object.id);
 			session.sendTCP(GenericError.GAME_IS_FULL);
 			return;
 		}
@@ -31,7 +32,8 @@ public class JoinGamePacketHandler implements
 		packet.name = session.getAccount().getName();
 		packet.joined = true;
 		
-		gameServer.getServer().sendToAllTCP(packet);
+		gameServer.getLogger().debug("Player " + session.getAccount().getName() + " joined game " + object.id);
 		
+		gameServer.getServer().sendToAllTCP(packet);
 	}
 }

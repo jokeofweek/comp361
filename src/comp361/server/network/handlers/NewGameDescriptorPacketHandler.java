@@ -27,6 +27,8 @@ public class NewGameDescriptorPacketHandler implements ServerPacketHandler<NewGa
 		nonCreatorPacket.descriptor = descriptor;
 		nonCreatorPacket.isCreator = false;
 		gameServer.getServer().sendToAllExceptTCP(session.getID(), nonCreatorPacket);
+
+		gameServer.getLogger().debug("Game " + descriptor.getId() + " created");
 	}
 
 }

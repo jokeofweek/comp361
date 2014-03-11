@@ -16,6 +16,7 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 		AccountDataStore store = gameServer.getAccountDataStore();
 
 		if (store.accountExists(object.accountName)) {
+			gameServer.getLogger().warn("Account " + object.accountName + " already exists");
 			session.sendTCP(RegisterError.ACCOUNT_ALREADY_EXISTS);
 		} else {
 			// Create the account
@@ -27,8 +28,10 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 			// returning if there was an error
 			try {
 				store.saveAccount(account);
+				gameServer.getLogger().debug("Account " + object.accountName + " created");
 			} catch (DataStoreException e) {
 				session.sendTCP(RegisterError.SAVE_ERROR);
+				gameServer.getLogger().error("Could not create account " + object.accountName);
 				return;
 			}
 			

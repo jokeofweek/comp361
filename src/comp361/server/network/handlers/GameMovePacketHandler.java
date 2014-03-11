@@ -16,6 +16,9 @@ public class GameMovePacketHandler implements
 
 		// Send to all players that are in the game
 		int id = session.getGameDescriptorId();
+		
+		gameServer.getLogger().debug("Received move for game " + id);
+		
 		for (Connection c : gameServer.getServer().getConnections()) {
 			Session other = (Session) c;
 			if (other != session && other.getSessionType() == SessionType.GAME

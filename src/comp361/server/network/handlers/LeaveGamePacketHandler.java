@@ -26,11 +26,12 @@ public class LeaveGamePacketHandler implements
 			updatePacket.id = descriptorId;
 			updatePacket.name = session.getAccount().getName();
 			updatePacket.joined = false;
-			
+
 			gameServer.getServer().sendToAllTCP(updatePacket);
 		} else {
 			// TODO Handle game already started
 		}
 
+		gameServer.getLogger().debug("Player " + session.getAccount().getName() + " left game " + descriptorId);
 	}
 }
