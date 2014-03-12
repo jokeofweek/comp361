@@ -401,13 +401,13 @@ public class Ship {
 		Point endPoint = game.getFurthestPosition(this, new Line(points.get(0), points.get(points.size() - 1)));
 		if (endPoint != null) {
 			setPosition(endPoint);
-		}
-		
-		// Once we've moved, explode any adjacent mines
-		if (!isMineLayer()) {
-			for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
-				// TODO: Log events here dawg!
-				game.explodeMine(minePoint);
+			
+			// Once we've moved, explode any adjacent mines
+			if (!isMineLayer()) {
+				for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
+					// TODO: Log events here dawg!
+					game.explodeMine(minePoint);
+				}
 			}
 		}
 	}

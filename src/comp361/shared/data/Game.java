@@ -116,7 +116,15 @@ public class Game {
 			// If the point isn't water, then can't move past it.
 			if (field.getCellType(p) != CellType.WATER) {
 				return last;
+			} else {
+				// Check if there is a ship at that point
+				for (Ship s : ships) {
+					if (s.pointBelongsToShip(p)) {
+						return last;
+					}
+				}
 			}
+			
 			last = p;
 			// If we can move to it, but we aren't a mine layer and there are adjacnet mines, we need to explode!
 			if (!ship.isMineLayer() && !field.getAdjacentMines(p).isEmpty()) {
