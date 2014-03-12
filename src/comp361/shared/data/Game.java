@@ -379,18 +379,31 @@ public class Game {
 	 * 
 	 * @param s
 	 *            The ship in question.
-	 * @return True if the ship is touching the base.
+	 * @return True if the ship is touching the base and has damaged squared
 	 */
 	public boolean canRepair(Ship s) {
+		boolean hasDamage = false;
+		for (int i = 0; i < s.getSize(); i++) {
+			if (s.getHealth(i) != s.getMaxHealthPerSquare()) {
+				hasDamage = true;
+				break;
+			}
+		}
+		
+		if (!hasDamage) {
+			return false;
+		}
+		
 		// Get the base points
 		Set<Point> basePoints = getBasePoints(s.getOwner());
 
 		// Test if the ship is touching the base.
 		for (Point p : s.getShipLine().getPoints()) {
 			for (Point bp : basePoints) {
-				// TODO: Handle a base being damaged.
-				if (Math.abs(p.x - bp.x) + Math.abs(p.y - bp.y) <= 1) {
-					return true;
+				if (!field.isBaseDestroyed(bp)) {
+					if (Math.abs(p.x - bp.x) + Math.abs(p.y - bp.y) <= 1) {
+						return true;
+					}
 				}
 			}
 		}
