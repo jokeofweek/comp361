@@ -4,4 +4,5 @@ public class NewGameDescriptorPacket {
 	public String name;
 	public String password;
 	public int maxPlayers;
+	public int shipInventory;
 }

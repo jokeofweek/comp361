@@ -42,7 +42,7 @@ public class GameDescriptorManager {
 	 */
 	public GameDescriptor createDescriptor(NewGameDescriptorPacket packet) {
 		GameDescriptor descriptor = new GameDescriptor(currentId++,
-				packet.name, packet.password, packet.maxPlayers);
+				packet.name, packet.password, packet.maxPlayers, packet.shipInventory);
 		descriptor.setSeed(System.currentTimeMillis());
 		gameDescriptors.put(descriptor.getId(), descriptor);
 		return descriptor;
@@ -183,7 +183,7 @@ public class GameDescriptorManager {
 	public Game createGame(int id) {
 		GameDescriptor d = gameDescriptors.get(id);
 				
-		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed(), d.getPositions());
+		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed(), d.getPositions(), d.getShipInventory());
 		return g;
 	}
 	

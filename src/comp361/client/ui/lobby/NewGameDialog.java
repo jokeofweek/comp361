@@ -7,7 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +21,7 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
+import comp361.shared.data.Ship;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 
 public class NewGameDialog extends JDialog {
@@ -25,22 +29,29 @@ public class NewGameDialog extends JDialog {
 
 	private JLabel gameNameLabel;
 	private JLabel gamePasswordLabel;
+	private JLabel shipInventoryLabel;
 	private JTextField gameNameField;
 	private JTextField gamePasswordField;
 	private JButton cancelButton;
 	private JButton createButton;
-
+	private JComboBox<String> shipInventoryBox;
+	
 	public NewGameDialog(final ClientWindow frame, final GameClient client) {
 		super(frame, true);
 		
 		JPanel content = new JPanel(new BorderLayout());
-		JPanel fields = new JPanel(new GridLayout(4, 1));
+		JPanel fields = new JPanel(new GridLayout(6, 1));
 		JPanel buttons = new JPanel(new BorderLayout());
 		
 		gameNameLabel = new JLabel("Name of the game");
 		gamePasswordLabel = new JLabel("Password (leave empty for none)");
 		gameNameField = new JTextField();
 		gamePasswordField = new JTextField();
+		shipInventoryLabel = new JLabel("Set of ships");
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(Ship.SHIP_INVENTORY_NAMES);
+		shipInventoryBox = new JComboBox<>(model);
+		shipInventoryBox.setSelectedIndex(0);
+		
 		cancelButton = new JButton("Cancel");
 		createButton = new JButton("Create Game");
 		
@@ -59,6 +70,7 @@ public class NewGameDialog extends JDialog {
 					packet.name = name;
 					packet.password = gamePasswordField.getText();
 					packet.maxPlayers = Constants.NUM_PLAYERS;
+					packet.shipInventory = shipInventoryBox.getSelectedIndex();
 					client.getClient().sendTCP(packet);
 				}
 				
@@ -75,6 +87,8 @@ public class NewGameDialog extends JDialog {
 		fields.add(gameNameField);
 		fields.add(gamePasswordLabel);
 		fields.add(gamePasswordField);
+		fields.add(shipInventoryLabel);
+		fields.add(shipInventoryBox);
 		
 		buttons.add(cancelButton, BorderLayout.WEST);
 		buttons.add(createButton, BorderLayout.EAST);

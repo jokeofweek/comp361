@@ -32,8 +32,10 @@ public class Game {
 	 *            The seed for the random field.
 	 * @param positions
 	 * 			  The ship positions.
+	 * @param shipInventory
+	 * 			  The index of the ship inventory
 	 */
-	public Game(String p1, String p2, long seed, int[][] positions) {
+	public Game(String p1, String p2, long seed, int[][] positions, int shipInventory) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.field = new Field(Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
@@ -60,8 +62,8 @@ public class Game {
 		}
 		
 		for (int p = 0; p < positions.length; p++) {
-			for (int i = 0; i < Ship.DEFAULT_INVENTORY.length; i++) {
-				Ship s = Ship.DEFAULT_INVENTORY[i].clone(this, (p == 0) ? getP1() : getP2());
+			for (int i = 0; i < Ship.SHIP_INVENTORIES[shipInventory].length; i++) {
+				Ship s = Ship.SHIP_INVENTORIES[shipInventory][i].clone(this, (p == 0) ? getP1() : getP2());
 				placeShipAt(s, positions[p][i]);
 				ships.add(s);
 			}

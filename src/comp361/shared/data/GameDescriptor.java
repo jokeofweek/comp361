@@ -14,6 +14,7 @@ import comp361.client.ui.lobby.games.GamesPanel;
 public class GameDescriptor {
 	
 	private int id;
+	private int shipInventory;
 	private String name;
 	private String password;
 	private String[] players;
@@ -29,12 +30,13 @@ public class GameDescriptor {
 	 */
 	public GameDescriptor(){}
 	
-	public GameDescriptor(int id, String name, String password, int maxPlayers) {
+	public GameDescriptor(int id, String name, String password, int maxPlayers, int shipInventory) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.players = new String[maxPlayers];
-		this.positions = new int[maxPlayers][Ship.DEFAULT_INVENTORY.length];
+		this.positions = new int[maxPlayers][Ship.SHIP_INVENTORIES[shipInventory].length];
+		this.shipInventory = shipInventory;
 		this.readyPlayers = new HashSet<>();
 		this.maxPlayers = maxPlayers;
 	}
@@ -95,7 +97,7 @@ public class GameDescriptor {
 	public void removeReadyPlayer(String name) {
 		readyPlayers.remove(name);
 	}
-	
+		
 	public void clearReadyPlayers() {
 		readyPlayers.clear();
 	}
@@ -120,6 +122,9 @@ public class GameDescriptor {
 		this.seed = seed;
 	}
 
+	public int getShipInventory() {
+		return shipInventory;
+	}
 	
 	public int getPlayerCount() {
 		int count = 0;

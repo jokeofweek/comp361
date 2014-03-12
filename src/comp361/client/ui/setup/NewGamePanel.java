@@ -60,13 +60,15 @@ public class NewGamePanel extends ClientPanel {
 
 		// Get the player's index to determine if they are player 1 or 2
 		boolean flipped = false;
-		String[] players =  gameClient.getGameDescriptorManager().getGameDescriptor(gameDescriptorId).getPlayers();
+		String[] players = gameClient.getGameDescriptorManager()
+				.getGameDescriptor(gameDescriptorId).getPlayers();
 		for (int i = 0; i < players.length; i++) {
-			if (players[i] != null && players[i].equals(gameClient.getPlayerName())) {
+			if (players[i] != null
+					&& players[i].equals(gameClient.getPlayerName())) {
 				flipped = (i == 1);
 			}
 		}
-				
+
 		this.gameDescriptorId = gameDescriptorId;
 		this.reefGenerator = new CoralReefGenerator(flipped);
 		this.reefGenerator.regenerateReef(gameClient.getGameDescriptorManager()
@@ -86,7 +88,9 @@ public class NewGamePanel extends ClientPanel {
 
 		// Build the panel which actually holds the coral reef.
 		readyActionListener = new ReadyActionListener();
-		coralPanel = new CoralPanel(reefGenerator, readyActionListener);
+		coralPanel = new CoralPanel(getGameClient().getGameDescriptorManager()
+				.getGameDescriptor(gameDescriptorId).getShipInventory(),
+				reefGenerator, readyActionListener);
 		coralContainer.add(coralPanel);
 
 		// Build the containers for the buttons
@@ -160,6 +164,7 @@ public class NewGamePanel extends ClientPanel {
 		messageField.setForeground(Color.GRAY);
 		messageField.addMouseListener(new MouseAdapter() {
 			private boolean cleared = false;
+
 			public void mousePressed(MouseEvent e) {
 				if (!cleared) {
 					messageField.setText("");
@@ -177,7 +182,8 @@ public class NewGamePanel extends ClientPanel {
 				String message = messageField.getText();
 
 				// Avoid sending default text or empty message
-				if (messageField.getForeground() == Color.GRAY || message.isEmpty()) {
+				if (messageField.getForeground() == Color.GRAY
+						|| message.isEmpty()) {
 					return;
 				}
 
@@ -347,7 +353,7 @@ public class NewGamePanel extends ClientPanel {
 			getGameClient().getClient().sendTCP(packet);
 
 		}
-		
+
 		public boolean isReady() {
 			return this.isReady;
 		}

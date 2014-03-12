@@ -46,16 +46,16 @@ public class CoralPanel extends JPanel implements Observer {
 	private long lastImageUpdate = 0;
 	private ReadyActionListener readyActionListener;
 
-	public CoralPanel(CoralReefGenerator reefGenerator, ReadyActionListener readyActionListener) {
+	public CoralPanel(int shipInventory, CoralReefGenerator reefGenerator, ReadyActionListener readyActionListener) {
 		this.reefGenerator = reefGenerator;
 		this.reefMask = reefGenerator.getReef();
 		this.readyActionListener = readyActionListener;
 				
 		// Setup the widths and positions
-		shipWidths = new int[Ship.DEFAULT_INVENTORY.length];
-		shipPositions = new int[Ship.DEFAULT_INVENTORY.length];
+		shipWidths = new int[Ship.SHIP_INVENTORIES[shipInventory].length];
+		shipPositions = new int[Ship.SHIP_INVENTORIES[shipInventory].length];
 		for (int i = 0; i < shipWidths.length; i++) {
-			shipWidths[i] = Ship.DEFAULT_INVENTORY[i].getSize();
+			shipWidths[i] = Ship.SHIP_INVENTORIES[shipInventory][i].getSize();
 			shipPositions[i] = i;
 		}
 		
