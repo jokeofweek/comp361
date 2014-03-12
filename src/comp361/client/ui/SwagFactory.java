@@ -12,6 +12,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -72,8 +73,9 @@ public class SwagFactory {
 			styleLabel((JLabel) component);
 		} else if(component instanceof JTextField) {
 			styleTextField((JTextField) component);
-		}
-		else if(component instanceof JEditorPane){
+		} else if (component instanceof JComboBox) {
+			styleComboBox((JComboBox) component);
+		} else if(component instanceof JEditorPane){
 			styleEditorPane((JEditorPane) component);
 		}
 		else {
@@ -94,6 +96,11 @@ public class SwagFactory {
 	}
 	
 	private static void styleTextField(JTextField field) {
+		field.setFont(FONT);
+	}
+	
+	private static void styleComboBox(JComboBox field) {
+		field.setBackground(Color.WHITE);
 		field.setFont(FONT);
 	}
 	

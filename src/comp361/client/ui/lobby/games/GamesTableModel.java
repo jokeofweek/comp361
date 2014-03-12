@@ -11,11 +11,12 @@ import javax.swing.table.AbstractTableModel;
 
 import comp361.client.data.GameDescriptorManager;
 import comp361.shared.data.GameDescriptor;
+import comp361.shared.data.Ship;
 
 public class GamesTableModel extends AbstractTableModel implements Observer {
 
-	public static final int JOIN_COLUMN = 3;
-	private static final String[] headers =  {"Name", "Players", "Private?", "Join"};
+	public static final int JOIN_COLUMN = 4;
+	private static final String[] headers =  {"Name", "Players", "Private?", "Ship Set", "Join"};
 	
 	private GameDescriptorManager manager;
 	/**
@@ -88,11 +89,9 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 				return "";
 			}
 		} else if (columnIndex == 3) {
-			
-			
+			return Ship.SHIP_INVENTORY_NAMES[descriptor.getShipInventory()];
+		} else if (columnIndex == 4) {
 			return (descriptor.isStarted() ? "Observe" : "Join");
-			
-			
 		}
 		
 		throw new IndexOutOfBoundsException();
