@@ -1,6 +1,7 @@
 package comp361.shared.data;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +18,6 @@ public class Field {
 	private int[][] baseHealth;
 	
 	public Field() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Field(int width, int height) {
@@ -27,6 +27,15 @@ public class Field {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				cells[x][y] = CellType.WATER;
+			}
+		}
+		
+		// Set up the base health
+		baseHealth = new int[2][Constants.BASE_HEIGHT];
+		// Initialize health to 1
+		for (int p = 0; p < baseHealth.length; p++) {
+			for (int i = 0; i < baseHealth[p].length; i++) {
+				baseHealth[p][i] = 1;
 			}
 		}
 	}
@@ -52,7 +61,7 @@ public class Field {
 	public boolean inBounds(Point p) {
 		return (p.x >= 0 && p.x < Constants.MAP_WIDTH && p.y >= 0 && p.y < Constants.MAP_HEIGHT);
 	}
-	
+
 	/**
 	 * This filters a set of points to keep only in bound points.
 	 * @param points The set of points to filter.
@@ -60,6 +69,21 @@ public class Field {
 	 */
 	public Set<Point> filterInBoundPoints(Set<Point> points) {
 		Set<Point> inPoints = new HashSet<>(points.size());
+		for (Point p : points) {
+			if (inBounds(p)) {
+				inPoints.add(p);
+			}
+		}
+		return inPoints;
+	}
+	
+	/**
+	 * This filters a list of points to keep only in bound points.
+	 * @param points The set of points to filter.
+	 * @return The filtered set.
+	 */
+	public List<Point> filterInBoundPoints(List<Point> points) {
+		List<Point> inPoints = new ArrayList<>(points.size());
 		for (Point p : points) {
 			if (inBounds(p)) {
 				inPoints.add(p);
@@ -104,11 +128,47 @@ public class Field {
 	}
 	
 	/**
+	 * Gets the first index for the base health array based on a given
+	 * point.
+	 * @param p The point to get the player index for.
+	 * @return The player index.
+	 */
+	private int getBasePlayerIndex(Point p) {
+		if (p.x == 0) {
+			return 0; 
+		} else if (p.x == Constants.MAP_WIDTH - 1) {
+			return 1;
+		} else {
+			throw new IllegalArgumentException("No player has a base at this point!");
+		}
+	}
+	
+	/**
+	 * Gets the second index for the base health array based on a given
+	 * point.
+	 * @param p The point to get the base position for.
+	 * @return The base position.
+	 */
+	private int getBasePositionIndex(Point p) {
+		return p.y - Constants.BASE_Y_OFFSET;
+	}
+	
+	/**
 	 * @param p Point on the base to inflict damage to
 	 */
 	public void damageBase(Point p)
-	{
-		// TODO: implement this
+	{	
+		baseHealth[getBasePlayerIndex(p)][getBasePositionIndex(p)] = 0;
+	}
+	
+	/**
+	 * Tests whether a given base cell is your own base.
+	 * @param p The base point.
+	 * @param isP1 If you are player 1
+	 * @return True if that base is your own.
+	 */
+	public boolean isOwnBase(Point p, boolean isP1) {
+		return getBasePlayerIndex(p) == (isP1 ? 0 : 1);
 	}
 	
 	/**
@@ -117,7 +177,7 @@ public class Field {
 	 * @return True if the base is destroyed, else false.
 	 */
 	public boolean isBaseDestroyed(Point p) {
-		return false;
+		return baseHealth[getBasePlayerIndex(p)][getBasePositionIndex(p)] == 0;
 	}
 	
 	/**

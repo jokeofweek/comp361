@@ -1,5 +1,6 @@
 package comp361.client.ui.game;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -241,8 +242,14 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 
 	private void drawBase(Graphics2D g, int x, int y) {
-		g.drawImage(ResourceManager.getInstance().getBaseImage(y), x
-				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+		Point p = new Point(x, y);
+		if (game.getField().isBaseDestroyed(p)) {
+			g.setColor(Color.black);
+			g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+		} else {
+			g.drawImage(ResourceManager.getInstance().getBaseImage(y), x
+					* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+		}
 	}
 
 	public void drawWater(Graphics g, int x, int y) {

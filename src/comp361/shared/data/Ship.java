@@ -303,7 +303,7 @@ public class Ship {
 	 */
 	public void fireTorpedo(List<GameEvent> events) {
 		if (this.hasTorpedoes) {
-			for (Point p : getTorpedoLine().getPoints()) {
+			for (Point p : game.getField().filterInBoundPoints(getTorpedoLine().getPoints())) {
 				if (game.getField().getCellType(p) == CellType.BASE) {
 					// Test if the base was destroyed beforehand
 					boolean alreadyDestroyed = this.game.getField().isBaseDestroyed(p);
@@ -312,12 +312,14 @@ public class Ship {
 
 					events.add(new GameEvent(p, 
 							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+					return;
 				} else if (game.getField().getCellType(p) == CellType.MINE) {
 					// Remove the mine
 					game.getField().setCellType(p, CellType.WATER);
 					// Log the event
 					events.add(new GameEvent(p, 
 							Cause.TORPEDO, Effect.MINE_DESTROYED, this));
+					return;
 				} else if (game.getField().getCellType(p) == CellType.REEF) {
 					// Do nothing!
 					return;
