@@ -160,7 +160,10 @@ public class Game {
 
 		// Add the points above and below the base
 		points.add(new Point(baseX, Constants.BASE_Y_OFFSET - 1));
+		points.add(new Point(baseX + offsetX, Constants.BASE_Y_OFFSET - 1));
 		points.add(new Point(baseX, Constants.BASE_Y_OFFSET
+				+ Constants.BASE_HEIGHT));
+		points.add(new Point(baseX + offsetX, Constants.BASE_Y_OFFSET
 				+ Constants.BASE_HEIGHT));
 
 		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
