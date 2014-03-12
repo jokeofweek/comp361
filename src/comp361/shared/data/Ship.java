@@ -220,16 +220,14 @@ public class Ship {
 				// destroy the mine
 				this.game.getField().setCellType(p, CellType.WATER);
 				// Log the event
-				events.add(new GameEvent(Arrays.asList(p), 
-						Cause.CANNON, Arrays.asList(Effect.MINE_DESTROYED), this));
+				events.add(new GameEvent(p, Cause.CANNON, Effect.MINE_DESTROYED, this));
 			} else if (this.game.getField().getCellType(p) == CellType.BASE){
 				// Test if the base was destroyed beforehand
 				boolean alreadyDestroyed = this.game.getField().isBaseDestroyed(p);
 				// damage the base
 				this.game.getField().damageBase(p);
 
-				events.add(new GameEvent(Arrays.asList(p), 
-						Cause.CANNON, Arrays.asList(alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+				events.add(new GameEvent(p, Cause.CANNON, alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED, this));
 			} else {
 				boolean hit = false;
 				for (Ship s : this.game.getShips()) { 
@@ -238,16 +236,15 @@ public class Ship {
 						
 						// Log the event
 						hit = true;
-						events.add(new GameEvent(Arrays.asList(p), 
-								Cause.CANNON, Arrays.asList(s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT), this));
+						events.add(new GameEvent(p, 
+								Cause.CANNON, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
 						break;
 					}
 				}
 				
 				// If hit nothing, log that
 				if (!hit) {
-					events.add(new GameEvent(Arrays.asList(p), 
-							Cause.CANNON, Arrays.asList(Effect.HIT_WATER), this));
+					events.add(new GameEvent(p, Cause.CANNON, Effect.HIT_WATER, this));
 				}
 			}
 			return true;
@@ -306,14 +303,14 @@ public class Ship {
 					// damage the base
 					this.game.getField().damageBase(p);
 
-					events.add(new GameEvent(Arrays.asList(p), 
-							Cause.TORPEDO, Arrays.asList(alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+					events.add(new GameEvent(p, 
+							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
 				} else if (game.getField().getCellType(p) == CellType.MINE) {
 					// Remove the mine
 					game.getField().setCellType(p, CellType.WATER);
 					// Log the event
-					events.add(new GameEvent(Arrays.asList(p), 
-							Cause.TORPEDO, Arrays.asList(Effect.MINE_DESTROYED), this));
+					events.add(new GameEvent(p, 
+							Cause.TORPEDO, Effect.MINE_DESTROYED, this));
 				} else if (game.getField().getCellType(p) == CellType.REEF) {
 					// Do nothing!
 					return;
@@ -323,8 +320,7 @@ public class Ship {
 							s.hitWithTorpedo(p, this.facing);
 
 							// Log the event
-							events.add(new GameEvent(Arrays.asList(p), 
-									Cause.TORPEDO, Arrays.asList(s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT), this));
+							events.add(new GameEvent(p, Cause.TORPEDO, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
 							return;
 						}
 					}
@@ -410,6 +406,7 @@ public class Ship {
 		// Once we've moved, explode any adjacent mines
 		if (!isMineLayer()) {
 			for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
+				// TODO: Log events here dawg!
 				game.explodeMine(minePoint);
 			}
 		}

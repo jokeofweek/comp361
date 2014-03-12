@@ -9,15 +9,15 @@ import comp361.shared.data.Ship;
 
 public class GameEvent {
 
-	private Collection<Point> points;
+	private Point point;
 	private Cause cause;
-	private List<Effect> effects;
+	private Effect effect;
 	private Ship firingShip;
 	
-	public GameEvent(Collection<Point> points, Cause cause, List<Effect> effects, Ship firingShip) {
-		this.points = points;
+	public GameEvent(Point point, Cause cause, Effect effect, Ship firingShip) {
+		this.point = point;
 		this.cause = cause;
-		this.effects = effects;
+		this.effect = effect;
 		this.firingShip = firingShip;
 	}
 	
@@ -25,12 +25,12 @@ public class GameEvent {
 		return cause;
 	}
 	
-	public List<Effect> getEffects() {
-		return effects;
+	public Effect getEffect() {
+		return effect;
 	}
 	
-	public Collection<Point> getPoints() {
-		return points;
+	public Point getPoint() {
+		return point;
 	}
 	
 	public Ship getFiringShip() {

@@ -415,7 +415,7 @@ public class Game {
 
 		System.out.println("Move applied. Events: ");
 		for (GameEvent e : events) {
-			System.out.println(e.getPoints() + " - " + e.getCause() + " - " + e.getEffects());
+			System.out.println(e.getPoint() + " - " + e.getCause() + " - " + e.getEffect());
 		}
 		System.out.println();
 	}
