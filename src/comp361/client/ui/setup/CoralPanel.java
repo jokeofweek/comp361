@@ -39,16 +39,24 @@ public class CoralPanel extends JPanel implements Observer {
 
 	private CoralReefGenerator reefGenerator;
 
-	// Hard coded ships for now
-	private int[] shipWidths = {3, 4, 2, 5};
-	private int[] shipPositions = {0, 2, 3, Constants.BASE_HEIGHT + 1};
-	private int selectedShip = 2;
+	private int[] shipWidths;
+	private int[] shipPositions;
+	private int selectedShip = 0;
 	private boolean[][] reefMask;
 	private long lastImageUpdate = 0;
 
 	public CoralPanel(CoralReefGenerator reefGenerator) {
 		this.reefGenerator = reefGenerator;
 		this.reefMask = reefGenerator.getReef();
+				
+		// Setup the widths and positions
+		shipWidths = new int[Ship.DEFAULT_INVENTORY.length];
+		shipPositions = new int[Ship.DEFAULT_INVENTORY.length];
+		for (int i = 0; i < shipWidths.length; i++) {
+			shipWidths[i] = Ship.DEFAULT_INVENTORY[i].getSize();
+			shipPositions[i] = i;
+		}
+		
 		
 		// Add self as listener to the reef
 		this.reefGenerator.addObserver(this);

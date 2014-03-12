@@ -33,6 +33,13 @@ public class Ship {
 			0, ArmorType.NORMAL, true, false, true, false, false, false, false,
 			false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
 					5, 3));
+	
+	public static final Ship[] DEFAULT_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
+		Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE,
+		Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE,
+		Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE,
+		Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE };
+	
 	private static final int TORPEDO_RANGE = 10;
 
 	// This is the position of the head of the ship.

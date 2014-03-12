@@ -57,17 +57,12 @@ public class Game {
 			}
 		}
 		
-		// Setup the ships
-		Ship[] templates = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
-				Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE,
-				Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE,
-				Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE,
-				Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE };
+		
 
-		for (int i = 0; i < templates.length; i++) {
-			Ship s = templates[i].clone(this, p1);
+		for (int i = 0; i < Ship.DEFAULT_INVENTORY.length; i++) {
+			Ship s = Ship.DEFAULT_INVENTORY[i].clone(this, p1);
 			placeShipAt(s, i);
-			Ship s2 = templates[i].clone(this, p2);
+			Ship s2 = Ship.DEFAULT_INVENTORY[i].clone(this, p2);
 			placeShipAt(s2, i);
 			ships.add(s);
 			ships.add(s2);
