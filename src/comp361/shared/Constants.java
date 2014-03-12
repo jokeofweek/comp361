@@ -37,8 +37,8 @@ public class Constants {
 	public static final Color MOVE_HOVER_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 	public static final Color MOVE_BORDER_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 	public static final float SUNKEN_SHIP_ALPHA = 0.3f;
-	public static final Color HEALTH_BAR_BACKGROUND = Color.red;
-	public static final Color HEALTH_BAR_FOREGROUND = Color.green;
+	public static final Color HEALTH_BAR_BACKGROUND = new Color(0.922f, 0.216f, 0, 1);
+	public static final Color HEALTH_BAR_FOREGROUND = new Color(0.275f, 0.549f, 0.322f, 1);
 	
 	
 	public static final int NUM_PLAYERS = 2;
