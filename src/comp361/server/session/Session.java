@@ -93,7 +93,7 @@ public class Session extends Connection {
 				gameServer.getGameDescriptorManager().endGame(
 						getGameDescriptorId(), gameServer, false,
 						this.getAccount().getName(),
-						this.getAccount().getName() + " disconnected", true);
+						this.getAccount().getName() + " disconnected", true, true);
 			}
 
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();

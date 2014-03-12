@@ -118,7 +118,11 @@ public class GamePanel extends ClientPanel {
 			// As long as we didn't disconnect (and therefore lose), show a message
 			GameOverPacket packet = (GameOverPacket) object;
 			if (packet.result != GameResult.LOSS || !packet.fromDisconnect) {
-				JOptionPane.showMessageDialog(null, packet.message);
+				if (packet.message != null) {
+					JOptionPane.showMessageDialog(null, packet.message);
+				} else {
+					JOptionPane.showMessageDialog(null, packet.result == GameResult.WIN ? "You won!" : "You lost!");
+				}
 				getClientWindow().setPanel(new LobbyPanel(getGameClient(), getClientWindow()));
 			}
 			return;

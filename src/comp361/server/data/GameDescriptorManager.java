@@ -195,8 +195,9 @@ public class GameDescriptorManager {
 	 * @param loser The loser, if there was one.
 	 * @param message The message to include
 	 * @param fromDisconnect Whether the game was over from an early disconnect
+	 * @param sendPacket Whether the packet should be sent to clients
 	 */
-	public void endGame(int id, GameServer server, boolean draw, String loser, String message, boolean fromDisconnect) {
+	public void endGame(int id, GameServer server, boolean draw, String loser, String message, boolean fromDisconnect, boolean sendPacket) {
 		// Create a packet for the winner
 		GameOverPacket winPacket = new GameOverPacket();
 		winPacket.result = draw ? GameResult.DRAW : GameResult.WIN;
@@ -213,10 +214,12 @@ public class GameDescriptorManager {
 		for (Connection c : server.getServer().getConnections()) {
 			Session s = (Session) c;
 			if (s.getSessionType() == SessionType.GAME && s.getGameDescriptorId() == id) {
-				if (!draw && s.getAccount().getName().equals(loser)) {
-					s.sendTCP(lossPacket);
-				} else {
-					s.sendTCP(winPacket);
+				if (sendPacket) {
+					if (!draw && s.getAccount().getName().equals(loser)) {
+						s.sendTCP(lossPacket);
+					} else {
+						s.sendTCP(winPacket);
+					}
 				}
 				
 				// Update the session type back to lobby

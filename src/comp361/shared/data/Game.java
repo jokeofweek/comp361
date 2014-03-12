@@ -410,6 +410,10 @@ public class Game {
 	}
 	
 
+	/**
+	 * Plays a move on a game.
+	 * @param packet The packet representing the move.
+	 */
 	public void applyMove(GameMovePacket packet) {
 		Ship ship = ships.get(packet.ship);
 		
@@ -436,5 +440,30 @@ public class Game {
 			System.out.println(e.getPoint() + " - " + e.getCause() + " - " + e.getEffect());
 		}
 		System.out.println();
+	}
+	
+	/**
+	 * @return the winner of the game if there is one, else null.
+	 */
+	public String getWinner() {
+		int activeP1 = 0;
+		int activeP2 = 0;
+		for (Ship s : ships) {
+			if (!s.isSunk()) {
+				if (s.getOwner().equals(p1)) {
+					activeP1++;
+				} else {
+					activeP2++;
+				}
+			}
+		}
+		
+		if (activeP1 == 0) {
+			return p2;
+		} else if (activeP2 == 0) {
+			return p1;
+		} else {
+			return null;
+		}
 	}
 }

@@ -3,7 +3,9 @@ package comp361.client.data;
 import java.util.Observable;
 
 import comp361.client.GameClient;
+import comp361.server.GameServer;
 import comp361.shared.data.Game;
+import comp361.shared.data.GameResult;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
 
@@ -55,6 +57,26 @@ public class GameManager extends Observable {
 				
 		setChanged();
 		notifyObservers();
+		
+		// Test if the game is over!
+		String winner = game.getWinner();
+		if (winner != null) {
+			GameOverPacket overPacket = new GameOverPacket();
+			overPacket.message = null;
+			overPacket.fromDisconnect = false;
+			if ((isPlayer1() ? game.getP1() : game.getP2()).equals(winner)) {
+				overPacket.result = GameResult.WIN;
+			} else {
+				overPacket.result = GameResult.LOSS;
+			}
+			// Send the packet to the server if it was our own game
+			if (isOwn) {
+				client.getClient().sendTCP(overPacket);
+			}
+			// Register that the game is over
+			gameOver(overPacket);
+			client.publishMessage(overPacket);
+		}
 	}
 	
 	public void gameOver(GameOverPacket packet) {

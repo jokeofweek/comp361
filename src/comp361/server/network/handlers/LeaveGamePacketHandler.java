@@ -38,7 +38,7 @@ public class LeaveGamePacketHandler implements
 			gameServer.getGameDescriptorManager().endGame(
 					session.getGameDescriptorId(), gameServer, false,
 					session.getAccount().getName(),
-					session.getAccount().getName() + " left the game.", false);
+					session.getAccount().getName() + " left the game.", false, true);
 		}
 	}
 }
