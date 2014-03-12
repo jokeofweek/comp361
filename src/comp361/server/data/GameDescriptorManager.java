@@ -47,6 +47,24 @@ public class GameDescriptorManager {
 		gameDescriptors.put(descriptor.getId(), descriptor);
 		return descriptor;
 	}
+	
+	/**
+	 * Updates a player's starting positions for a game descriptor
+ 	 * @param id The ID of the game descriptor.
+	 * @param player The player's name
+	 * @param positions The set of positions
+	 */
+	public void setPlayerPositions(int id, String player, int[] positions){ 
+		GameDescriptor d = gameDescriptors.get(id);
+		for (int i = 0; i < d.getMaxPlayers(); i++) {
+			if (d.getPlayers()[i] != null && d.getPlayers()[i].equals(player)) {
+				d.setPositions(i, positions);
+				return;
+			}
+		}
+		throw new IllegalArgumentException("No player " + player + " in " + id +". Could not set player positions.");
+	}
+	
 
 	/**
 	 * Checks whether there is space for an extra player in a game.
@@ -165,7 +183,7 @@ public class GameDescriptorManager {
 	public Game createGame(int id) {
 		GameDescriptor d = gameDescriptors.get(id);
 				
-		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed());
+		Game g = new Game(d.getPlayers()[0], d.getPlayers()[1], d.getSeed(), d.getPositions());
 		return g;
 	}
 	

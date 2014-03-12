@@ -45,6 +45,7 @@ public class NewGamePanel extends ClientPanel {
 	private int gameDescriptorId;
 	private JButton readyButton;
 	private ReadyActionListener readyActionListener;
+	private CoralPanel coralPanel;
 
 	private JScrollPane chatScrollPane;
 	private JEditorPane chatEditorPane;
@@ -84,7 +85,8 @@ public class NewGamePanel extends ClientPanel {
 		SwagFactory.style(coralContainer);
 
 		// Build the panel which actually holds the coral reef.
-		CoralPanel coralPanel = new CoralPanel(reefGenerator);
+		readyActionListener = new ReadyActionListener();
+		coralPanel = new CoralPanel(reefGenerator, readyActionListener);
 		coralContainer.add(coralPanel);
 
 		// Build the containers for the buttons
@@ -118,7 +120,6 @@ public class NewGamePanel extends ClientPanel {
 
 		// Build the ready button
 		readyButton = new JButton("Ready");
-		readyActionListener = new ReadyActionListener();
 		readyButton.addActionListener(readyActionListener);
 		SwagFactory.style(readyButton);
 		horizontalButtonContainer.add(readyButton);
@@ -331,7 +332,7 @@ public class NewGamePanel extends ClientPanel {
 		}
 	}
 
-	private class ReadyActionListener implements ActionListener {
+	public class ReadyActionListener implements ActionListener {
 		private boolean isReady = false;
 
 		@Override
@@ -341,9 +342,14 @@ public class NewGamePanel extends ClientPanel {
 
 			// Send the packet
 			UpdateReadyPacket packet = new UpdateReadyPacket();
+			packet.positions = coralPanel.getShipPositions();
 			packet.ready = isReady;
 			getGameClient().getClient().sendTCP(packet);
 
+		}
+		
+		public boolean isReady() {
+			return this.isReady;
 		}
 
 		public void updateStatus(boolean isReady) {

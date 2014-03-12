@@ -30,8 +30,10 @@ public class Game {
 	 *            The second player to play the game
 	 * @param seed
 	 *            The seed for the random field.
+	 * @param positions
+	 * 			  The ship positions.
 	 */
-	public Game(String p1, String p2, long seed) {
+	public Game(String p1, String p2, long seed, int[][] positions) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.field = new Field(Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
@@ -57,15 +59,12 @@ public class Game {
 			}
 		}
 		
-		
-
-		for (int i = 0; i < Ship.DEFAULT_INVENTORY.length; i++) {
-			Ship s = Ship.DEFAULT_INVENTORY[i].clone(this, p1);
-			placeShipAt(s, i);
-			Ship s2 = Ship.DEFAULT_INVENTORY[i].clone(this, p2);
-			placeShipAt(s2, i);
-			ships.add(s);
-			ships.add(s2);
+		for (int p = 0; p < positions.length; p++) {
+			for (int i = 0; i < Ship.DEFAULT_INVENTORY.length; i++) {
+				Ship s = Ship.DEFAULT_INVENTORY[i].clone(this, (p == 0) ? getP1() : getP2());
+				placeShipAt(s, positions[p][i]);
+				ships.add(s);
+			}
 		}
 	}
 

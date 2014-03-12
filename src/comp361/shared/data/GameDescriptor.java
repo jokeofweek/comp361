@@ -1,5 +1,7 @@
 package comp361.shared.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ public class GameDescriptor {
 	private String name;
 	private String password;
 	private String[] players;
+	private int[][] positions;
 	private Set<String> readyPlayers;
 	private long seed;
 	private int maxPlayers;
@@ -31,6 +34,7 @@ public class GameDescriptor {
 		this.name = name;
 		this.password = password;
 		this.players = new String[maxPlayers];
+		this.positions = new int[maxPlayers][Ship.DEFAULT_INVENTORY.length];
 		this.readyPlayers = new HashSet<>();
 		this.maxPlayers = maxPlayers;
 	}
@@ -55,6 +59,16 @@ public class GameDescriptor {
 		return readyPlayers;
 	}
 
+	public int[][] getPositions() {
+		return positions;
+	}
+	
+	public void setPositions(int index, int[] position) {
+		for (int i = 0; i < position.length; i++) {
+			this.positions[index][i] = position[i];
+		}
+	}
+	
 	public void addPlayer(String name) {
 		for (int i = 0; i < players.length; i++) {
 			if (players[i] == null) {

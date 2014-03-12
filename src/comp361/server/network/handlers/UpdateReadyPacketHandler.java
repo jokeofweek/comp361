@@ -20,6 +20,9 @@ public class UpdateReadyPacketHandler implements
 		gameServer.getGameDescriptorManager().setReadyStatus(
 				session.getGameDescriptorId(), session.getAccount().getName(),
 				packet.ready);
+		gameServer.getGameDescriptorManager().setPlayerPositions(
+				session.getGameDescriptorId(), session.getAccount().getName(),
+				packet.positions);
 
 		if (gameServer.getGameDescriptorManager().canStart(
 				session.getGameDescriptorId())) {

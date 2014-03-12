@@ -5,21 +5,21 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
+import comp361.client.GameClient;
 import comp361.client.ui.ResourceManager;
+import comp361.client.ui.setup.NewGamePanel.ReadyActionListener;
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
 import comp361.shared.data.Ship;
+import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
 
 public class CoralPanel extends JPanel implements Observer {
 	// Number of tiles along the x and y of the panel
@@ -44,10 +44,12 @@ public class CoralPanel extends JPanel implements Observer {
 	private int selectedShip = 0;
 	private boolean[][] reefMask;
 	private long lastImageUpdate = 0;
+	private ReadyActionListener readyActionListener;
 
-	public CoralPanel(CoralReefGenerator reefGenerator) {
+	public CoralPanel(CoralReefGenerator reefGenerator, ReadyActionListener readyActionListener) {
 		this.reefGenerator = reefGenerator;
 		this.reefMask = reefGenerator.getReef();
+		this.readyActionListener = readyActionListener;
 				
 		// Setup the widths and positions
 		shipWidths = new int[Ship.DEFAULT_INVENTORY.length];
@@ -266,6 +268,12 @@ public class CoralPanel extends JPanel implements Observer {
 			if (selectedShip != -1 && slotAtPosition != -1) {
 				shipPositions[selectedShip] = slotAtPosition;
 				selectedShip = -1;
+				
+				// No longer ready!
+				if (readyActionListener.isReady()) {
+					readyActionListener.actionPerformed(null);
+				}
+				
 				repaint();
 				return;
 			}
@@ -282,5 +290,9 @@ public class CoralPanel extends JPanel implements Observer {
 		}
 
 		return true;
+	}
+	
+	public int[] getShipPositions() {
+		return shipPositions;
 	}
 }
