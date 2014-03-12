@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.SwagFactory;
-import comp361.client.ui.util.HealthBar;
 import comp361.shared.Constants;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;

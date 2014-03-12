@@ -2,8 +2,10 @@ package comp361.shared.data;
 
 import java.awt.Point;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import comp361.client.data.event.GameEvent;
 import comp361.shared.Constants;
 
 /**
@@ -106,7 +108,16 @@ public class Field {
 	 */
 	public void damageBase(Point p)
 	{
-		//TODO: implement this
+		// TODO: implement this
+	}
+	
+	/**
+	 * Tests whether a given point is a base and is destroyed
+	 * @param p The point to test
+	 * @return True if the base is destroyed, else false.
+	 */
+	public boolean isBaseDestroyed(Point p) {
+		return false;
 	}
 	
 	/**

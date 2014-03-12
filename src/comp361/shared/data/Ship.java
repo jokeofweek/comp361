@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import comp361.client.data.event.Cause;
+import comp361.client.data.event.Effect;
+import comp361.client.data.event.GameEvent;
 import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
@@ -211,17 +214,42 @@ public class Ship {
 	 *            the target location of the cannon ball
 	 * @return true if the operation succeeds, false otherwise
 	 */
-	public boolean fireCannon(Point p) {
+	public boolean fireCannon(Point p, List<GameEvent> events) {
 		if (this.getCannonRange().getRectangle(this).contains(p)) {
-			if (this.game.getField().getCellType(p) == CellType.MINE)
+			if (this.game.getField().getCellType(p) == CellType.MINE) {
 				// destroy the mine
 				this.game.getField().setCellType(p, CellType.WATER);
-			else if (this.game.getField().getCellType(p) == CellType.BASE)
+				// Log the event
+				events.add(new GameEvent(Arrays.asList(p), 
+						Cause.CANNON, Arrays.asList(Effect.MINE_DESTROYED), this));
+			} else if (this.game.getField().getCellType(p) == CellType.BASE){
+				// Test if the base was destroyed beforehand
+				boolean alreadyDestroyed = this.game.getField().isBaseDestroyed(p);
 				// damage the base
 				this.game.getField().damageBase(p);
-			for (Ship s : this.game.getShips())
-				if (s.pointBelongsToShip(p))
-					s.hitWithCannon(p, this.hasHeavyCannon);
+
+				events.add(new GameEvent(Arrays.asList(p), 
+						Cause.CANNON, Arrays.asList(alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+			} else {
+				boolean hit = false;
+				for (Ship s : this.game.getShips()) { 
+					if (s.pointBelongsToShip(p)) {
+						s.hitWithCannon(p, this.hasHeavyCannon);
+						
+						// Log the event
+						hit = true;
+						events.add(new GameEvent(Arrays.asList(p), 
+								Cause.CANNON, Arrays.asList(s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT), this));
+						break;
+					}
+				}
+				
+				// If hit nothing, log that
+				if (!hit) {
+					events.add(new GameEvent(Arrays.asList(p), 
+							Cause.CANNON, Arrays.asList(Effect.HIT_WATER), this));
+				}
+			}
 			return true;
 		}
 		return false;
@@ -235,10 +263,11 @@ public class Ship {
 	 */
 	public void hitWithCannon(Point p, boolean isHeavyCannon) {
 		if (health[getShipLine().getPoints().indexOf(p)] > 0) {
-			if (isHeavyCannon)
+			if (isHeavyCannon) {
 				health[getShipLine().getPoints().indexOf(p)] = 0;
-			else
+			} else {
 				health[getShipLine().getPoints().indexOf(p)]--;
+			}
 		}
 	}
 
@@ -268,15 +297,36 @@ public class Ship {
 	/**
 	 * Fires a torpedo
 	 */
-	public void fireTorpedo() {
+	public void fireTorpedo(List<GameEvent> events) {
 		if (this.hasTorpedoes) {
 			for (Point p : getTorpedoLine().getPoints()) {
-				if (game.getField().getCellType(p) == CellType.BASE)
-					game.getField().damageBase(p);
-				for (Ship s : game.getShips()) {
-					if (s.pointBelongsToShip(p)) {
-						s.hitWithTorpedo(p, this.facing);
-						return;
+				if (game.getField().getCellType(p) == CellType.BASE) {
+					// Test if the base was destroyed beforehand
+					boolean alreadyDestroyed = this.game.getField().isBaseDestroyed(p);
+					// damage the base
+					this.game.getField().damageBase(p);
+
+					events.add(new GameEvent(Arrays.asList(p), 
+							Cause.TORPEDO, Arrays.asList(alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+				} else if (game.getField().getCellType(p) == CellType.MINE) {
+					// Remove the mine
+					game.getField().setCellType(p, CellType.WATER);
+					// Log the event
+					events.add(new GameEvent(Arrays.asList(p), 
+							Cause.TORPEDO, Arrays.asList(Effect.MINE_DESTROYED), this));
+				} else if (game.getField().getCellType(p) == CellType.REEF) {
+					// Do nothing!
+					return;
+				} else {
+					for (Ship s : game.getShips()) {
+						if (s.pointBelongsToShip(p)) {
+							s.hitWithTorpedo(p, this.facing);
+
+							// Log the event
+							events.add(new GameEvent(Arrays.asList(p), 
+									Cause.TORPEDO, Arrays.asList(s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT), this));
+							return;
+						}
 					}
 				}
 			}

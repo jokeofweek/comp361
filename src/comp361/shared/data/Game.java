@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import comp361.client.data.event.GameEvent;
 import comp361.client.ui.setup.CoralReefGenerator;
 import comp361.shared.Constants;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -393,13 +394,15 @@ public class Game {
 
 	public void applyMove(GameMovePacket packet) {
 		Ship ship = ships.get(packet.ship);
+		
+		List<GameEvent> events = new ArrayList<>();
 
 		if (packet.moveType == MoveType.MOVE) {
 			ship.moveShip(packet.contextPoint);
 		} else if (packet.moveType == MoveType.CANNON) {
-			ship.fireCannon(packet.contextPoint);
+			ship.fireCannon(packet.contextPoint, events);
 		} else if (packet.moveType == MoveType.TORPEDO) {
-			ship.fireTorpedo();
+			ship.fireTorpedo(events);
 		} else if (packet.moveType == MoveType.REPAIR) {
 			ship.repair();
 		} else if (packet.moveType == MoveType.PICKUP_MINE) {
@@ -410,5 +413,10 @@ public class Game {
 			ship.getGame().getField().setCellType(packet.contextPoint, CellType.MINE);
 		}
 
+		System.out.println("Move applied. Events: ");
+		for (GameEvent e : events) {
+			System.out.println(e.getPoints() + " - " + e.getCause() + " - " + e.getEffects());
+		}
+		System.out.println();
 	}
 }
