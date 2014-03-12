@@ -98,9 +98,13 @@ public class SwagFactory {
 	}
 	
 	private static void styleButton(JButton button) {
+		styleButtonWithoutHeight(button);
+		styleButtonHeight(button, button.getWidth());
+	}
+	
+	public static void styleButtonWithoutHeight(JButton button) {
 		button.setBackground(new Color(185, 225, 255));
 		button.setFont(FONT);
-		styleButtonHeight(button, button.getWidth());
 	}
 
 	private static void stylePanel(JPanel panel) {

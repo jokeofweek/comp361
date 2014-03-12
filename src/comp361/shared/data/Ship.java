@@ -358,8 +358,10 @@ public class Ship {
 		}
 		
 		// Once we've moved, explode any adjacent mines
-		for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
-			game.explodeMine(minePoint);
+		if (!isMineLayer()) {
+			for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
+				game.explodeMine(minePoint);
+			}
 		}
 	}
 

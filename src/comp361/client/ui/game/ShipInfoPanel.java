@@ -1,9 +1,12 @@
 package comp361.client.ui.game;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -13,6 +16,7 @@ import javax.swing.JPanel;
 
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
+import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -20,7 +24,6 @@ import comp361.shared.packets.shared.GameMovePacket;
 public class ShipInfoPanel extends JPanel implements Observer {
 
 	private SelectionContext context;
-	private JPanel infoPanel = new JPanel();
 	private GameClient client;
 	
 	public ShipInfoPanel(GameClient client, SelectionContext context) {
@@ -41,26 +44,36 @@ public class ShipInfoPanel extends JPanel implements Observer {
 	public void refreshData() {
 		removeAll();
 		
-		setLayout(new GridLayout(0, 1));
+		setLayout(new BorderLayout());
+		
+		
+		// Create a panel to hold info on the ship.
+		JPanel infoPanel = new JPanel(new BorderLayout());		
 		
 		if (context.getShip() != null) {
-			add(new JLabel(context.getShip().getName()));
-
+			// Build the ship label container
+			JPanel labelContainer = new JPanel(new GridLayout(0, 1));
+			labelContainer.add(new JLabel(context.getShip().getName()));
 			// If the ship is a mine layer, add info about number of mines
 			if (context.getShip().isMineLayer()) {
-				add(new JLabel("Mines: " + context.getShip().getMineCount()));
+				labelContainer.add(new JLabel("Mines: " + context.getShip().getMineCount()));
 			}
+			
+			infoPanel.add(labelContainer, BorderLayout.NORTH);
+			
+			// Build all the action buttons
+			List<JButton> actionButtons = new ArrayList<>();
 			
 			JButton moveShipButton = new JButton("Move");
 			moveShipButton.addActionListener(new MoveContextActionListener(MoveType.MOVE));
-			add(moveShipButton);
+			actionButtons.add(moveShipButton);
 			
 			JButton turnShipButton = new JButton("Turn");
-			add(turnShipButton);
+			actionButtons.add(turnShipButton);
 			
 			JButton fireCannonButton = new JButton("Fire Cannon");
 			fireCannonButton.addActionListener(new MoveContextActionListener(MoveType.CANNON));
-			add(fireCannonButton);
+			actionButtons.add(fireCannonButton);
 			
 			if (context.getShip().hasTorpedoes()) {
 				JButton fireTorpedoButton = new JButton("Fire Torpedo");
@@ -74,14 +87,14 @@ public class ShipInfoPanel extends JPanel implements Observer {
 						client.getGameManager().applyMove(packet, true);
 					}
 				});
-				add(fireTorpedoButton);	
+				actionButtons.add(fireTorpedoButton);	
 			}
 			
 			// If we have mines and there is a place we can drop the mine, show the button
 			if (context.getShip().isMineLayer() && context.getShip().getMineCount() > 0 && !context.getShip().getValidMineDropPoints().isEmpty()) {
 				JButton dropMineButton = new JButton("Drop Mine");
 				dropMineButton.addActionListener(new MoveContextActionListener(MoveType.DROP_MINE));
-				add(dropMineButton);
+				actionButtons.add(dropMineButton);
 			}
 			
 			// If we can pickup mines and there is a mine to pickup, show the button
@@ -89,7 +102,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				if (context.getShip().getValidMinePickupPoints().size() > 0) {
 					JButton pickupMineButton = new JButton("Pickup Mine");
 					pickupMineButton.addActionListener(new MoveContextActionListener(MoveType.PICKUP_MINE));
-					add(pickupMineButton);
+					actionButtons.add(pickupMineButton);
 				}
 			}
 			
@@ -105,12 +118,24 @@ public class ShipInfoPanel extends JPanel implements Observer {
 						client.getGameManager().applyMove(packet, true);
 					}
 				});
-				add(repairButton);
+				actionButtons.add(repairButton);
 			}
-						
+			
+			// Style and add all the buttons to a container
+			JPanel buttonContainer = new JPanel();
+			for (JButton button : actionButtons) {
+				buttonContainer.add(button);
+				SwagFactory.styleButtonWithoutHeight(button);
+				// SwagFactory.style(button);
+				// SwagFactory.styleButtonHeight(button, button.getWidth());
+			}
+			
+			infoPanel.add(buttonContainer);
 		} else {
-			add(new JLabel("No selected ship"));
+			infoPanel.add(new JLabel("No selected ship"));
 		}
+		
+		add(infoPanel);
 		
 		revalidate();
 		repaint();
