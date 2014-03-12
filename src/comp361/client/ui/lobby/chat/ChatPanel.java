@@ -108,11 +108,11 @@ public class ChatPanel extends JPanel {
 		
 		messageField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				if (!e.isControlDown() || e.getKeyCode() != KeyEvent.VK_1) {
+				if (!e.isControlDown() || (e.getKeyCode() != KeyEvent.VK_1 && e.getKeyCode() != KeyEvent.VK_2)) {
 					return;
 				}
 
-				sendNewGamePacket("" + System.currentTimeMillis(), "");
+				sendNewGamePacket("" + System.currentTimeMillis(), "", e.getKeyCode() == KeyEvent.VK_1 ? 0 : 1);
 			}
 		});
 
@@ -178,11 +178,12 @@ public class ChatPanel extends JPanel {
 		});
 	}
 	
-	private void sendNewGamePacket(String name, String password) {
+	private void sendNewGamePacket(String name, String password, int shipInventory) {
 		NewGameDescriptorPacket packet = new NewGameDescriptorPacket();
 		packet.maxPlayers = Constants.NUM_PLAYERS;
 		packet.name = name;
 		packet.password = password;
+		packet.shipInventory = shipInventory;
 		gameClient.getClient().sendTCP(packet);
 	}
 	
@@ -224,7 +225,7 @@ public class ChatPanel extends JPanel {
 						password = tokens.remove(0);
 					}
 
-					sendNewGamePacket(name, password);
+					sendNewGamePacket(name, password, 0);
 					return;
 				} else {
 					// Ignore any unrecognized commands
