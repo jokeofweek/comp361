@@ -17,25 +17,17 @@ public enum Direction {
 	/**
 	 * @return true if this is left or right, else false.
 	 */
-	public boolean alongXAxis() 
+	public boolean isHorizontal()
 	{
 		return this == LEFT || this == RIGHT;
 	}
 	
 	/**
-	 * @return the angle of the direction in radian
+	 * @param other another direction
+	 * @return returns true if other and this are perpendicular
 	 */
-	public double angle()
+	public boolean isPerpendicularTo(Direction other)
 	{
-		return Math.PI-this.ordinal()*(Math.PI/2);		
-	}
-	
-	/**
-	 * @param d a direction
-	 * @return the angle between this and d
-	 */
-	public double angleBetween(Direction d)
-	{
-		return d.angle() - this.angle;
+		return this.ordinal() == (other.ordinal()+1)%4 || this.ordinal() == (other.ordinal()-1)%4;
 	}
 }

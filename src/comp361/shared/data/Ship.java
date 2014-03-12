@@ -347,8 +347,8 @@ public class Ship {
 		if (health[getShipLine().getPoints().indexOf(p)] > 0)
 			health[getShipLine().getPoints().indexOf(p)]--;
 		// if perpendicular, damage another adjacent square
-		if (Math.abs(shootingDirection.angleBetween(facing)) == Math.PI / 2) {
-			if (Math.abs(facing.angle()) == Math.PI) {
+		if (shootingDirection.isPerpendicularTo(facing)) {
+			if (facing.isHorizontal()) {
 				// try to damage two potential points
 				Point secondP1 = new Point(p.x, p.y + 1);
 				Point secondP2 = new Point(p.x, p.y - 1);
