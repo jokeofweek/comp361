@@ -12,7 +12,6 @@ import javax.swing.ImageIcon;
 
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
-import comp361.shared.data.Ship;
 
 public class ResourceManager {
 	private static ResourceManager instance;
@@ -21,9 +20,13 @@ public class ResourceManager {
 	private final String REEF_FILENAME = "reef.png";
 	private final String MINE_FILENAME = "mine-anim.gif";
 	
+	private final String DEFAULT_STATE = null;
+	private final String HIT_STATE = "hit";
+	private final String DEAD_STATE = "dead";
+	
 	private final Direction[] directions = Direction.values();
 	private final String[] colors = {"blue", "red"};
-	private final String[] states = {null, "hit"};
+	private final String[] states = {DEFAULT_STATE, HIT_STATE, DEAD_STATE};
 	private final String[] baseParts = {"base-top", "base-body", "base-bottom"};
 	
 	private final Image waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME).getImage();
@@ -46,7 +49,7 @@ public class ResourceManager {
 			loadReefImage();
 			loadBaseImages();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			System.exit(1);
 		}
 
@@ -57,20 +60,19 @@ public class ResourceManager {
 	}
 
 	public BufferedImage getBodyImage(Direction dir, int health, int maxHealth) {
-		String state = health < maxHealth ? "hit" : null;
-		if (health == 0) { state = "dead"; }
+		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-body", dir.ordinal()+1, state);
 		return images.get(filename);
 	}
 
 	public BufferedImage getHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
-		String state = health < maxHealth ? "hit" : null;
+		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-head", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
 	public BufferedImage getTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
-		String state = health < maxHealth ? "hit" : null;
+		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-tail", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
@@ -85,13 +87,13 @@ public class ResourceManager {
 		
 		switch (y) {
 		case Constants.BASE_Y_OFFSET:
-			filename = getFilename("base-top", -1, null);
+			filename = getBaseFilename("top");
 			break;
 		case Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1:
-			filename = getFilename("base-bottom", -1, null);
+			filename = getBaseFilename("bottom");
 			break;
 		default:
-			filename = getFilename("base-body", -1, null);
+			filename = getBaseFilename("body");
 		}
 		
 		return images.get(filename);
@@ -126,10 +128,6 @@ public class ResourceManager {
 				image = ImageIO.read(new File(filename));
 				images.put(filename, image);
 			}
-
-			filename = getFilename("ship-body", dir.ordinal()+1, "dead");
-			image = ImageIO.read(new File(filename));
-			images.put(filename, image);
 		}
 	}
 	
@@ -188,5 +186,19 @@ public class ResourceManager {
 		}
 		
 		return Constants.GFX_DATA_PATH + filename + ".png";
+	}
+	
+	private String getBaseFilename(String part) {
+		return getFilename("base-" + part, -1, null);
+	}
+	
+	private String getState(int health, int maxHealth) {
+		if (health == maxHealth) {
+			return DEFAULT_STATE;
+		} else if (health == 0) {
+			return DEAD_STATE;
+		} else {
+			return HIT_STATE;
+		}
 	}
 }
