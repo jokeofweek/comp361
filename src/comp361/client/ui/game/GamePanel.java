@@ -1,11 +1,15 @@
 package comp361.client.ui.game;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
@@ -14,7 +18,9 @@ import comp361.client.data.SelectionContext;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.lobby.LobbyPanel;
+import comp361.client.ui.util.HealthBar;
 import comp361.shared.data.GameResult;
+import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameOverPacket;
 
 public class GamePanel extends ClientPanel {
@@ -23,16 +29,18 @@ public class GamePanel extends ClientPanel {
 	private JLabel turnLabel;
 	private GameFieldPanel fieldPanel;
 	private ShipInfoPanel infoPanel;
+	private List<HealthBar> healthBars;
 	
 	public GamePanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
+		
 		initUI(gameClient);
 		
 		// Add this as an observer of the context
 		context.addObserver(this);
 	}
 
-	private void initUI(GameClient client) {
+	private void initUI(final GameClient client) {
 		setLayout(new BorderLayout());
 
 		context = new SelectionContext();
@@ -41,9 +49,48 @@ public class GamePanel extends ClientPanel {
 		
 		JPanel leftBarPanel = new JPanel(new BorderLayout());
 		
+		// Container for the turn info and health info
+		JPanel gameInfoPanel = new JPanel(new BorderLayout());
 		turnLabel = new JLabel();
+		turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		updateTurnLabel();
-		leftBarPanel.add(turnLabel, BorderLayout.NORTH);
+		gameInfoPanel.add(turnLabel, BorderLayout.NORTH);
+		
+		// Buid health bars for every player
+		JPanel healthPanel = new JPanel(new GridLayout(4, 1));
+		healthBars = new ArrayList<>();
+		for (final String player : new String[]{client.getGameManager().getGame().getP1(), client.getGameManager().getGame().getP2()}) {
+			healthPanel.add(new JLabel(player + ":"));
+			HealthBar bar = (new HealthBar(10) {
+				
+				@Override
+				public int getValue() {
+					int remainingHealth = 0;
+					for (Ship s : client.getGameManager().getGame().getPlayerShips(player)) {
+						for (int i = 0; i < s.getSize(); i++) {
+							remainingHealth += s.getHealth(i);
+						}
+					}
+					return remainingHealth;
+				}
+				
+				@Override
+				public int getMaxValue() {
+					int totalHealth = 0;
+					for (Ship s : client.getGameManager().getGame().getPlayerShips(player)) {
+						totalHealth += s.getMaxHealthPerSquare() * s.getSize();
+					}
+					return totalHealth;
+				}
+			});
+			healthBars.add(bar);
+			healthPanel.add(bar);
+		}
+		
+		gameInfoPanel.add(healthPanel);
+		leftBarPanel.add(gameInfoPanel, BorderLayout.NORTH);
+		
+		// Container for the ship info
 		infoPanel = new ShipInfoPanel(client, context);
 		leftBarPanel.add(infoPanel, BorderLayout.CENTER);
 		 
@@ -93,8 +140,14 @@ public class GamePanel extends ClientPanel {
 		}
 		// Update the info panel
 		updateTurnLabel();
+		
+		// Notify observers
 		infoPanel.update(source, object);
 		fieldPanel.update(source, object);
+		for (HealthBar bar : healthBars) {
+			bar.update(source, object);
+		}
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
@@ -105,4 +158,6 @@ public class GamePanel extends ClientPanel {
 		});
 	}
 
+	
+	
 }

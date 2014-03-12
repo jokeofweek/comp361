@@ -2,6 +2,7 @@ package comp361.client.ui;
 
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JComponent;
@@ -19,6 +20,7 @@ public abstract class ClientPanel extends JPanel implements Observer {
 
 	private GameClient gameClient;
 	private ClientWindow clientWindow;
+	
 	
 	public ClientPanel(GameClient gameClient, ClientWindow clientWindow) {
 		super();
@@ -71,4 +73,7 @@ public abstract class ClientPanel extends JPanel implements Observer {
 	public JComponent getOverlayComponent() {
 		return null;
 	}
+		
+	
 }
+

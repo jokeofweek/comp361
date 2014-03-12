@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.util.HealthBar;
 import comp361.shared.Constants;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -46,9 +47,8 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		
 		setLayout(new BorderLayout());
 		
-		
 		// Create a panel to hold info on the ship.
-		JPanel infoPanel = new JPanel(new BorderLayout());		
+		JPanel contentPanel = new JPanel(new BorderLayout());		
 		
 		if (context.getShip() != null) {
 			// Build the ship label container
@@ -59,7 +59,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				labelContainer.add(new JLabel("Mines: " + context.getShip().getMineCount()));
 			}
 			
-			infoPanel.add(labelContainer, BorderLayout.NORTH);
+			contentPanel.add(labelContainer, BorderLayout.NORTH);
 			
 			// Build all the action buttons
 			List<JButton> actionButtons = new ArrayList<>();
@@ -130,12 +130,12 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				// SwagFactory.styleButtonHeight(button, button.getWidth());
 			}
 			
-			infoPanel.add(buttonContainer);
+			contentPanel.add(buttonContainer);
 		} else {
-			infoPanel.add(new JLabel("No selected ship"));
+			contentPanel.add(new JLabel("No selected ship"));
 		}
 		
-		add(infoPanel);
+		add(contentPanel);
 		
 		revalidate();
 		repaint();
