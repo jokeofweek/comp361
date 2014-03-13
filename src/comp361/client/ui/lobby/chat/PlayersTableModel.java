@@ -9,8 +9,6 @@ import java.util.Observer;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.java.swing.plaf.windows.WindowsTreeUI.CollapsedIcon;
-
 import comp361.client.data.PlayerManager;
 
 public class PlayersTableModel extends AbstractTableModel implements Observer {
