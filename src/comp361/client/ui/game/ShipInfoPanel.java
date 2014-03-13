@@ -102,6 +102,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			}
 			
 			JButton turnShipButton = new JButton("Turn");
+			turnShipButton.addActionListener(new MoveContextActionListener(MoveType.TURN));
 			actionButtons.add(turnShipButton);
 			
 			JButton fireCannonButton = new JButton("Fire Cannon");

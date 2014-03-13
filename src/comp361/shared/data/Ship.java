@@ -1,6 +1,7 @@
 package comp361.shared.data;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,15 +24,15 @@ public class Ship {
 			0, ArmorType.NORMAL, false, false, false, false, false, true,
 			false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	// TODO: Fix torpedo cannon range
-	public static final Ship TORPEDO_TEMPLATE = new Ship("Torpedo", 3, 9, 0,
+	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo", 3, 9, 0,
 			ArmorType.NORMAL, true, false, false, false, false, true, false,
-			false, new TailRange(6, 3), null, new CenterRange(5, 5));
+			true, new TailRange(6, 3), null, new CenterRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
 			5, ArmorType.HEAVY, false, true, false, false, false, true, true,
 			false, new CenterRange(6, 5), null, new CenterRange(4, 5));
 	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3,
 			0, ArmorType.NORMAL, true, false, true, false, false, false, false,
-			false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
+			true, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
 					5, 3));
 
 	private static final Ship[] DEFAULT_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
@@ -98,7 +99,6 @@ public class Ship {
 		this.radar = radar;
 		this.longRadar = longRadar;
 		this.cannonRange = cannonRange;
-
 		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
 
@@ -814,6 +814,26 @@ public class Ship {
 		}
 
 		return game.getField().filterInBoundPoints(points);
+	}
+	
+	public Set<Point> getValidTurnPoints() {
+		Set<Point> points = new HashSet<>();
+		
+		int yDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 1 : 0;
+		int xDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 0 : 1;
+				
+		points.add(new Point(position.x + xDelta, position.y + yDelta));
+		points.add(new Point(position.x - xDelta, position.y - yDelta));
+		
+		if (canTurn180()) {
+			// Get the last point
+			Point2D tail = getShipLine().getP1();
+			points.add(new Point((int)tail.getX() + (yDelta * (facing == Direction.RIGHT ? - 1 : 1)),
+					(int)tail.getY() + (xDelta * (facing == Direction.DOWN ? - 1 : 1))));
+		}
+		
+		// TODO: Handle behind
+		return points;
 	}
 
 	/**
