@@ -24,7 +24,13 @@ public class SelectionContext extends Observable {
 
 	public void setShip(Ship ship) {
 		this.ship = ship;
-		this.type = MoveType.MOVE;
+		if (ship != null) {
+			if (ship.canMove()) {
+				this.type = MoveType.MOVE;
+			} else {
+				this.type = null;
+			}
+		}
 		updatePoints();
 		setChanged();
 		notifyObservers();

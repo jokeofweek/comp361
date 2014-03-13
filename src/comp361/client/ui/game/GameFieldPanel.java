@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -125,6 +126,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Draw CellType tiles (BASE, MINE, REEF, WATER)
 		drawTiles(g2d, sonarFov);
 
+		drawLongRangeRadarOutlines(g2d);
+		
 		// Draw ship outline for selected ship
 		if (context.getShip() != null) {
 			drawShipSelection(g2d, context.getShip());
@@ -139,12 +142,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (GameEvent event : events) {
 			drawGameEvent(g2d, event);
 		}
-		
 		drawSelectionContext(g2d);
+		
 	}
 
 	
-
 	private void recalculateFieldsOfVision() {
 		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game
 				.getP2());
@@ -360,6 +362,22 @@ public class GameFieldPanel extends JPanel implements Observer {
 			}
 		}
 	}
+
+
+	private void drawLongRangeRadarOutlines(Graphics g) {
+		g.setColor(Constants.LONG_RANGE_RADAR_BORDER);
+		for (Ship s : game.getShips()) {
+			if (s.getOwner().equals(isP1 ? game.getP1() : game.getP2()) || GOD_MODE) {
+				if (s.hasLongRangeRadar() && s.isLongRangeRadarEnabled()) {
+					// Render outline around rectangle for long range radar	
+					Rectangle r = s.getActiveRadar().getRectangle(s);
+					g.drawRect(r.x * Constants.TILE_SIZE, r.y * Constants.TILE_SIZE,
+							(int)r.getWidth() * Constants.TILE_SIZE, (int)r.getHeight() * Constants.TILE_SIZE);
+				}
+			}
+		}
+	}
+
 
 	@Override
 	public void update(Observable o, Object arg) {

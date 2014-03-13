@@ -42,6 +42,7 @@ public class Constants {
 	public static final Color HEALTH_BAR_BACKGROUND = new Color(0.922f, 0.216f, 0, 1);
 	public static final Color HEALTH_BAR_FOREGROUND = new Color(0.275f, 0.549f, 0.322f, 1);
 	public static final Color GAME_EVENT_COLOR = new Color(1.0f, (152 / 255.0f), 0.0f, 0.70f);
+	public static final Color LONG_RANGE_RADAR_BORDER = new Color(0.0f,1.0f, 0.0f, 0.8f);
 	
 	public static final int PULSE_ALPHA_INTERVALS = 10;
 	public static final float PULSE_ALPHA_DELTA = 0.025f;

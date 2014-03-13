@@ -437,6 +437,8 @@ public class Game {
 		} else if (packet.moveType == MoveType.DROP_MINE) {
 			ship.setMineCount(ship.getMineCount() - 1);
 			ship.getGame().getField().setCellType(packet.contextPoint, CellType.MINE);
+		} else if (packet.moveType == MoveType.TOGGLE_LONG_RANGE_RADAR) {
+			ship.setLongRangeRadarEnabled(!ship.isLongRangeRadarEnabled());
 		}
 
 		System.out.println("Move applied. Events: ");

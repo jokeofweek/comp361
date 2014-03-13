@@ -590,6 +590,10 @@ public class Ship {
 		return this.longRangeRadarEnabled;
 	}
 
+	public void setLongRangeRadarEnabled(boolean longRangeRadarEnabled) {
+		this.longRangeRadarEnabled = longRangeRadarEnabled;
+	}
+	
 	/**
 	 * @return true if the ship has a sonar, false otherwise
 	 */
@@ -943,5 +947,12 @@ public class Ship {
 				i++;
 			}
 		}
+	}
+	
+	/**
+	 * @return true if the ship can move, or false if its LRR is enabled
+	 */
+	public boolean canMove() {
+		return !(hasLongRangeRadar && isLongRangeRadarEnabled());
 	}
 }
