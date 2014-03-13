@@ -1,4 +1,4 @@
-<project name="COMP361" default="init" basedir=".">
+<project name="COMP361" default="build" basedir=".">
 
   <property name="src" location="src"/>
   <property name="build" location="bin"/>
@@ -7,9 +7,10 @@
   <path id="classpath">
         <pathelement location="${lib}/commons-lang3-3.2.1.jar" />
         <pathelement location="${lib}/kryonet-2.18-all.jar" />
+        <pathelement location="jl1.0.1.jar" />
   </path>
   
-  <target name="init" depends="clean">
+  <target name="build" depends="clean">
     <javac srcdir="${src}" 
            destdir="${build}">
       <classpath refid="classpath" />
@@ -21,6 +22,7 @@
       <classpath>
         <pathelement location="${lib}/commons-lang3-3.2.1.jar" />
         <pathelement location="${lib}/kryonet-2.18-all.jar" />
+        <pathelement location="jl1.0.1.jar" />
         <pathelement path="${build}" />
       </classpath>
     </java>
