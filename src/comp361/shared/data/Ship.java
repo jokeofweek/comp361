@@ -511,6 +511,30 @@ public class Ship {
 	}
 
 	/**
+	 * @param p The point we want to go to
+	 * @return true if the point requires a shift, or false if it is right in front of the ship.
+	 */
+	public boolean requiresShift(Point p) {
+		int xOffset = 0;
+		int yOffset = 0;
+		if (facing == Direction.LEFT) xOffset = -1;
+		else if (facing == Direction.RIGHT) xOffset = 1;
+		else if (facing == Direction.UP) yOffset = -1;
+		else yOffset = 1;
+		
+		// Iterate along entire line which is in front of our ship, testing if
+		// we encounter the point.
+		Point cur = new Point(position.x + xOffset, position.y + yOffset);
+		while (getGame().getField().inBounds(cur)) {
+			if (cur.equals(p)) {
+				return false;
+			}
+			cur.setLocation(cur.x + xOffset, cur.y + yOffset);
+		}
+		return true;
+	}
+	
+	/**
 	 * Moves the ship to the position, given there are no obstacles on the path.
 	 * 
 	 * @param p
@@ -521,29 +545,16 @@ public class Ship {
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
 		points.remove(0);
-
 		
 		// Get the furthest possible position
 		Line l = new Line(points.get(0), points.get(points.size() - 1));
-		Point endPoint = game.getFurthestPosition(this, l);
-		if (endPoint != null) {
-			if(!shiftShip(p))
-			{
+		// Test if we are moving forwards or shifting
+		if (requiresShift(p)) {
+			shiftShip(p);
+		} else {
+			Point endPoint = game.getFurthestPosition(this, l);
+			if (endPoint != null) {
 				setPosition(endPoint);
-				// If there was a collision with another ship.
-				if (!endPoint.equals(p)) {
-					Point last = null;
-					for (Point lineP : l.getPoints()) {
-						if (last != null && last.equals(endPoint)) {
-							// If the collision point wasnt a mine, log the event
-							if (game.getField().getCellType(lineP) != CellType.MINE) {
-								events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
-							}
-							break;
-						}
-						last = lineP;
-					}
-				}
 				// Once we've moved, explode any adjacent mines
 				if (!isMineLayer() && endPoint != null) {
 					for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
@@ -551,8 +562,22 @@ public class Ship {
 						events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
 					}
 				}
+			} 
+			// Test if we didn't make it all the way. If there was a collision, add it as an event.
+			if (endPoint == null || !endPoint.equals(p)) {
+				Point last = null;
+				for (Point lineP : l.getPoints()) {
+					if (last == endPoint || (last != null && last.equals(endPoint))) {
+						// If the collision point wasnt a mine, log the event
+						if (game.getField().getCellType(lineP) != CellType.MINE) {
+							events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
+						}
+						break;
+					}
+					last = lineP;
+				}
 			}
-		}
+		} 
 		
 		System.out.println("Ship position: " + this.position);
 		System.err.println("Press position" + p);
@@ -848,8 +873,7 @@ public class Ship {
 					(int)tail.getY() + (xDelta * (facing == Direction.DOWN ? - 1 : 1))));
 		}
 		
-		// TODO: Handle behind
-		return points;
+		return game.getField().filterInBoundPoints(points);
 	}
 
 	/**

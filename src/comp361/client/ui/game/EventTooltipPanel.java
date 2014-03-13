@@ -30,7 +30,7 @@ public class EventTooltipPanel extends JPanel implements Observer {
 		
 		setLayout(null);
 		tooltipPanel = new JPanel();
-		tooltipPanel.setBackground(Color.blue);
+		//tooltipPanel.setBackground(Color.blue);
 		tooltipPanel.add(new JLabel("Hombre."));
 		tooltipPanel.setVisible(false);
 		add(tooltipPanel);
