@@ -28,7 +28,7 @@ public enum Direction {
 	
 	public Direction getCounterClockwise() {
 		if (this == LEFT) return DOWN;
-		else return values()[(this.ordinal() - 1) % 4];
+		else return values()[(this.ordinal() - 1)];
 	}
 	
 	/**

@@ -815,7 +815,7 @@ public class Ship {
 			for (Point minePoint : getSurroundingPoints()) {
 				if (game.getField().getCellType(minePoint) == CellType.MINE) {
 					game.explodeMine(minePoint);
-					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
+					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
 				}
 			}
 		}
@@ -1103,10 +1103,10 @@ public class Ship {
 		int xDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 0 : 1;
 				
 		points.put(new Point(position.x + xDelta, position.y + yDelta), 
-				(facing == Direction.LEFT || facing == Direction.UP) ? facing.getCounterClockwise() :  
+				(facing == Direction.LEFT || facing == Direction.DOWN) ? facing.getCounterClockwise() :  
 				facing.getClockwise());
 		points.put(new Point(position.x - xDelta, position.y - yDelta), 
-				(facing == Direction.LEFT || facing == Direction.UP) ? facing.getClockwise() : facing.getCounterClockwise());
+				(facing == Direction.RIGHT || facing == Direction.UP) ? facing.getCounterClockwise() : facing.getClockwise());
 		
 		if (canTurn180()) {
 			// Get the last point
@@ -1284,12 +1284,28 @@ public class Ship {
 				turns = 2;
 			}
 			
-			for (int i = 0; i < turns; i++) {
-				turnOnCenter(left, events);
+
+			boolean hitMine = false;
+			for (int i = 0; i < turns && !hitMine; i++) {
+				// If we encountered a collision, back up.
+				if (!turnOnCenter(left, events)) {
+					break;
+				}
+
+				// Once we've moved, explode any adjacent mines
+				if (!isMineLayer()) {
+					for (Point minePoint : getSurroundingPoints()) {
+						if (game.getField().getCellType(minePoint) == CellType.MINE) {
+							game.explodeMine(minePoint);
+							hitMine = true;
+							events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
+						}
+					}
+				}
 			}
 
 		} else {
-			// TODO
+			turnShip(getTurnPoints().get(p));
 		}
 	}
 	
@@ -1297,41 +1313,66 @@ public class Ship {
 	 * Turns a 3-size ship on its center.
 	 * @param left True if we're turning left
 	 * @param event
+	 * @return true if the turn was succesfull
 	 */
-	public void turnOnCenter(boolean left, List<GameEvent> events) {
+	public boolean turnOnCenter(boolean left, List<GameEvent> events) {
 		if (this.getSize() != 3) {
 			throw new RuntimeException("Hard-coded for size 3 ships yo.");
 		}
 		
 		List<Point> points = new ArrayList<Point>();
-		List<Integer> indices = new ArrayList<>();
 		Point finalPoint = null;
-		
+		System.out.println(position);
+		System.out.println(getTurnPoints());
 		if (facing == Direction.LEFT) {
 			points.add(new Point(position.x, position.y + (left ? 1 : -1)));
-			indices.add(2);
+			points.add(new Point(position.x + 2, position.y + (left ? -1 : 1)));
 			points.add(new Point(position.x + 1, position.y - 1));
-			indices.add(left ? 0 : 2);
 			points.add(new Point(position.x + 1, position.y + 1));
-			indices.add(left ? 2 : 0);
 			finalPoint = new Point(position.x + 1, position.y + (left ? 1 : -1));
 		} else if (facing == Direction.RIGHT) {
 			points.add(new Point(position.x, position.y + (left ? -1 : +1)));
-			indices.add(2);
+			points.add(new Point(position.x - 2, position.y + (left ? 1 : -1)));
 			points.add(new Point(position.x - 1, position.y - 1));
-			indices.add(left ? 2 : 0);
 			points.add(new Point(position.x - 1, position.y + 1));
-			indices.add(left ? 0 : 2);
 			finalPoint = new Point(position.x - 1, position.y + (left ? -1 : 1));
 		} else if (facing == Direction.DOWN) {
-			
+			points.add(new Point(position.x + (left? 1 : - 1), position.y));
+			points.add(new Point(position.x + (left? -1 : 1), position.y - 2));
+			points.add(new Point(position.x - 1, position.y - 1));
+			points.add(new Point(position.x + 1, position.y - 1));
+			finalPoint = new Point(position.x + (left? 1 : -1), position.y - 1);
 		} else if (facing == Direction.UP) {
-			
+			points.add(new Point(position.x + (left? -1 : 1), position.y));
+			points.add(new Point(position.x + (left? 1 : -1), position.y + 2));
+			points.add(new Point(position.x - 1, position.y + 1));
+			points.add(new Point(position.x + 1, position.y + 1));
+			finalPoint = new Point(position.x + (left? -1 : 1), position.y + 1);
 		}
 		
+		// Test all points
+		for (int i = 0; i < points.size(); i++) {
+			Point p = points.get(i);
+			// Test for ship collisions
+			for(Ship ship : getGame().getShips()){
+				if(ship.pointBelongsToShip(p)){
+					// Ship collision!
+					events.add(new GameEvent(p, null, Effect.SHIP_COLLISION, null));
+					return false;
+				}
+			}
+			// Test for non water collision
+			if (game.getField().getCellType(p) != CellType.WATER) {
+				// Collision!
+				events.add(new GameEvent(p, null, Effect.SHIP_COLLISION, null));
+				return false;
+			}
+		}
+
+		System.out.println("Turning " + facing + "," + position + " -> " + (left ? facing.getCounterClockwise() : facing.getClockwise()) + "," + finalPoint + " - " + left);
 		setPosition(finalPoint);
 		setDirection(left ? facing.getCounterClockwise() : facing.getClockwise());
-		
+		return true;
 		
 	}
 }

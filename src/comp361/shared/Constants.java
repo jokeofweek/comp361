@@ -13,7 +13,7 @@ public class Constants {
 	// Resources
 	public static final String GFX_DATA_PATH = CLIENT_DATA_PATH + "gfx/";
 	public static final String SFX_DATA_PATH = CLIENT_DATA_PATH + "sfx/";
-	public static final String BACKGROUND_MUSIC_PATH = SFX_DATA_PATH + "roccow.mp3";
+	public static final String BACKGROUND_MUSIC_PATH = SFX_DATA_PATH + "astley.mp3";
 	
 	// Screen size
 	public static final int SCREEN_WIDTH = 800;

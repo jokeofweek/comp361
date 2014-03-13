@@ -97,24 +97,26 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 		throw new IndexOutOfBoundsException();
 	}
 
-	public void refreshData(GameDescriptorManager manager) {
+	public void refreshData(final GameDescriptorManager manager) {
 		this.manager = manager;
 
-		// Create a list of the descriptors IDs and sort them
-		descriptors = new ArrayList<>(manager.getGameDescriptorIds());
-		Collections.sort(descriptors);
-		// Remove full games
-		for (int i = descriptors.size() - 1; i >= 0; i--) {
-			GameDescriptor d = manager.getGameDescriptor(descriptors.get(i));
-			if (d.isStarted() || (d.getMaxPlayers() - d.getPlayerCount() == 0)) {
-				descriptors.remove(i);
-			}
-		}
 		// We've updated our list, so trigger a refresh of the table
 		// data.
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+
+				// Create a list of the descriptors IDs and sort them
+				descriptors = new ArrayList<>(manager.getGameDescriptorIds());
+				Collections.sort(descriptors);
+				// Remove full games
+				for (int i = descriptors.size() - 1; i >= 0; i--) {
+					GameDescriptor d = manager.getGameDescriptor(descriptors.get(i));
+					if (d.isStarted() || (d.getMaxPlayers() - d.getPlayerCount() == 0)) {
+						descriptors.remove(i);
+					}
+				}
+				
 				fireTableDataChanged();
 			}
 		});
