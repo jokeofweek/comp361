@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import sun.reflect.generics.tree.FieldTypeSignature;
+
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
@@ -410,22 +412,52 @@ public class Ship {
 	 */
 	public boolean shiftShip(Point p)
 	{	
+		//Shift backwards (Left)
 		if(facing == Direction.RIGHT){
 			if(p.x < this.position.x && p.y == this.position.y){
 				Point newPosition = new Point(this.position.x - 1, this.position.y);
-				setPosition(newPosition);
+				Point collisionCheckPosition = new Point(this.position.x - this.size, this.position.y);
+				
+				if(getGame().getField().getCellType(collisionCheckPosition) == CellType.WATER){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift up
 			else if(p.y < this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x - this.size + 1, this.position.y - 1), new Point(this.position.x, this.position.y - 1));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift down
 			else if(p.y > this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y + 1);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x - this.size + 1, this.position.y + 1), new Point(this.position.x, this.position.y + 1));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
+				
 				return true;
 			}
 			else
@@ -435,21 +467,50 @@ public class Ship {
 		}
 		
 		else if(facing == Direction.LEFT){
+			//Shift Backwards (Right)
 			if(p.x > this.position.x && p.y == this.position.y){
 				Point newPosition = new Point(this.position.x + 1, this.position.y);
-				setPosition(newPosition);
+				Point collisionCheckPosition = new Point(this.position.x + this.size, this.position.y);
+
+				if(getGame().getField().getCellType(collisionCheckPosition) == CellType.WATER){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift up
 			else if(p.y < this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x + this.size - 1, this.position.y - 1), new Point(this.position.x, this.position.y - 1));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift down
 			else if(p.y > this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y + 1);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x + this.size - 1, this.position.y + 1), new Point(this.position.x, this.position.y + 1));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
@@ -459,22 +520,51 @@ public class Ship {
 			}
 		}
 		
+		//Shift backwards (down)
 		else if(facing == Direction.UP){
 			if(p.y > this.position.y && p.x == this.position.x){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
-				setPosition(newPosition);
+				Point collisionCheckPosition = new Point(this.position.x, this.position.y - this.size);
+
+				if(getGame().getField().getCellType(collisionCheckPosition) == CellType.WATER){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift left
 			else if(p.x < this.position.x){
 				Point newPosition = new Point(this.position.x - 1, this.position.y);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x - 1, this.position.y + this.size - 1), new Point(this.position.x - 1, this.position.y));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift right
 			else if(p.x > this.position.x){
 				Point newPosition = new Point(this.position.x + 1, this.position.y);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x + 1, this.position.y + this.size - 1), new Point(this.position.x + 1, this.position.y));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
@@ -484,22 +574,51 @@ public class Ship {
 			}
 		}
 		
-		else{
+		else{ // Direction = DOWN
+			//Shift backwards (up)
 			if(p.y < this.position.y && p.x == this.position.x){
 				Point newPosition = new Point(this.position.x, this.position.y + 1);
-				setPosition(newPosition);
+				Point collisionCheckPosition = new Point(this.position.x, this.position.y + this.size);
+
+				if(getGame().getField().getCellType(collisionCheckPosition) == CellType.WATER){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift left
 			else if(p.x < this.position.x){
 				Point newPosition = new Point(this.position.x - 1, this.position.y);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x - 1, this.position.y - this.size + 1), new Point(this.position.x - 1, this.position.y));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
+			//Shift right
 			else if(p.x > this.position.x){
 				Point newPosition = new Point(this.position.x + 1, this.position.y);
-				setPosition(newPosition);
+				
+				Line collisionLine = new Line(new Point(this.position.x + 1, this.position.y - this.size + 1), new Point(this.position.x + 1, this.position.y));
+				boolean collision = false;
+				for(Point point : collisionLine.getPoints()){
+					if(getGame().getField().getCellType(point) != CellType.WATER){
+						collision = true;
+					}
+				}
+				
+				if(!collision){
+					setPosition(newPosition);
+				}
 				return true;
 			}
 			
@@ -522,11 +641,13 @@ public class Ship {
 		// Remove the head.
 		points.remove(0);
 
+		System.out.println("Ship position: " + this.position);
+		System.err.println("Press position" + p);
 		
 		// Get the furthest possible position
 		Point endPoint = game.getFurthestPosition(this, new Line(points.get(0), points.get(points.size() - 1)));
-		if (endPoint != null) {
-			if(!shiftShip(p))
+		if (!shiftShip(p)) {
+			if(endPoint != null)
 			{
 				setPosition(endPoint);
 				// Once we've moved, explode any adjacent mines
@@ -538,8 +659,7 @@ public class Ship {
 			}
 		}
 		
-		System.out.println("Ship position: " + this.position);
-		System.err.println("Press position" + p);
+
 		
 		
 
