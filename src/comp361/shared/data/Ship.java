@@ -788,7 +788,11 @@ public class Ship {
 		Line l = new Line(points.get(0), points.get(points.size() - 1));
 		// Test if we are moving forwards or shifting
 		if (requiresShift(p)) {
-			shiftShip(p);
+			Point collisionPoint = shiftShip(p);
+			if(collisionPoint != null){
+				events.add(new GameEvent(collisionPoint, null, Effect.SHIP_COLLISION, null));
+			}
+			
 		} else {
 			Point endPoint = game.getFurthestPosition(this, l);
 			if (endPoint != null) {
