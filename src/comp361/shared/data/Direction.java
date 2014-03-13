@@ -22,6 +22,15 @@ public enum Direction {
 		return this == LEFT || this == RIGHT;
 	}
 	
+	public Direction getClockwise() {
+		return values()[(this.ordinal() + 1) % 4];
+	}
+	
+	public Direction getCounterClockwise() {
+		if (this == LEFT) return DOWN;
+		else return values()[(this.ordinal() - 1) % 4];
+	}
+	
 	/**
 	 * @param other another direction
 	 * @return returns true if other and this are perpendicular

@@ -4,9 +4,13 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
@@ -1089,23 +1093,36 @@ public class Ship {
 		return game.getField().filterInBoundPoints(points);
 	}
 	
-	public Set<Point> getValidTurnPoints() {
-		Set<Point> points = new HashSet<>();
+	/**
+	 * @return a map containing the points to turn to as well as the new facing direction.
+	 */
+	private Map<Point, Direction> getTurnPoints() {
+		Map<Point, Direction> points = new HashMap<>();
 		
 		int yDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 1 : 0;
 		int xDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 0 : 1;
 				
-		points.add(new Point(position.x + xDelta, position.y + yDelta));
-		points.add(new Point(position.x - xDelta, position.y - yDelta));
+		points.put(new Point(position.x + xDelta, position.y + yDelta), 
+				(facing == Direction.LEFT || facing == Direction.UP) ? facing.getCounterClockwise() :  
+				facing.getClockwise());
+		points.put(new Point(position.x - xDelta, position.y - yDelta), 
+				(facing == Direction.LEFT || facing == Direction.UP) ? facing.getClockwise() : facing.getCounterClockwise());
 		
 		if (canTurn180()) {
 			// Get the last point
 			Point2D tail = getShipLine().getP1();
-			points.add(new Point((int)tail.getX() + (yDelta * (facing == Direction.RIGHT ? - 1 : 1)),
-					(int)tail.getY() + (xDelta * (facing == Direction.DOWN ? - 1 : 1))));
+			points.put(new Point((int)tail.getX() + (yDelta * (facing == Direction.RIGHT ? - 1 : 1)),
+					(int)tail.getY() + (xDelta * (facing == Direction.DOWN ? - 1 : 1))), facing.opposite());
 		}
 		
-		return game.getField().filterInBoundPoints(points);
+		return points;
+	}
+	
+	/**
+	 * @return the set of points we can turn to.
+	 */
+	public Set<Point> getValidTurnPoints() {
+		return game.getField().filterInBoundPoints(getTurnPoints().keySet());
 	}
 
 	/**
@@ -1247,5 +1264,74 @@ public class Ship {
 	 */
 	public boolean canMove() {
 		return !(hasLongRangeRadar && isLongRangeRadarEnabled());
+	}
+	
+
+	/**
+	 * Turns a ship to a point.
+	 * @param p
+	 */
+	public void turnTo(Point p, List<GameEvent> events) {
+		if (turnsOnCenter) {
+			// Get the direction of the point we're turning to
+			Direction newFacingDirection = getTurnPoints().get(p);
+			
+			boolean left = (facing.opposite() == newFacingDirection) || (facing.getCounterClockwise() == newFacingDirection);
+			int turns = 1;
+			
+			// If it is opposite, we're turning 180
+			if (facing.opposite() == newFacingDirection) {
+				turns = 2;
+			}
+			
+			for (int i = 0; i < turns; i++) {
+				turnOnCenter(left, events);
+			}
+
+		} else {
+			// TODO
+		}
+	}
+	
+	/**
+	 * Turns a 3-size ship on its center.
+	 * @param left True if we're turning left
+	 * @param event
+	 */
+	public void turnOnCenter(boolean left, List<GameEvent> events) {
+		if (this.getSize() != 3) {
+			throw new RuntimeException("Hard-coded for size 3 ships yo.");
+		}
+		
+		List<Point> points = new ArrayList<Point>();
+		List<Integer> indices = new ArrayList<>();
+		Point finalPoint = null;
+		
+		if (facing == Direction.LEFT) {
+			points.add(new Point(position.x, position.y + (left ? 1 : -1)));
+			indices.add(2);
+			points.add(new Point(position.x + 1, position.y - 1));
+			indices.add(left ? 0 : 2);
+			points.add(new Point(position.x + 1, position.y + 1));
+			indices.add(left ? 2 : 0);
+			finalPoint = new Point(position.x + 1, position.y + (left ? 1 : -1));
+		} else if (facing == Direction.RIGHT) {
+			points.add(new Point(position.x, position.y + (left ? -1 : +1)));
+			indices.add(2);
+			points.add(new Point(position.x - 1, position.y - 1));
+			indices.add(left ? 2 : 0);
+			points.add(new Point(position.x - 1, position.y + 1));
+			indices.add(left ? 0 : 2);
+			finalPoint = new Point(position.x - 1, position.y + (left ? -1 : 1));
+		} else if (facing == Direction.DOWN) {
+			
+		} else if (facing == Direction.UP) {
+			
+		}
+		
+		setPosition(finalPoint);
+		setDirection(left ? facing.getCounterClockwise() : facing.getClockwise());
+		
+		
 	}
 }
