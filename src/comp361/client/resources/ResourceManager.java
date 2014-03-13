@@ -63,19 +63,19 @@ public class ResourceManager {
 		return waterImage;
 	}
 
-	public Image getBodyImage(Direction dir, int health, int maxHealth) {
+	public Image getShipBodyImage(Direction dir, int health, int maxHealth) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-body", dir.ordinal()+1, state);
 		return images.get(filename);
 	}
 
-	public Image getHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+	public Image getShipHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-head", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
-	public Image getTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+	public Image getShipTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-tail", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);

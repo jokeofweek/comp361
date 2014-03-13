@@ -244,7 +244,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
 			
-			BufferedImage headImage = (BufferedImage)rm.getHeadImage(ship.getDirection(),
+			BufferedImage headImage = (BufferedImage)rm.getShipHeadImage(ship.getDirection(),
 					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
 
 			g2d.drawImage(headImage, op, (int)head.x * Constants.TILE_SIZE,  (int)head.y * Constants.TILE_SIZE);		
@@ -253,7 +253,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			BufferedImage tailImage = (BufferedImage)rm.getTailImage(ship.getDirection(),
+			BufferedImage tailImage = (BufferedImage)rm.getShipTailImage(ship.getDirection(),
 					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
 
 			g2d.drawImage(tailImage, op, (int) tail.getX()
@@ -266,7 +266,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				bodyImage = (BufferedImage)rm.getBodyImage(ship.getDirection(),
+				bodyImage = (BufferedImage)rm.getShipBodyImage(ship.getDirection(),
 						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
 
 				g2d.drawImage(bodyImage, op, (int) p.getX()
