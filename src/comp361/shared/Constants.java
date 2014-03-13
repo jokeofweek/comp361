@@ -8,9 +8,12 @@ public class Constants {
 	public static final int PORT = 5000;
 	public static final String DATA_PATH = "./data/";
 	public static final String CLIENT_DATA_PATH = DATA_PATH + "client/";
+	public static final String SERVER_DATA_PATH = DATA_PATH + "server/";
+
+	// Resources
 	public static final String GFX_DATA_PATH = CLIENT_DATA_PATH + "gfx/";
 	public static final String SFX_DATA_PATH = CLIENT_DATA_PATH + "sfx/";
-	public static final String SERVER_DATA_PATH = DATA_PATH + "server/";
+	public static final String BACKGROUND_MUSIC_PATH = SFX_DATA_PATH + "astley.mp3";
 	
 	// Screen size
 	public static final int SCREEN_WIDTH = 800;
