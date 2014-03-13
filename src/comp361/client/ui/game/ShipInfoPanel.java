@@ -1,6 +1,7 @@
 package comp361.client.ui.game;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -20,6 +22,7 @@ import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
+import comp361.shared.data.ArmorType;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
 
@@ -51,24 +54,43 @@ public class ShipInfoPanel extends JPanel implements Observer {
 	public void refreshData() {
 		removeAll();
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
 		
 		// Create a panel to hold info on the ship.
 	
 		if (context.getShip() != null) {
 			// Build the ship label container
-			JPanel labelContainer = new JPanel(new GridLayout(0, 1));
+			JPanel labelContainer = new JPanel(new GridLayout(0, 1, 0, 0));
+			
 			JLabel shipNameLabel = new JLabel(context.getShip().getName());
 			shipNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			labelContainer.add(shipNameLabel);
+
+			// Build list of weapons
+			List<String> weapons = new ArrayList<>();
+			weapons.add(context.getShip().hasHeavyCannon() ? "Heavy Cannon" : "Cannon");
+			if (context.getShip().hasTorpedoes()) {
+				weapons.add("Torpedoes");
+			}
+			String weaponStr = weapons.get(0);
+			weapons.remove(0);
+			for (String weapon : weapons) {
+				weaponStr += ", " + weapon;
+			}
+			labelContainer.add(new JLabel(weapons.size() == 0 ? "Weapon:" : "Weapons:"));
+			labelContainer.add(new JLabel(weaponStr));
+			
+			// Build armor label
+			labelContainer.add(new JLabel("Armor: " + (context.getShip().getArmor() == ArmorType.HEAVY ? "Heavy" : "Normal")));
+			
 			// If the ship is a mine layer, add info about number of mines
 			if (context.getShip().isMineLayer()) {
 				JLabel mineLabel = new JLabel("Mines: " + context.getShip().getMineCount());
-				mineLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				labelContainer.add(mineLabel);
 			}
 			
-			add(labelContainer);
+			
+			add(labelContainer, BorderLayout.NORTH);
 			
 			// Build all the action buttons
 			List<JButton> actionButtons = new ArrayList<>();
@@ -141,11 +163,9 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			
 			add(buttonContainer);
 		} else {
-			JPanel labelContainer = new JPanel(new BorderLayout());
 			JLabel label = new JLabel("No selected ship");
 			label.setHorizontalAlignment(SwingConstants.CENTER);
-			labelContainer.add(label);
-			add(labelContainer);
+			add(label);
 		}
 		
 		revalidate();

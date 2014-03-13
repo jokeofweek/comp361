@@ -140,6 +140,10 @@ public class Ship {
 	public String getOwner() {
 		return this.owner;
 	}
+	
+	public ArmorType getArmor() {
+		return armor;
+	}
 
 	/**
 	 * @return the speed of the ship
@@ -205,7 +209,7 @@ public class Ship {
 	 * @return true if the ship is equipped with a heavy cannon, false otherwise
 	 */
 	public boolean hasHeavyCannon() {
-		return this.hasHeavyCannon();
+		return this.hasHeavyCannon;
 	}
 
 	/**
