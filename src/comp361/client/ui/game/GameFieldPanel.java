@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
+import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.data.event.GameEvent;
@@ -45,6 +46,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
+	private EventTooltipContext eventContext;
 	private List<GameEvent> events = new ArrayList<>();
 
 	// Cached field of vision
@@ -56,7 +58,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	int cursorY = -1;
 
 	public GameFieldPanel(GameClient client, SelectionContext context,
-			boolean isP1) {
+			boolean isP1, EventTooltipContext eventContext) {
 		SwagFactory.style(this);
 
 		this.client = client;
@@ -73,6 +75,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		this.isP1 = isP1;
 		this.context = context;
 		this.context.addObserver(this);
+		this.eventContext = eventContext;
 		this.addMouseListener(new FieldMouseAdapter());
 		this.addMouseMotionListener(new FieldMouseAdapter());
 
@@ -136,7 +139,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		}
 	}
-
+	
 	private void drawShips(Graphics g, Set<Point> fov) {
 		// Draw sunken ships first
 		Set<Ship> liveShips = new HashSet<>();
@@ -333,6 +336,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			recalculateFieldsOfVision();
 			if (arg instanceof List) {
 				events = (List<GameEvent>)arg;
+				eventContext.setEvent(null);
 			}
 		}
 	}
@@ -381,6 +385,17 @@ public class GameFieldPanel extends JPanel implements Observer {
 			
 
 			if (changed) {
+				// If the mouse, see if we have any game events using that position
+				Point p = new Point(newX, newY);
+				GameEvent foundEvent = null;
+				for (GameEvent event : events) {
+					if (event.getPoint().equals(p)) {
+						foundEvent = event;
+						break;
+					}
+				}
+				eventContext.setEvent(foundEvent);
+				
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
