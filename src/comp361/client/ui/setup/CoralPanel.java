@@ -54,7 +54,7 @@ public class CoralPanel extends JPanel implements Observer {
 		shipPositions = new int[Ship.SHIP_INVENTORIES[shipInventory].length];
 		for (int i = 0; i < shipWidths.length; i++) {
 			shipWidths[i] = Ship.SHIP_INVENTORIES[shipInventory][i].getSize();
-			shipPositions[i] = i;
+			shipPositions[i] = (i + 1);
 		}
 		
 		
