@@ -1,6 +1,5 @@
 package comp361.shared.packets.server;
 
-import java.util.HashSet;
 
 public class GameDescriptorReadyUpdatePacket {
 
