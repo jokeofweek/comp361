@@ -1,6 +1,5 @@
 package comp361.client.ui.util;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Observable;

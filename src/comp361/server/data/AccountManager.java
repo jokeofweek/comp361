@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import comp361.shared.data.Player;
-import comp361.shared.data.Statistics;
 import comp361.shared.packets.server.PlayerListPacket;
 
 /**

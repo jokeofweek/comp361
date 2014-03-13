@@ -1,7 +1,6 @@
 package comp361.server.network.handlers;
 
 import com.esotericsoftware.kryonet.Connection;
-
 import comp361.server.GameServer;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;

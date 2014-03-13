@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
-
 import comp361.server.data.AccountManager;
 import comp361.server.data.GameDescriptorManager;
 import comp361.server.data.store.AccountDataStore;

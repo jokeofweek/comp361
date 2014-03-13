@@ -6,7 +6,6 @@ import comp361.server.data.Account;
 import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
-import comp361.shared.packets.shared.GameOverPacket;
 
 public class Session extends Connection {
 

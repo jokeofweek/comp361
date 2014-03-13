@@ -5,7 +5,6 @@ import comp361.server.GameServer;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.packets.shared.InGameMessagePacket;
-import comp361.shared.packets.shared.SetupMessagePacket;
 
 public class InGameMessagePacketHandler implements ServerPacketHandler<InGameMessagePacket>
 {

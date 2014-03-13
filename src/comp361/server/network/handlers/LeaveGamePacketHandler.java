@@ -1,13 +1,10 @@
 package comp361.server.network.handlers;
 
-import com.esotericsoftware.kryonet.Connection;
-
 import comp361.server.GameServer;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
-import comp361.shared.packets.shared.GameOverPacket;
 
 public class LeaveGamePacketHandler implements
 		ServerPacketHandler<LeaveGamePacket> {

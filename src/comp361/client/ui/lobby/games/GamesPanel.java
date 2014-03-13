@@ -1,13 +1,9 @@
 package comp361.client.ui.lobby.games;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
 
 import comp361.client.GameClient;
 
