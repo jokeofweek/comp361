@@ -331,7 +331,8 @@ public class Ship {
 							Cause.TORPEDO, Effect.MINE_DESTROYED, null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.REEF) {
-					// Do nothing!
+					// Log the event
+					events.add(new GameEvent(p, Cause.TORPEDO, Effect.HIT_WATER, null));
 					return;
 				} else {
 					for (Ship s : game.getShips()) {

@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import comp361.client.data.EventTooltipContext;
 import comp361.client.data.event.GameEvent;
+import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 
 public class EventTooltipPanel extends JPanel implements Observer {
@@ -22,6 +24,7 @@ public class EventTooltipPanel extends JPanel implements Observer {
 	private EventTooltipContext context;
 	private final static int TOOLTIP_WIDTH = 300;
 	private final static int TOOLTIP_HEIGHT = 150;
+	private final static int BORDER_SPACING = 10;
  
 	public EventTooltipPanel(EventTooltipContext context) {
 
@@ -60,18 +63,28 @@ public class EventTooltipPanel extends JPanel implements Observer {
 						// Update the panel text
 						JLabel headerLabel = new JLabel("Impact Detected");
 						headerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+						SwagFactory.style(headerLabel);
+						headerLabel.setFont(SwagFactory.HEADER_FONT);
 						labelContainer.add(headerLabel);
 						
 						if (event.getCause() != null) {
 							JLabel causeLabel = new JLabel("Cause: " + event.getCause());
 							causeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+							SwagFactory.style(causeLabel);
 							labelContainer.add(causeLabel);
 						}
 						JLabel effectLabel = new JLabel(event.getEffect() + "");
 						effectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+						SwagFactory.style(effectLabel);
 						labelContainer.add(effectLabel);
+						
 						tooltipPanel.add(labelContainer);
+						
+						SwagFactory.style(tooltipPanel);
+						tooltipPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
+								BorderFactory.createEmptyBorder(BORDER_SPACING, BORDER_SPACING, BORDER_SPACING, BORDER_SPACING)));
 						tooltipPanel.setVisible(true);
+						
 						
 						tooltipPanel.doLayout();
 						int tooltipWidth = tooltipPanel.getPreferredSize().width;
@@ -88,7 +101,7 @@ public class EventTooltipPanel extends JPanel implements Observer {
 						}
 						left += ((event.getPoint().x + 0.5) * Constants.TILE_SIZE) - (tooltipWidth / 2);
 						// Make sure we don't go off to the left
-						left = Math.min(left, Constants.SCREEN_WIDTH - tooltipHeight);
+						left = Math.min(left, Constants.SCREEN_WIDTH - tooltipWidth);
 						
 						tooltipPanel.setBounds(left, top, tooltipWidth, tooltipHeight);
 					}
