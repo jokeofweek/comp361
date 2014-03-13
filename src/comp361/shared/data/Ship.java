@@ -804,7 +804,7 @@ public class Ship {
 				for (Point lineP : l.getPoints()) {
 					if (last == endPoint || (last != null && last.equals(endPoint))) {
 						// If the collision point wasnt a mine, log the event
-						if (game.getField().getCellType(lineP) != CellType.MINE) {
+						if (game.getField().getCellType(lineP) != CellType.WATER) {
 							events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
 						}
 						break;
@@ -987,15 +987,15 @@ public class Ship {
 			int backY = this.position.y + this.size;
 			Point backPoint = new Point(this.position.x, backY);
 			points.add(backPoint);
-
+			
 			// Add all the points to the right of the ship
-			Point sidePoint = new Point(this.position.x + 1, this.position.y - (getSize() / 2));
+			Point sidePoint = new Point(this.position.x + 1, this.position.y + (getSize() / 2));
 			points.add(sidePoint);
-
+			System.out.println(sidePoint);
 			// Add all the points to the left of the ship
-			sidePoint = new Point(this.position.x - 1, this.position.y - (getSize() / 2));
+			sidePoint = new Point(this.position.x - 1, this.position.y + (getSize() / 2));
 			points.add(sidePoint);
-
+			System.out.println(sidePoint);
 			// Add all the points above(in front of) the ship
 			Point movementCap = new Point(this.position.x, this.position.y
 					- this.getSpeed());
