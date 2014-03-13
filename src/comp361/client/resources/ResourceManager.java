@@ -15,9 +15,7 @@ import comp361.shared.data.Direction;
 
 public class ResourceManager {
 	private static ResourceManager instance;
-	
-	private final String WATER_FILENAME = "bg-anim.gif";
-	private final String MINE_FILENAME = "mine-anim.gif";
+
 	private final String EVENT_FILENAME = "exclamation.png";
 	
 	private final String DEFAULT_STATE = null;
