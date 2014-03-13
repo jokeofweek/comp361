@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import comp361.client.resources.ImageManager;
+import comp361.client.resources.SoundManager;
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
 
@@ -35,6 +37,8 @@ public class ResourceManager {
 
 	public static ResourceManager getInstance() {
 		if (instance == null) {
+			ImageManager.getInstance();
+			SoundManager.getInstance();
 			instance = new ResourceManager();
 		}
 		return instance;
