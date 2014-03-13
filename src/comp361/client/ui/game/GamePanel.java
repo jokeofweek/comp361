@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -32,6 +34,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import comp361.client.GameClient;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
+import comp361.client.data.event.GameEvent;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;

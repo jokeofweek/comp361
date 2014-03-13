@@ -14,6 +14,7 @@ import comp361.shared.packets.shared.GameMovePacket;
 public class Game {
 	private String p1;
 	private String p2;
+	
 	private Field field;
 	private List<Ship> ships;
 
@@ -415,8 +416,9 @@ public class Game {
 	/**
 	 * Plays a move on a game.
 	 * @param packet The packet representing the move.
+	 * @return a list of events
 	 */
-	public void applyMove(GameMovePacket packet) {
+	public List<GameEvent >applyMove(GameMovePacket packet) {
 		Ship ship = ships.get(packet.ship);
 		
 		List<GameEvent> events = new ArrayList<>();
@@ -442,6 +444,8 @@ public class Game {
 			System.out.println(e.getPoint() + " - " + e.getCause() + " - " + e.getEffect());
 		}
 		System.out.println();
+		
+		return events;
 	}
 	
 	/**

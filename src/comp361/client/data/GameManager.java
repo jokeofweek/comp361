@@ -1,8 +1,10 @@
 package comp361.client.data;
 
+import java.util.List;
 import java.util.Observable;
 
 import comp361.client.GameClient;
+import comp361.client.data.event.GameEvent;
 import comp361.shared.data.Game;
 import comp361.shared.data.GameResult;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -44,7 +46,7 @@ public class GameManager extends Observable {
 			return;
 		}
 		
-		game.applyMove(packet);
+		List<GameEvent> events = game.applyMove(packet);
 
 		// If it was your own move, send to server
 		if (isOwn) {
@@ -55,7 +57,7 @@ public class GameManager extends Observable {
 		}
 				
 		setChanged();
-		notifyObservers();
+		notifyObservers(events);
 		
 		// Test if the game is over!
 		String winner = game.getWinner();

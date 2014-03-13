@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -23,6 +24,7 @@ import javax.swing.SwingUtilities;
 import comp361.client.GameClient;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
+import comp361.client.data.event.GameEvent;
 import comp361.client.ui.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
@@ -43,6 +45,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
+	private List<GameEvent> events = new ArrayList<>();
 
 	// Cached field of vision
 	private Set<Point> fov;
@@ -96,8 +99,16 @@ public class GameFieldPanel extends JPanel implements Observer {
 		if (!GOD_MODE) {
 			drawFogOfWar(g2d, fov);
 		}
+		
+		// Draw the game events
+		for (GameEvent event : events) {
+			drawGameEvent(g2d, event);
+		}
+		
 		drawSelectionContext(g2d);
 	}
+
+	
 
 	private void recalculateFieldsOfVision() {
 		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game
@@ -255,6 +266,14 @@ public class GameFieldPanel extends JPanel implements Observer {
 		g.drawImage(ResourceManager.getInstance().getWaterImage(), x
 				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
+	
+	private void drawGameEvent(Graphics g, GameEvent event) {
+		g.setColor(Constants.GAME_EVENT_COLOR);
+		g.fillRect(event.getPoint().x * Constants.TILE_SIZE, event.getPoint().y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+
+		g.setColor(Constants.MOVE_BORDER_COLOR);
+		g.drawRect(event.getPoint().x * Constants.TILE_SIZE, event.getPoint().y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {
 		Line2D line = ship.getShipLine();
@@ -312,6 +331,9 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Only update the field panel if a turn actually passed
 		if (o instanceof GameManager) {
 			recalculateFieldsOfVision();
+			if (arg instanceof List) {
+				events = (List<GameEvent>)arg;
+			}
 		}
 	}
 

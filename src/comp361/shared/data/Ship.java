@@ -704,18 +704,12 @@ public class Ship {
 			points.add(backPoint);
 
 			// Add all the points to the right of the ship
-			int rightX = this.position.x + 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point rightPoint = new Point(rightX, p.y);
-				points.add(rightPoint);
-			}
+			Point sidePoint = new Point(this.position.x + 1, this.position.y - (getSize() / 2));
+			points.add(sidePoint);
 
 			// Add all the points to the left of the ship
-			int leftX = this.position.x - 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point leftPoint = new Point(leftX, p.y);
-				points.add(leftPoint);
-			}
+			sidePoint = new Point(this.position.x - 1, this.position.y - (getSize() / 2));
+			points.add(sidePoint);
 
 			// Add all the points above(in front of) the ship
 			Point movementCap = new Point(this.position.x, this.position.y
@@ -738,18 +732,12 @@ public class Ship {
 			points.add(backPoint);
 
 			// Add all the points to the right of the ship
-			int rightX = this.position.x + 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point rightPoint = new Point(rightX, p.y);
-				points.add(rightPoint);
-			}
+			Point sidePoint = new Point(this.position.x + 1, this.position.y - (getSize() / 2));
+			points.add(sidePoint);
 
 			// Add all the points to the left of the ship
-			int leftX = this.position.x - 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point leftPoint = new Point(leftX, p.y);
-				points.add(leftPoint);
-			}
+			sidePoint = new Point(this.position.x - 1, this.position.y - (getSize() / 2));
+			points.add(sidePoint);
 
 			// Add all the points below(in front of) the ship
 			Point movementCap = new Point(this.position.x, this.position.y
@@ -772,18 +760,12 @@ public class Ship {
 			points.add(backPoint);
 
 			// Add all the points right above the ship
-			int topY = this.position.y - 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point topPoint = new Point(p.x, topY);
-				points.add(topPoint);
-			}
+			Point sidePoint = new Point(this.position.x + (getSize() / 2), this.position.y - 1);
+			points.add(sidePoint);
 
 			// Add all the points right below the ship
-			int bottomY = this.position.y + 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point bottomPoint = new Point(p.x, bottomY);
-				points.add(bottomPoint);
-			}
+			sidePoint = new Point(this.position.x + (getSize() / 2), this.position.y + 1);
+			points.add(sidePoint);
 
 			// Add all the points in front of the ship
 			Point movementCap = new Point(this.position.x - this.getSpeed(),
@@ -806,18 +788,12 @@ public class Ship {
 			points.add(backPoint);
 
 			// Add all the points right above the ship
-			int topY = this.position.y - 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point topPoint = new Point(p.x, topY);
-				points.add(topPoint);
-			}
+			Point sidePoint = new Point(this.position.x - getSize() / 2, this.position.y - 1);
+			points.add(sidePoint);
 
 			// Add all the points below the ship
-			int bottomY = this.position.y + 1;
-			for (Point p : this.getShipLine().getPoints()) {
-				Point bottomPoint = new Point(p.x, bottomY);
-				points.add(bottomPoint);
-			}
+			sidePoint = new Point(this.position.x - getSize() / 2, this.position.y + 1);
+			points.add(sidePoint);
 
 			// Add all the points in front of the ship
 			Point movementCap = new Point(this.position.x + this.getSpeed(),
