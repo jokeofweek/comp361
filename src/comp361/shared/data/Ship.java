@@ -26,7 +26,7 @@ public class Ship {
 			0, ArmorType.NORMAL, false, false, false, false, false, true,
 			false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	// TODO: Fix torpedo cannon range
-	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo", 3, 9, 0,
+	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo Boat", 3, 9, 0,
 			ArmorType.NORMAL, true, false, false, false, false, true, false,
 			true, new TailRange(6, 3), null, new CenterRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,

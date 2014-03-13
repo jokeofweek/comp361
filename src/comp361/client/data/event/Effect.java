@@ -6,7 +6,7 @@ public enum Effect {
 	MINE_DESTROYED("Mine Destroyed"),
 	SHIP_HIT("Ship Hit"), 
 	BASE_HIT("Base Hit"), 
-	SHIP_SUNK("Ship Sunk"), 
+	SHIP_SUNK("# Sunk"), 
 	BASE_DESTROYED("Base Destroyed"),
 	HIT_WATER("Hit Nothing");
 	
