@@ -108,6 +108,7 @@ public class NewGamePanel extends ClientPanel {
 		
 		JPanel horizontalButtonContainer = new JPanel(new GridLayout(1, 2,
 				COMPONENT_SPACING, 0));
+		SwagFactory.style(horizontalButtonContainer);
 
 		// build the leave button
 		JButton leaveButton = new JButton();
@@ -152,6 +153,7 @@ public class NewGamePanel extends ClientPanel {
 		optionsContainer.setBorder(BorderFactory.createEmptyBorder(
 				COMPONENT_SPACING, COMPONENT_SPACING, COMPONENT_SPACING,
 				COMPONENT_SPACING));
+		SwagFactory.style(optionsContainer);
 
 		return optionsContainer;
 	}
