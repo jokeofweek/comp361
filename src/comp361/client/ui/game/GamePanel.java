@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import javax.swing.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -32,9 +31,9 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import comp361.client.GameClient;
+import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
-import comp361.client.data.event.GameEvent;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
@@ -49,7 +48,11 @@ import comp361.shared.packets.shared.MessagePacket;
 
 public class GamePanel extends ClientPanel {
 	
+	private EventTooltipPanel tooltipPanel;
+	
 	private SelectionContext context;
+	private EventTooltipContext eventContext;
+	
 	private JLabel turnLabel;
 	private GameFieldPanel fieldPanel;
 	private ShipInfoPanel infoPanel;
@@ -67,13 +70,16 @@ public class GamePanel extends ClientPanel {
 		
 		// Add this as an observer of the context
 		context.addObserver(this);
+		tooltipPanel = new EventTooltipPanel(eventContext);
 	}
 
 	private void initUI(final GameClient client) {
 		setLayout(new BorderLayout());
 
 		context = new SelectionContext();
-		fieldPanel = new GameFieldPanel(client, context, client.getGameManager().isPlayer1());
+		eventContext = new EventTooltipContext();
+		
+		fieldPanel = new GameFieldPanel(client, context, client.getGameManager().isPlayer1(), eventContext);
 		add(fieldPanel, BorderLayout.CENTER);
 		
 		JPanel leftBarPanel = new JPanel(new BorderLayout());
@@ -329,6 +335,11 @@ public class GamePanel extends ClientPanel {
 				repaint();
 			}
 		});
+	}
+	
+	@Override
+	public JComponent getOverlayComponent() {
+		return tooltipPanel;
 	}
 
 	

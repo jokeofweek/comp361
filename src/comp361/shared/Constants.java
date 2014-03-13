@@ -8,9 +8,12 @@ public class Constants {
 	public static final int PORT = 5000;
 	public static final String DATA_PATH = "./data/";
 	public static final String CLIENT_DATA_PATH = DATA_PATH + "client/";
+	public static final String SERVER_DATA_PATH = DATA_PATH + "server/";
+
+	// Resources
 	public static final String GFX_DATA_PATH = CLIENT_DATA_PATH + "gfx/";
 	public static final String SFX_DATA_PATH = CLIENT_DATA_PATH + "sfx/";
-	public static final String SERVER_DATA_PATH = DATA_PATH + "server/";
+	public static final String BACKGROUND_MUSIC_PATH = SFX_DATA_PATH + "astley.mp3";
 	
 	// Screen size
 	public static final int SCREEN_WIDTH = 800;
@@ -31,16 +34,25 @@ public class Constants {
 	
 	// Color constants
 	public static final Color FOG_OF_WAR_COLOR = new Color(0f, 0f, 0f, 0.5f);
-	public static final Color SONAR_COLOR = new Color(1.0f, 0.0f, 0f, 0.1f);
+	
+	
 	public static final Color SHIP_SELECTION_COLOR = new Color(1.0f, 1.0f, 0f, 0.5f);
 	public static final Color SHIP_PLACE_OK_COLOR = new Color(1.0f, 1.0f, 0f, 0.1f);
 	public static final Color MOVE_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.5f);
 	public static final Color MOVE_HOVER_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 	public static final Color MOVE_BORDER_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 	public static final float SUNKEN_SHIP_ALPHA = 0.3f;
+	public static final float GAME_EVENT_ALPHA = 0.8f;
 	public static final Color HEALTH_BAR_BACKGROUND = new Color(0.922f, 0.216f, 0, 1);
 	public static final Color HEALTH_BAR_FOREGROUND = new Color(0.275f, 0.549f, 0.322f, 1);
-	public static final Color GAME_EVENT_COLOR = new Color(1.0f, (152 / 255.0f), 0.0f, 0.70f);
+	public static final Color LONG_RANGE_RADAR_BORDER = new Color(0.0f,1.0f, 0.0f, 0.8f);
+	
+	public static final int PULSE_ALPHA_INTERVALS = 10;
+	public static final float PULSE_ALPHA_DELTA = 0.025f;
+	public static final float SONAR_RED = 1.0f;
+	public static final float SONAR_GREEN = 0.0f;
+	public static final float SONAR_BLUE = 0.0f;
+	public static final float SONAR_ALPHA = 0.1f;
 	
 	
 	public static final int NUM_PLAYERS = 2;

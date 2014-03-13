@@ -1,6 +1,7 @@
 package comp361.shared.data;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,15 +26,15 @@ public class Ship {
 			0, ArmorType.NORMAL, false, false, false, false, false, true,
 			false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	// TODO: Fix torpedo cannon range
-	public static final Ship TORPEDO_TEMPLATE = new Ship("Torpedo", 3, 9, 0,
+	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo", 3, 9, 0,
 			ArmorType.NORMAL, true, false, false, false, false, true, false,
-			false, new TailRange(6, 3), null, new CenterRange(5, 5));
+			true, new TailRange(6, 3), null, new CenterRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
 			5, ArmorType.HEAVY, false, true, false, false, false, true, true,
 			false, new CenterRange(6, 5), null, new CenterRange(4, 5));
 	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3,
 			0, ArmorType.NORMAL, true, false, true, false, false, false, false,
-			false, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
+			true, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
 					5, 3));
 
 	private static final Ship[] DEFAULT_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
@@ -100,7 +101,6 @@ public class Ship {
 		this.radar = radar;
 		this.longRadar = longRadar;
 		this.cannonRange = cannonRange;
-
 		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
 
@@ -239,14 +239,14 @@ public class Ship {
 				// destroy the mine
 				this.game.getField().setCellType(p, CellType.WATER);
 				// Log the event
-				events.add(new GameEvent(p, Cause.CANNON, Effect.MINE_DESTROYED, this));
+				events.add(new GameEvent(p, Cause.CANNON, Effect.MINE_DESTROYED, null));
 			} else if (this.game.getField().getCellType(p) == CellType.BASE){
 				// Test if the base was destroyed beforehand
 				boolean alreadyDestroyed = this.game.getField().isBaseDestroyed(p);
 				// damage the base
 				this.game.getField().damageBase(p);
 
-				events.add(new GameEvent(p, Cause.CANNON, alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED, this));
+				events.add(new GameEvent(p, Cause.CANNON, alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED, null));
 			} else {
 				boolean hit = false;
 				for (Ship s : this.game.getShips()) { 
@@ -256,7 +256,7 @@ public class Ship {
 						// Log the event
 						hit = true;
 						events.add(new GameEvent(p, 
-								Cause.CANNON, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
+								Cause.CANNON, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, s));
 						break;
 					}
 				}
@@ -323,17 +323,18 @@ public class Ship {
 					this.game.getField().damageBase(p);
 
 					events.add(new GameEvent(p, 
-							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.MINE) {
 					// Remove the mine
 					game.getField().setCellType(p, CellType.WATER);
 					// Log the event
 					events.add(new GameEvent(p, 
-							Cause.TORPEDO, Effect.MINE_DESTROYED, this));
+							Cause.TORPEDO, Effect.MINE_DESTROYED, null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.REEF) {
-					// Do nothing!
+					// Log the event
+					events.add(new GameEvent(p, Cause.TORPEDO, Effect.HIT_WATER, null));
 					return;
 				} else {
 					for (Ship s : game.getShips()) {
@@ -341,7 +342,7 @@ public class Ship {
 							s.hitWithTorpedo(p, this.facing);
 
 							// Log the event
-							events.add(new GameEvent(p, Cause.TORPEDO, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
+							events.add(new GameEvent(p, Cause.TORPEDO, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, s));
 							return;
 						}
 					}
@@ -630,34 +631,73 @@ public class Ship {
 	}
 
 	/**
+	 * @param p The point we want to go to
+	 * @return true if the point requires a shift, or false if it is right in front of the ship.
+	 */
+	public boolean requiresShift(Point p) {
+		int xOffset = 0;
+		int yOffset = 0;
+		if (facing == Direction.LEFT) xOffset = -1;
+		else if (facing == Direction.RIGHT) xOffset = 1;
+		else if (facing == Direction.UP) yOffset = -1;
+		else yOffset = 1;
+		
+		// Iterate along entire line which is in front of our ship, testing if
+		// we encounter the point.
+		Point cur = new Point(position.x + xOffset, position.y + yOffset);
+		while (getGame().getField().inBounds(cur)) {
+			if (cur.equals(p)) {
+				return false;
+			}
+			cur.setLocation(cur.x + xOffset, cur.y + yOffset);
+		}
+		return true;
+	}
+	
+	/**
 	 * Moves the ship to the position, given there are no obstacles on the path.
 	 * 
 	 * @param p
 	 *            the new position of the ship
 	 */
-	public void moveShip(Point p) {
+	public void moveShip(Point p, List<GameEvent> events) {
 		Line trajectory = getLineTo(p);
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
 		points.remove(0);
-
-		System.out.println("Ship position: " + this.position);
-		System.err.println("Press position" + p);
 		
 		// Get the furthest possible position
-		Point endPoint = game.getFurthestPosition(this, new Line(points.get(0), points.get(points.size() - 1)));
-		if (!shiftShip(p)) {
-			if(endPoint != null)
-			{
+		Line l = new Line(points.get(0), points.get(points.size() - 1));
+		// Test if we are moving forwards or shifting
+		if (requiresShift(p)) {
+			shiftShip(p);
+		} else {
+			Point endPoint = game.getFurthestPosition(this, l);
+			if (endPoint != null) {
 				setPosition(endPoint);
 				// Once we've moved, explode any adjacent mines
 				if (!isMineLayer() && endPoint != null) {
 					for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
 						game.explodeMine(minePoint);
+						events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
 					}
 				}
+			} 
+			// Test if we didn't make it all the way. If there was a collision, add it as an event.
+			if (endPoint == null || !endPoint.equals(p)) {
+				Point last = null;
+				for (Point lineP : l.getPoints()) {
+					if (last == endPoint || (last != null && last.equals(endPoint))) {
+						// If the collision point wasnt a mine, log the event
+						if (game.getField().getCellType(lineP) != CellType.MINE) {
+							events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
+						}
+						break;
+					}
+					last = lineP;
+				}
 			}
-		}
+		} 
 		
 
 		
@@ -710,6 +750,10 @@ public class Ship {
 		return this.longRangeRadarEnabled;
 	}
 
+	public void setLongRangeRadarEnabled(boolean longRangeRadarEnabled) {
+		this.longRangeRadarEnabled = longRangeRadarEnabled;
+	}
+	
 	/**
 	 * @return true if the ship has a sonar, false otherwise
 	 */
@@ -931,6 +975,25 @@ public class Ship {
 
 		return game.getField().filterInBoundPoints(points);
 	}
+	
+	public Set<Point> getValidTurnPoints() {
+		Set<Point> points = new HashSet<>();
+		
+		int yDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 1 : 0;
+		int xDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 0 : 1;
+				
+		points.add(new Point(position.x + xDelta, position.y + yDelta));
+		points.add(new Point(position.x - xDelta, position.y - yDelta));
+		
+		if (canTurn180()) {
+			// Get the last point
+			Point2D tail = getShipLine().getP1();
+			points.add(new Point((int)tail.getX() + (yDelta * (facing == Direction.RIGHT ? - 1 : 1)),
+					(int)tail.getY() + (xDelta * (facing == Direction.DOWN ? - 1 : 1))));
+		}
+		
+		return game.getField().filterInBoundPoints(points);
+	}
 
 	/**
 	 * @return the max health of each square of the ship
@@ -1063,5 +1126,12 @@ public class Ship {
 				i++;
 			}
 		}
+	}
+	
+	/**
+	 * @return true if the ship can move, or false if its LRR is enabled
+	 */
+	public boolean canMove() {
+		return !(hasLongRangeRadar && isLongRangeRadarEnabled());
 	}
 }

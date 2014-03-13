@@ -4,35 +4,34 @@ import java.awt.Point;
 
 import comp361.shared.data.Ship;
 
-
 public class GameEvent {
 
 	private Point point;
 	private Cause cause;
 	private Effect effect;
-	private Ship firingShip;
-	
-	public GameEvent(Point point, Cause cause, Effect effect, Ship firingShip) {
+	private Ship victimShip;
+
+	public GameEvent(Point point, Cause cause, Effect effect, Ship victimShip) {
 		this.point = point;
 		this.cause = cause;
 		this.effect = effect;
-		this.firingShip = firingShip;
+		this.victimShip = victimShip;
 	}
-	
+
 	public Cause getCause() {
 		return cause;
 	}
-	
+
 	public Effect getEffect() {
 		return effect;
 	}
-	
+
 	public Point getPoint() {
 		return point;
 	}
-	
-	public Ship getFiringShip() {
-		return firingShip;
+
+	public Ship getVictimShip() {
+		return victimShip;
 	}
-	
+
 }

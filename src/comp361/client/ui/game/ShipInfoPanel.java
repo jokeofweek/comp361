@@ -95,11 +95,14 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			// Build all the action buttons
 			List<JButton> actionButtons = new ArrayList<>();
 			
-			JButton moveShipButton = new JButton("Move");
-			moveShipButton.addActionListener(new MoveContextActionListener(MoveType.MOVE));
-			actionButtons.add(moveShipButton);
+			if (context.getShip().canMove()) {
+				JButton moveShipButton = new JButton("Move");
+				moveShipButton.addActionListener(new MoveContextActionListener(MoveType.MOVE));
+				actionButtons.add(moveShipButton);
+			}
 			
 			JButton turnShipButton = new JButton("Turn");
+			turnShipButton.addActionListener(new MoveContextActionListener(MoveType.TURN));
 			actionButtons.add(turnShipButton);
 			
 			JButton fireCannonButton = new JButton("Fire Cannon");
@@ -151,6 +154,22 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				});
 				actionButtons.add(repairButton);
 			}
+			
+
+			if (context.getShip().hasLongRangeRadar()) {
+				JButton toggleLongRangeRadar = new JButton(context.getShip().isLongRangeRadarEnabled() ? "Disable LRR" : "Enable LRR");
+				toggleLongRangeRadar.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						GameMovePacket packet = new GameMovePacket();
+						packet.ship = client.getGameManager().getGame().getShips().indexOf(context.getShip());
+						packet.moveType = MoveType.TOGGLE_LONG_RANGE_RADAR;
+						client.getGameManager().applyMove(packet, true);
+					}
+				});
+				actionButtons.add(toggleLongRangeRadar);	
+			}
+			
 			
 			// Style and add all the buttons to a container
 			JPanel buttonContainer = new JPanel();

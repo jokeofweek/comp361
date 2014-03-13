@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -20,12 +23,14 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import comp361.client.GameClient;
+import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.data.event.GameEvent;
-import comp361.client.ui.ResourceManager;
+import comp361.client.resources.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;
@@ -40,13 +45,20 @@ public class GameFieldPanel extends JPanel implements Observer {
 	// Transforms
 	private static final RescaleOp SUNKEN_SHIP_TRANSFORM = 
 			new RescaleOp(new float[]{0f, 0f, 0f, Constants.SUNKEN_SHIP_ALPHA}, new float[4], null);
+	private static final RescaleOp EVENT_TRANSFORM = 
+			new RescaleOp(new float[]{1f, 1f, 1f, Constants.GAME_EVENT_ALPHA}, new float[4], null);
 
 	private GameClient client;
 	private Game game;
 	private boolean isP1;
 	private SelectionContext context;
+	private EventTooltipContext eventContext;
 	private List<GameEvent> events = new ArrayList<>();
 
+	private int alphaPulseCounter = 0;
+	private boolean alphaPulsingForwards = true;
+	private Color[] sonarColors = new Color[Constants.PULSE_ALPHA_INTERVALS];
+	
 	// Cached field of vision
 	private Set<Point> fov;
 	private Set<Point> sonarFov;
@@ -56,7 +68,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	int cursorY = -1;
 
 	public GameFieldPanel(GameClient client, SelectionContext context,
-			boolean isP1) {
+			boolean isP1, EventTooltipContext eventContext) {
 		SwagFactory.style(this);
 
 		this.client = client;
@@ -73,11 +85,36 @@ public class GameFieldPanel extends JPanel implements Observer {
 		this.isP1 = isP1;
 		this.context = context;
 		this.context.addObserver(this);
+		this.eventContext = eventContext;
 		this.addMouseListener(new FieldMouseAdapter());
 		this.addMouseMotionListener(new FieldMouseAdapter());
 
 		// Calculate the FOV
 		recalculateFieldsOfVision();
+		
+		// Setup the pulse colors
+		for (int i = 0; i < sonarColors.length; i++) {
+			sonarColors[i] = new Color(Constants.SONAR_RED, Constants.SONAR_GREEN,
+					Constants.SONAR_BLUE, Constants.SONAR_ALPHA + Constants.PULSE_ALPHA_DELTA * i);
+		}
+		
+		new Timer(150, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (alphaPulsingForwards) {
+					if (alphaPulseCounter == Constants.PULSE_ALPHA_INTERVALS - 2) {
+						alphaPulsingForwards = false;
+					}
+					alphaPulseCounter++;
+				} else {
+					if (alphaPulseCounter == 1) {
+						alphaPulsingForwards = true;
+					}
+					alphaPulseCounter--;
+				}
+				repaint();
+			}
+		}).start();
 	}
 
 	@Override
@@ -90,6 +127,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Draw CellType tiles (BASE, MINE, REEF, WATER)
 		drawTiles(g2d, sonarFov);
 
+		drawLongRangeRadarOutlines(g2d);
+		
 		// Draw ship outline for selected ship
 		if (context.getShip() != null) {
 			drawShipSelection(g2d, context.getShip());
@@ -101,15 +140,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 		
 		// Draw the game events
-		for (GameEvent event : events) {
-			drawGameEvent(g2d, event);
-		}
-		
+		drawGameEvents(g2d);
 		drawSelectionContext(g2d);
+		
 	}
 
 	
-
 	private void recalculateFieldsOfVision() {
 		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game
 				.getP2());
@@ -136,7 +172,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		}
 	}
-
+	
 	private void drawShips(Graphics g, Set<Point> fov) {
 		// Draw sunken ships first
 		Set<Ship> liveShips = new HashSet<>();
@@ -163,7 +199,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 				// If the point is in the sonar fov, add overlay
 				if (sonarFov.contains(new Point(x, y))) {
-					g.setColor(Constants.SONAR_COLOR);
+					g.setColor(sonarColors[alphaPulseCounter]);
 					g.fillRect(x * Constants.TILE_SIZE,
 							y * Constants.TILE_SIZE, Constants.TILE_SIZE,
 							Constants.TILE_SIZE);
@@ -208,7 +244,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
 			
-			BufferedImage headImage = (BufferedImage)rm.getHeadImage(ship.getDirection(),
+			BufferedImage headImage = (BufferedImage)rm.getShipHeadImage(ship.getDirection(),
 					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
 
 			g2d.drawImage(headImage, op, (int)head.x * Constants.TILE_SIZE,  (int)head.y * Constants.TILE_SIZE);		
@@ -217,7 +253,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			BufferedImage tailImage = (BufferedImage)rm.getTailImage(ship.getDirection(),
+			BufferedImage tailImage = (BufferedImage)rm.getShipTailImage(ship.getDirection(),
 					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
 
 			g2d.drawImage(tailImage, op, (int) tail.getX()
@@ -230,7 +266,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				bodyImage = (BufferedImage)rm.getBodyImage(ship.getDirection(),
+				bodyImage = (BufferedImage)rm.getShipBodyImage(ship.getDirection(),
 						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
 
 				g2d.drawImage(bodyImage, op, (int) p.getX()
@@ -267,12 +303,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 	
-	private void drawGameEvent(Graphics g, GameEvent event) {
-		g.setColor(Constants.GAME_EVENT_COLOR);
-		g.fillRect(event.getPoint().x * Constants.TILE_SIZE, event.getPoint().y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
-
-		g.setColor(Constants.MOVE_BORDER_COLOR);
-		g.drawRect(event.getPoint().x * Constants.TILE_SIZE, event.getPoint().y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+	private void drawGameEvents(Graphics g) {
+		BufferedImage image = (BufferedImage) ResourceManager.getInstance().getEventImage();
+		Graphics2D g2d = (Graphics2D)g;
+		for (GameEvent e : events) {
+			g2d.drawImage(image, EVENT_TRANSFORM, e.getPoint().x * Constants.TILE_SIZE, e.getPoint().y * Constants.TILE_SIZE);
+		}
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {
@@ -326,6 +362,22 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
+
+	private void drawLongRangeRadarOutlines(Graphics g) {
+		g.setColor(Constants.LONG_RANGE_RADAR_BORDER);
+		for (Ship s : game.getShips()) {
+			if (s.getOwner().equals(isP1 ? game.getP1() : game.getP2()) || GOD_MODE) {
+				if (s.hasLongRangeRadar() && s.isLongRangeRadarEnabled()) {
+					// Render outline around rectangle for long range radar	
+					Rectangle r = s.getActiveRadar().getRectangle(s);
+					g.drawRect(r.x * Constants.TILE_SIZE, r.y * Constants.TILE_SIZE,
+							(int)r.getWidth() * Constants.TILE_SIZE, (int)r.getHeight() * Constants.TILE_SIZE);
+				}
+			}
+		}
+	}
+
+
 	@Override
 	public void update(Observable o, Object arg) {
 		// Only update the field panel if a turn actually passed
@@ -333,6 +385,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			recalculateFieldsOfVision();
 			if (arg instanceof List) {
 				events = (List<GameEvent>)arg;
+				eventContext.setEvent(null);
 			}
 		}
 	}
@@ -381,6 +434,17 @@ public class GameFieldPanel extends JPanel implements Observer {
 			
 
 			if (changed) {
+				// If the mouse, see if we have any game events using that position
+				Point p = new Point(newX, newY);
+				GameEvent foundEvent = null;
+				for (GameEvent event : events) {
+					if (event.getPoint().equals(p)) {
+						foundEvent = event;
+						break;
+					}
+				}
+				eventContext.setEvent(foundEvent);
+				
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {

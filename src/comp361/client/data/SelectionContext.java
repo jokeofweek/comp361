@@ -24,7 +24,13 @@ public class SelectionContext extends Observable {
 
 	public void setShip(Ship ship) {
 		this.ship = ship;
-		this.type = MoveType.MOVE;
+		if (ship != null) {
+			if (ship.canMove()) {
+				this.type = MoveType.MOVE;
+			} else {
+				this.type = null;
+			}
+		}
 		updatePoints();
 		setChanged();
 		notifyObservers();
@@ -46,6 +52,8 @@ public class SelectionContext extends Observable {
 			points = new ArrayList<>();
 		} else if (getType() == MoveType.MOVE) {
 			points = ship.getValidMovePoints();
+		} else if (getType() == MoveType.TURN) {
+			points = ship.getValidTurnPoints();
 		} else if (getType() == MoveType.CANNON) {
 			points = ship.getCannonRange().getPoints(ship);
 		} else if (getType() == MoveType.DROP_MINE) {
