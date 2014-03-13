@@ -30,6 +30,7 @@ import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.data.event.GameEvent;
+import comp361.client.resources.ImageManager;
 import comp361.client.resources.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
@@ -289,13 +290,15 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawBase(Graphics2D g, int x, int y) {
 		Point p = new Point(x, y);
+		Image baseImage = null;
+
 		if (game.getField().isBaseDestroyed(p)) {
-			g.setColor(Color.black);
-			g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+			baseImage = ImageManager.getInstance().getImage("base-anim-dead");
 		} else {
-			g.drawImage(ResourceManager.getInstance().getBaseImage(y), x
-					* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
+			baseImage = ImageManager.getInstance().getImage("base-anim");
 		}
+
+		g.drawImage(baseImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
 	public void drawWater(Graphics g, int x, int y) {
