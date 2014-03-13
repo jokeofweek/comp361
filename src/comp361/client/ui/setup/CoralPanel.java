@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import comp361.client.GameClient;
 import comp361.client.ui.ResourceManager;
+import comp361.client.ui.SwagFactory;
 import comp361.client.ui.setup.NewGamePanel.ReadyActionListener;
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
@@ -68,6 +69,7 @@ public class CoralPanel extends JPanel implements Observer {
 		
 		// Set the size to be the size of the field plus ten columns on the left
 		// for the base.
+		SwagFactory.style(this);
 		Dimension d = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
 		setPreferredSize(d);
 		setSize(d);

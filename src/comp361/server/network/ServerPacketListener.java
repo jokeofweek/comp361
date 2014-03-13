@@ -9,6 +9,7 @@ import comp361.server.GameServer;
 import comp361.server.network.handlers.ChangeSeedPacketHandler;
 import comp361.server.network.handlers.GameMovePacketHandler;
 import comp361.server.network.handlers.GameOverPacketHandler;
+import comp361.server.network.handlers.InGameMessagePacketHandler;
 import comp361.server.network.handlers.JoinGamePacketHandler;
 import comp361.server.network.handlers.LeaveGamePacketHandler;
 import comp361.server.network.handlers.LoginPacketHandler;
@@ -29,6 +30,7 @@ import comp361.shared.packets.client.UpdateReadyPacket;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
+import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -114,6 +116,7 @@ public class ServerPacketListener extends Listener {
 	private Map<Class, ServerPacketHandler> setupGamePacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		handlers.put(GameMovePacket.class, new GameMovePacketHandler());
+		handlers.put(InGameMessagePacket.class, new InGameMessagePacketHandler());
 		handlers.put(GameOverPacket.class, new GameOverPacketHandler());
 		return handlers;
 	}

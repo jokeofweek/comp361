@@ -1,27 +1,48 @@
 package comp361.client.ui.game;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import comp361.client.GameClient;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
+import comp361.client.ui.SwagFactory;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.client.ui.util.HealthBar;
+import comp361.shared.Constants;
 import comp361.shared.data.GameResult;
 import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameOverPacket;
+import comp361.shared.packets.shared.InGameMessagePacket;
+import comp361.shared.packets.shared.MessagePacket;
 
 public class GamePanel extends ClientPanel {
 	
@@ -30,6 +51,11 @@ public class GamePanel extends ClientPanel {
 	private GameFieldPanel fieldPanel;
 	private ShipInfoPanel infoPanel;
 	private List<HealthBar> healthBars;
+	
+	private JScrollPane chatScrollPane;
+	private JEditorPane chatEditorPane;
+	private HTMLEditorKit kit;
+	private HTMLDocument doc;
 	
 	public GamePanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
@@ -48,6 +74,7 @@ public class GamePanel extends ClientPanel {
 		add(fieldPanel, BorderLayout.CENTER);
 		
 		JPanel leftBarPanel = new JPanel(new BorderLayout());
+		JPanel topPanel = new JPanel(new BorderLayout());
 		
 		// Container for the turn info and health info
 		JPanel gameInfoPanel = new JPanel(new BorderLayout());
@@ -88,13 +115,149 @@ public class GamePanel extends ClientPanel {
 		}
 		
 		gameInfoPanel.add(healthPanel);
-		leftBarPanel.add(gameInfoPanel, BorderLayout.NORTH);
+		topPanel.add(gameInfoPanel, BorderLayout.NORTH);
 		
 		// Container for the ship info
 		infoPanel = new ShipInfoPanel(client, context);
-		leftBarPanel.add(infoPanel, BorderLayout.CENTER);
+		topPanel.add(infoPanel, BorderLayout.CENTER);
+
+		Dimension d = new Dimension(Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE), Constants.SCREEN_HEIGHT / 2);
+		topPanel.setSize(d);
+		topPanel.setPreferredSize(d);
+		topPanel.setMaximumSize(d);
+		topPanel.setMinimumSize(d);
+		
+		leftBarPanel.add(topPanel, BorderLayout.NORTH);
+		leftBarPanel.add(buildChatUI());
+		
+		d = new Dimension(Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE), Constants.SCREEN_HEIGHT);
+		leftBarPanel.setSize(d);
+		leftBarPanel.setPreferredSize(d);
+		leftBarPanel.setMaximumSize(d);
+		leftBarPanel.setMinimumSize(d);
 		 
 		add(leftBarPanel, BorderLayout.WEST );
+	}
+	
+	private JPanel buildChatUI() {
+		JPanel container = new JPanel(new BorderLayout());
+		JPanel inputPanel = new JPanel(new GridLayout(1, 2));
+
+		// Message text field
+		final JTextField messageField = new JTextField("u avin a giggle?");
+		messageField.setForeground(Color.GRAY);
+		messageField.addMouseListener(new MouseAdapter() {
+			private boolean cleared = false;
+
+			public void mousePressed(MouseEvent e) {
+				if (!cleared) {
+					messageField.setText("");
+					messageField.setForeground(Color.BLACK);
+				}
+			}
+		});
+
+		// Message send button
+		final JButton sendButton = new JButton("Send");
+
+		// Sends message when triggered
+		ActionListener messageSendHandler = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String message = messageField.getText();
+
+				// Avoid sending default text or empty message
+				if (messageField.getForeground() == Color.GRAY
+						|| message.isEmpty()) {
+					return;
+				}
+
+				InGameMessagePacket packet = new InGameMessagePacket();
+				packet.message = message;
+				packet.senderName = getGameClient().getPlayerName();
+
+				// Send message packet
+				getGameClient().getClient().sendTCP(packet);
+				publishChatMessage(packet);
+				
+				// Clear message text field
+				messageField.setText("");
+			}
+		};
+
+		// Attach message send handler
+		sendButton.addActionListener(messageSendHandler);
+		messageField.addActionListener(messageSendHandler);
+
+		inputPanel.add(messageField);
+		inputPanel.add(sendButton);
+		SwagFactory.styleButtonWithoutHeight(sendButton);
+
+		container.add(getChatPanel(), BorderLayout.CENTER);
+		container.add(inputPanel, BorderLayout.SOUTH);
+
+		return container;
+	}
+
+	private JComponent getChatPanel() {
+		// Create the text field
+		kit = new HTMLEditorKit();
+		doc = new HTMLDocument();
+		SwagFactory.style(chatEditorPane);
+		chatEditorPane = new JEditorPane();
+		chatEditorPane.setEditable(false);
+		chatEditorPane.setEditorKit(kit);
+		chatEditorPane.setDocument(doc);
+//		try {
+//			kit.insertHTML(doc, doc.getLength(),
+//					"Please chat with your opponent!", 0, 0, null);
+//		} catch (Exception e) {
+//		}
+
+		// Wrap the editor pane in a scroll pane
+		chatScrollPane = new JScrollPane(chatEditorPane,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		JPanel container = new JPanel(new BorderLayout());
+		SwagFactory.style(container);
+		container.add(chatScrollPane);
+		return container;
+	}
+	
+
+	public void publishChatMessage(final MessagePacket packet) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				String message = "";
+
+				// We have to escape both the sender name and the message just
+				// to make sure there's
+				// no HTML in there that shouldn't be there. This will make it
+				// so <b> gets shown as
+				// is instead of bolding text.
+
+				// Add the sender if it's there.
+				if (packet.senderName != null) {
+					message += "<b>"
+							+ StringEscapeUtils.escapeHtml4(packet.senderName)
+							+ "</b>: ";
+				}
+				message += StringEscapeUtils.escapeHtml4(packet.message);
+				// Insert the message then scroll to the bottom.
+				try {
+
+					kit.insertHTML(doc, doc.getLength(), message, 0, 0, null);
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				// Temporary hack, could be better..
+				chatEditorPane.setCaretPosition(chatEditorPane.getDocument()
+						.getLength());
+			}
+		});
 	}
 
 	@Override
@@ -118,13 +281,16 @@ public class GamePanel extends ClientPanel {
 			// As long as we didn't disconnect (and therefore lose), show a message
 			GameOverPacket packet = (GameOverPacket) object;
 			if (packet.result != GameResult.LOSS || !packet.fromDisconnect) {
+				String message = packet.result == GameResult.WIN ? "You won!" : "You lost!";
 				if (packet.message != null) {
-					JOptionPane.showMessageDialog(null, packet.message);
-				} else {
-					JOptionPane.showMessageDialog(null, packet.result == GameResult.WIN ? "You won!" : "You lost!");
+					message += " " + packet.message;
 				}
+				JOptionPane.showMessageDialog(null, message);
 				getClientWindow().setPanel(new LobbyPanel(getGameClient(), getClientWindow()));
 			}
+			return;
+		} else if (object instanceof InGameMessagePacket) {
+			publishChatMessage((MessagePacket)object);
 			return;
 		}
 		

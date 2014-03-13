@@ -35,6 +35,7 @@ import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
+import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -54,11 +55,12 @@ public class ClientPacketListener extends Listener {
 	}
 
 	private Map<Class, ClientPacketHandler> setupPacketHandlers() {
+		GenericPublishPacketHandler genericHandler = new GenericPublishPacketHandler();
 		Map<Class, ClientPacketHandler> handlers = new HashMap<Class, ClientPacketHandler>();
-		handlers.put(MessagePacket.class, new GenericPublishPacketHandler());
-		handlers.put(RegisterError.class, new GenericPublishPacketHandler());
-		handlers.put(LoginError.class, new GenericPublishPacketHandler());
-		handlers.put(GenericError.class, new GenericPublishPacketHandler());
+		handlers.put(MessagePacket.class, genericHandler);
+		handlers.put(RegisterError.class, genericHandler);
+		handlers.put(LoginError.class, genericHandler);
+		handlers.put(GenericError.class, genericHandler);
 		handlers.put(PlayerUpdatePacket.class, new PlayerUpdatePacketHandler());
 		handlers.put(PlayerListPacket.class, new PlayerListPacketHandler());
 		handlers.put(GameDescriptorCreatedPacket.class,
@@ -70,7 +72,7 @@ public class ClientPacketListener extends Listener {
 		handlers.put(ChangeSeedPacket.class, new ChangeSeedPacketHandler());
 		handlers.put(GameDescriptorReadyUpdatePacket.class,
 				new GameDescriptorReadyUpdatePacketHandler());
-		handlers.put(SetupMessagePacket.class, new GenericPublishPacketHandler());
+		handlers.put(SetupMessagePacket.class, genericHandler);
 		handlers.put(GameDescriptorStartPacket.class,
 				new GameDescriptorStartPacketHandler());
 		handlers.put(GameStartPacket.class,
@@ -79,6 +81,7 @@ public class ClientPacketListener extends Listener {
 				new GameMovePacketHandler());
 		handlers.put(GameOverPacket.class, new GameOverPacketHandler());
 		handlers.put(GameDescriptorRemovedPacket.class, new GameDescriptorRemovedPacketHandler());
+		handlers.put(InGameMessagePacket.class, genericHandler);
 
 		return handlers;
 	}

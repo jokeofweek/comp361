@@ -92,11 +92,11 @@ public class NewGamePanel extends ClientPanel {
 				.getGameDescriptor(gameDescriptorId).getShipInventory(),
 				reefGenerator, readyActionListener);
 		coralContainer.add(coralPanel);
+		SwagFactory.style(coralPanel);
 
 		// Build the containers for the buttons
 		JPanel buttonContainer = new JPanel(new GridLayout(2, 1,
 				COMPONENT_SPACING, COMPONENT_SPACING));
-		SwagFactory.style(buttonContainer);
 
 		// Build the button for regenerating the coral
 		JButton regenerateCoralButton = new JButton("Regenerate Corals");
@@ -104,7 +104,8 @@ public class NewGamePanel extends ClientPanel {
 				.addActionListener(new RegenerateCoralsActionListener());
 		buttonContainer.add(regenerateCoralButton);
 		SwagFactory.style(regenerateCoralButton);
-
+		SwagFactory.style(buttonContainer);
+		
 		JPanel horizontalButtonContainer = new JPanel(new GridLayout(1, 2,
 				COMPONENT_SPACING, 0));
 

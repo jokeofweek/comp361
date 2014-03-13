@@ -1,7 +1,5 @@
 package comp361.shared.packets.shared;
 
-public class SetupMessagePacket  {
+public class SetupMessagePacket extends MessagePacket  {
 
-	public String senderName;
-	public String message;
 }

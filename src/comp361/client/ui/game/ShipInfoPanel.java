@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
@@ -25,6 +27,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 
 	private SelectionContext context;
 	private GameClient client;
+	private final int WIDTH = Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE);
 	
 	public ShipInfoPanel(GameClient client, SelectionContext context) {
 		super();
@@ -32,33 +35,40 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		this.client = client;
 		this.context = context;
 		
-		Dimension d = new Dimension(Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE), Constants.SCREEN_HEIGHT);
-		setSize(d);
-		setPreferredSize(d);
-		setMaximumSize(d);
-		setMinimumSize(d);
 				
 		refreshData();
+	}
+	
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(WIDTH, super.getPreferredSize().height);
 	}
 	
 	public void refreshData() {
 		removeAll();
 		
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Create a panel to hold info on the ship.
-		JPanel contentPanel = new JPanel(new BorderLayout());		
-		
+	
 		if (context.getShip() != null) {
 			// Build the ship label container
 			JPanel labelContainer = new JPanel(new GridLayout(0, 1));
-			labelContainer.add(new JLabel(context.getShip().getName()));
+			JLabel shipNameLabel = new JLabel(context.getShip().getName());
+			shipNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			labelContainer.add(shipNameLabel);
 			// If the ship is a mine layer, add info about number of mines
 			if (context.getShip().isMineLayer()) {
-				labelContainer.add(new JLabel("Mines: " + context.getShip().getMineCount()));
+				JLabel mineLabel = new JLabel("Mines: " + context.getShip().getMineCount());
+				mineLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				labelContainer.add(mineLabel);
 			}
 			
-			contentPanel.add(labelContainer, BorderLayout.NORTH);
+			add(labelContainer);
 			
 			// Build all the action buttons
 			List<JButton> actionButtons = new ArrayList<>();
@@ -129,12 +139,14 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				// SwagFactory.styleButtonHeight(button, button.getWidth());
 			}
 			
-			contentPanel.add(buttonContainer);
+			add(buttonContainer);
 		} else {
-			contentPanel.add(new JLabel("No selected ship"));
+			JPanel labelContainer = new JPanel(new BorderLayout());
+			JLabel label = new JLabel("No selected ship");
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			labelContainer.add(label);
+			add(labelContainer);
 		}
-		
-		add(contentPanel);
 		
 		revalidate();
 		repaint();

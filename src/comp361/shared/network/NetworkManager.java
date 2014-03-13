@@ -43,6 +43,7 @@ import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
+import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -98,6 +99,7 @@ public class NetworkManager {
 		kryo.register(GameDescriptorReadyUpdatePacket.class);
 		kryo.register(ChangeSeedPacket.class);
 		kryo.register(SetupMessagePacket.class);
+		kryo.register(InGameMessagePacket.class);
 		kryo.register(GameDescriptorStartPacket.class);
 		kryo.register(GameStartPacket.class);
 		kryo.register(MoveType.class);
