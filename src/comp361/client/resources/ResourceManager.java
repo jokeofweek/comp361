@@ -29,8 +29,8 @@ public class ResourceManager {
 	private final String[] states = {DEFAULT_STATE, HIT_STATE, DEAD_STATE};
 	private final String[] baseParts = {"base-top", "base-body", "base-bottom"};
 	
-	private final Image waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME).getImage();
-	private final Image mineImage = new ImageIcon(Constants.GFX_DATA_PATH + MINE_FILENAME).getImage();
+	private final Image WATER_IMAGE = ImageManager.getInstance().getImage("bg-anim");
+	private final Image MINE_IMAGE = ImageManager.getInstance().getImage("mine-anim");
 	private final Image REEF_IMAGE = ImageManager.getInstance().getImage("reef");
 	private final Map<String, Image> images = new HashMap<String, Image>();
 
@@ -59,7 +59,7 @@ public class ResourceManager {
 	}
 
 	public Image getWaterImage() {
-		return waterImage;
+		return WATER_IMAGE;
 	}
 
 	public Image getShipBodyImage(Direction dir, int health, int maxHealth) {
@@ -108,7 +108,7 @@ public class ResourceManager {
 	}
 	
 	public Image getMineImage() {
-		return mineImage;
+		return MINE_IMAGE;
 	}
 
 	private void loadHeadImages() throws IOException {
