@@ -14,16 +14,16 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import comp361.client.data.EventTooltipContext;
+import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
+import comp361.shared.data.Game;
 
 public class EventTooltipPanel extends JPanel implements Observer {
 
 	private JPanel tooltipPanel;
 	private EventTooltipContext context;
-	private final static int TOOLTIP_WIDTH = 300;
-	private final static int TOOLTIP_HEIGHT = 150;
 	private final static int BORDER_SPACING = 10;
  
 	public EventTooltipPanel(EventTooltipContext context) {
@@ -73,7 +73,10 @@ public class EventTooltipPanel extends JPanel implements Observer {
 							SwagFactory.style(causeLabel);
 							labelContainer.add(causeLabel);
 						}
-						JLabel effectLabel = new JLabel(event.getEffect() + "");
+						JLabel effectLabel = new JLabel(event.getEffect().toString());
+						if (event.getEffect() == Effect.SHIP_SUNK) {
+							effectLabel.setText(event.getEffect().toString().replace("#", event.getVictimShip().getName()));
+						}
 						effectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 						SwagFactory.style(effectLabel);
 						labelContainer.add(effectLabel);

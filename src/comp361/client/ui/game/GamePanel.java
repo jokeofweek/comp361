@@ -77,7 +77,7 @@ public class GamePanel extends ClientPanel {
 		setLayout(new BorderLayout());
 
 		context = new SelectionContext();
-		eventContext = new EventTooltipContext();
+		eventContext = new EventTooltipContext(getGameClient().getGameManager().isPlayer1());
 		
 		fieldPanel = new GameFieldPanel(client, context, client.getGameManager().isPlayer1(), eventContext);
 		add(fieldPanel, BorderLayout.CENTER);

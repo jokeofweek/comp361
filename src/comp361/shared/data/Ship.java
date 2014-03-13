@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sun.reflect.generics.tree.FieldTypeSignature;
-
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
@@ -26,7 +24,7 @@ public class Ship {
 			0, ArmorType.NORMAL, false, false, false, false, false, true,
 			false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
 	// TODO: Fix torpedo cannon range
-	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo", 3, 9, 0,
+	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo Boat", 3, 9, 0,
 			ArmorType.NORMAL, true, false, false, false, false, true, false,
 			true, new TailRange(6, 3), null, new CenterRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
@@ -791,13 +789,6 @@ public class Ship {
 			Point endPoint = game.getFurthestPosition(this, l);
 			if (endPoint != null) {
 				setPosition(endPoint);
-				// Once we've moved, explode any adjacent mines
-				if (!isMineLayer() && endPoint != null) {
-					for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
-						game.explodeMine(minePoint);
-						events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
-					}
-				}
 			} 
 			// Test if we didn't make it all the way. If there was a collision, add it as an event.
 			if (endPoint == null || !endPoint.equals(p)) {
@@ -813,11 +804,17 @@ public class Ship {
 					last = lineP;
 				}
 			}
-		} 
+		} 	
 		
-
-		
-		
+		// Once we've moved, explode any adjacent mines
+		if (!isMineLayer()) {
+			for (Point minePoint : getSurroundingPoints()) {
+				if (game.getField().getCellType(minePoint) == CellType.MINE) {
+					game.explodeMine(minePoint);
+					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
+				}
+			}
+		}
 
 	}
 
@@ -1194,7 +1191,8 @@ public class Ship {
 				boolean isValid = true;
 				for (Point adjP : game.getField().getAdjacentPoints(p)) {
 					// Adjacent point must also be water
-					if (game.getField().getCellType(adjP) != CellType.WATER) {
+					if (game.getField().getCellType(adjP) != CellType.WATER &&
+							game.getField().getCellType(adjP) != CellType.MINE) {
 						isValid = false;
 						break;
 					}

@@ -15,9 +15,7 @@ import comp361.shared.data.Direction;
 
 public class ResourceManager {
 	private static ResourceManager instance;
-	
-	private final String WATER_FILENAME = "bg-anim.gif";
-	private final String MINE_FILENAME = "mine-anim.gif";
+
 	private final String EVENT_FILENAME = "exclamation.png";
 	
 	private final String DEFAULT_STATE = null;
@@ -29,8 +27,8 @@ public class ResourceManager {
 	private final String[] states = {DEFAULT_STATE, HIT_STATE, DEAD_STATE};
 	private final String[] baseParts = {"base-top", "base-body", "base-bottom"};
 	
-	private final Image waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME).getImage();
-	private final Image mineImage = new ImageIcon(Constants.GFX_DATA_PATH + MINE_FILENAME).getImage();
+	private final Image WATER_IMAGE = ImageManager.getInstance().getImage("bg-anim");
+	private final Image MINE_IMAGE = ImageManager.getInstance().getImage("mine-anim");
 	private final Image REEF_IMAGE = ImageManager.getInstance().getImage("reef");
 	private final Map<String, Image> images = new HashMap<String, Image>();
 
@@ -59,7 +57,7 @@ public class ResourceManager {
 	}
 
 	public Image getWaterImage() {
-		return waterImage;
+		return WATER_IMAGE;
 	}
 
 	public Image getShipBodyImage(Direction dir, int health, int maxHealth) {
@@ -88,27 +86,32 @@ public class ResourceManager {
 		return images.get(Constants.GFX_DATA_PATH + EVENT_FILENAME);
 	}
 	
-	public Image getBaseImage(int y) {
-		String filename = Constants.GFX_DATA_PATH + "base-";
+	public Image getBaseImage(int y, boolean isDestroyed) {
+		String name = "base-";
 		
 		switch (y) {
 		case Constants.BASE_Y_OFFSET:
-			
-			filename += "top";
+			name += "top";
 			break;
 		case Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1:
-			filename += "bottom";
+			name += "bottom";
 			break;
 		default:
-			filename += "body";
+			name += "body";
 		}
 		
-		filename += "-anim.gif";
-		return images.get(filename);
+		name += "-anim";
+		
+		if (isDestroyed) {
+			name += "-dead";
+		}
+		
+		name += ".gif";
+		return ImageManager.getInstance().getImage(name);
 	}
 	
 	public Image getMineImage() {
-		return mineImage;
+		return MINE_IMAGE;
 	}
 
 	private void loadHeadImages() throws IOException {
