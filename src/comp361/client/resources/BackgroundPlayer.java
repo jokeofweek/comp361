@@ -18,7 +18,7 @@ public class BackgroundPlayer extends PlaybackListener {
 	private File audioFile;
 
 	public BackgroundPlayer() {
-		audioFile = new File(Constants.SFX_DATA_PATH + "background.mp3");
+		audioFile = new File(Constants.BACKGROUND_MUSIC_PATH);
 	}
 
 	public void play() {

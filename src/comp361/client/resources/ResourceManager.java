@@ -17,7 +17,6 @@ public class ResourceManager {
 	private static ResourceManager instance;
 	
 	private final String WATER_FILENAME = "bg-anim.gif";
-	private final String REEF_FILENAME = "reef.png";
 	private final String MINE_FILENAME = "mine-anim.gif";
 	private final String EVENT_FILENAME = "exclamation.png";
 	
@@ -32,6 +31,7 @@ public class ResourceManager {
 	
 	private final Image waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME).getImage();
 	private final Image mineImage = new ImageIcon(Constants.GFX_DATA_PATH + MINE_FILENAME).getImage();
+	private final Image REEF_IMAGE = ImageManager.getInstance().getImage("reef");
 	private final Map<String, Image> images = new HashMap<String, Image>();
 
 	public static ResourceManager getInstance() {
@@ -49,7 +49,6 @@ public class ResourceManager {
 			loadHeadImages();
 			loadBodyImages();
 			loadTailImages();
-			loadReefImage();
 			loadEventImage();
 			loadBaseImages();
 		} catch (IOException e) {
@@ -63,27 +62,26 @@ public class ResourceManager {
 		return waterImage;
 	}
 
-	public Image getBodyImage(Direction dir, int health, int maxHealth) {
+	public Image getShipBodyImage(Direction dir, int health, int maxHealth) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-body", dir.ordinal()+1, state);
 		return images.get(filename);
 	}
 
-	public Image getHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+	public Image getShipHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-head", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
-	public Image getTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+	public Image getShipTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-tail", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
 	public Image getReefImage() {
-		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
-		return images.get(filename);
+		return REEF_IMAGE;
 	}
 	
 	public Image getEventImage() {
@@ -154,12 +152,6 @@ public class ResourceManager {
 				}
 			}
 		}
-	}
-	
-	private void loadReefImage() throws IOException {
-		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
-		BufferedImage image = ImageIO.read(new File(filename));
-		images.put(filename, image);
 	}
 	
 	private void loadEventImage() throws IOException {
