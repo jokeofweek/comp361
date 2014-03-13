@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sun.reflect.generics.tree.FieldTypeSignature;
-
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
