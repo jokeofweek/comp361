@@ -45,6 +45,8 @@ public class GameFieldPanel extends JPanel implements Observer {
 	// Transforms
 	private static final RescaleOp SUNKEN_SHIP_TRANSFORM = 
 			new RescaleOp(new float[]{0f, 0f, 0f, Constants.SUNKEN_SHIP_ALPHA}, new float[4], null);
+	private static final RescaleOp EVENT_TRANSFORM = 
+			new RescaleOp(new float[]{1f, 1f, 1f, Constants.GAME_EVENT_ALPHA}, new float[4], null);
 
 	private GameClient client;
 	private Game game;
@@ -138,9 +140,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 		
 		// Draw the game events
-		for (GameEvent event : events) {
-			drawGameEvent(g2d, event);
-		}
+		drawGameEvents(g2d);
 		drawSelectionContext(g2d);
 		
 	}
@@ -303,12 +303,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 	
-	private void drawGameEvent(Graphics g, GameEvent event) {
-		g.setColor(Constants.GAME_EVENT_COLOR);
-		g.fillRect(event.getPoint().x * Constants.TILE_SIZE, event.getPoint().y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
-
-		g.setColor(Constants.MOVE_BORDER_COLOR);
-		g.drawRect(event.getPoint().x * Constants.TILE_SIZE, event.getPoint().y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+	private void drawGameEvents(Graphics g) {
+		BufferedImage image = (BufferedImage) ResourceManager.getInstance().getEventImage();
+		Graphics2D g2d = (Graphics2D)g;
+		for (GameEvent e : events) {
+			g2d.drawImage(image, EVENT_TRANSFORM, e.getPoint().x * Constants.TILE_SIZE, e.getPoint().y * Constants.TILE_SIZE);
+		}
 	}
 
 	private void drawShipSelection(Graphics2D g, Ship ship) {

@@ -19,6 +19,7 @@ public class ResourceManager {
 	private final String WATER_FILENAME = "bg-anim.gif";
 	private final String REEF_FILENAME = "reef.png";
 	private final String MINE_FILENAME = "mine-anim.gif";
+	private final String EVENT_FILENAME = "exclamation.png";
 	
 	private final String DEFAULT_STATE = null;
 	private final String HIT_STATE = "hit";
@@ -49,6 +50,7 @@ public class ResourceManager {
 			loadBodyImages();
 			loadTailImages();
 			loadReefImage();
+			loadEventImage();
 			loadBaseImages();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -82,6 +84,10 @@ public class ResourceManager {
 	public Image getReefImage() {
 		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
 		return images.get(filename);
+	}
+	
+	public Image getEventImage() {
+		return images.get(Constants.GFX_DATA_PATH + EVENT_FILENAME);
 	}
 	
 	public Image getBaseImage(int y) {
@@ -152,6 +158,12 @@ public class ResourceManager {
 	
 	private void loadReefImage() throws IOException {
 		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
+		BufferedImage image = ImageIO.read(new File(filename));
+		images.put(filename, image);
+	}
+	
+	private void loadEventImage() throws IOException {
+		String filename = Constants.GFX_DATA_PATH + EVENT_FILENAME;
 		BufferedImage image = ImageIO.read(new File(filename));
 		images.put(filename, image);
 	}
