@@ -77,10 +77,13 @@ public class CoralPanel extends JPanel implements Observer {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		Graphics2D g2d = (Graphics2D) g;
+		
+		BufferedImage buffer = new BufferedImage(PANEL_WIDTH, PANEL_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = (Graphics2D) buffer.getGraphics();
+		
 
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		g2d.setColor(Color.white);
+		g2d.fillRect(0, 0, getWidth(), getHeight());
 		drawWater(g2d);
 		drawReef(g2d);
 		drawBase(g2d);
@@ -88,6 +91,7 @@ public class CoralPanel extends JPanel implements Observer {
 		drawSelectedShipHighlight(g2d);
 		drawShips(g2d);
 		
+		g.drawImage(buffer, 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
 	}
 
 	private void drawWater(Graphics2D g) {
