@@ -18,5 +18,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/comp361/javadoc/commons-lang3-3.2.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="jl1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
