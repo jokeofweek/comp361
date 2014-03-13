@@ -31,7 +31,7 @@ public class ResourceManager {
 	
 	private final Image waterImage = new ImageIcon(Constants.GFX_DATA_PATH + WATER_FILENAME).getImage();
 	private final Image mineImage = new ImageIcon(Constants.GFX_DATA_PATH + MINE_FILENAME).getImage();
-	private final Map<String, BufferedImage> images = new HashMap<String, BufferedImage>();
+	private final Map<String, Image> images = new HashMap<String, Image>();
 
 	public static ResourceManager getInstance() {
 		if (instance == null) {
@@ -59,43 +59,45 @@ public class ResourceManager {
 		return waterImage;
 	}
 
-	public BufferedImage getBodyImage(Direction dir, int health, int maxHealth) {
+	public Image getBodyImage(Direction dir, int health, int maxHealth) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-body", dir.ordinal()+1, state);
 		return images.get(filename);
 	}
 
-	public BufferedImage getHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+	public Image getHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-head", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
-	public BufferedImage getTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
+	public Image getTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String filename = getFilename("ship-tail", dir.ordinal()+1, isOwner, state);
 		return images.get(filename);
 	}
 	
-	public BufferedImage getReefImage() {
+	public Image getReefImage() {
 		String filename = Constants.GFX_DATA_PATH + REEF_FILENAME;
 		return images.get(filename);
 	}
 	
-	public BufferedImage getBaseImage(int y) {
-		String filename;
+	public Image getBaseImage(int y) {
+		String filename = Constants.GFX_DATA_PATH + "base-";
 		
 		switch (y) {
 		case Constants.BASE_Y_OFFSET:
-			filename = getBaseFilename("top");
+			
+			filename += "top";
 			break;
 		case Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1:
-			filename = getBaseFilename("bottom");
+			filename += "bottom";
 			break;
 		default:
-			filename = getBaseFilename("body");
+			filename += "body";
 		}
 		
+		filename += "-anim.gif";
 		return images.get(filename);
 	}
 	
@@ -154,11 +156,11 @@ public class ResourceManager {
 	
 	private void loadBaseImages() throws IOException {
 		String filename = null;
-		BufferedImage image = null;
+		Image image = null;
 		
 		for (String part : baseParts) {
-			filename = getFilename(part, -1, null);
-			image = ImageIO.read(new File(filename));
+			filename = Constants.GFX_DATA_PATH + part + "-anim.gif";
+			image = new ImageIcon(filename).getImage();
 			images.put(filename, image);
 		}
 	}
@@ -186,10 +188,6 @@ public class ResourceManager {
 		}
 		
 		return Constants.GFX_DATA_PATH + filename + ".png";
-	}
-	
-	private String getBaseFilename(String part) {
-		return getFilename("base-" + part, -1, null);
 	}
 	
 	private String getState(int health, int maxHealth) {

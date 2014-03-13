@@ -41,7 +41,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private GameClient client;
 	private Game game;
-	private long lastImageUpdate = 0;
 	private boolean isP1;
 	private SelectionContext context;
 
@@ -198,7 +197,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		
 		if (isOwnShip || fov.contains(head) || GOD_MODE) {
 			
-			BufferedImage headImage = rm.getHeadImage(ship.getDirection(),
+			BufferedImage headImage = (BufferedImage)rm.getHeadImage(ship.getDirection(),
 					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
 
 			g2d.drawImage(headImage, op, (int)head.x * Constants.TILE_SIZE,  (int)head.y * Constants.TILE_SIZE);		
@@ -207,7 +206,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		// Render the tail
 		Point tail = points.remove(0);
 		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			BufferedImage tailImage = rm.getTailImage(ship.getDirection(),
+			BufferedImage tailImage = (BufferedImage)rm.getTailImage(ship.getDirection(),
 					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
 
 			g2d.drawImage(tailImage, op, (int) tail.getX()
@@ -220,7 +219,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
 			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				bodyImage = rm.getBodyImage(ship.getDirection(),
+				bodyImage = (BufferedImage)rm.getBodyImage(ship.getDirection(),
 						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
 
 				g2d.drawImage(bodyImage, op, (int) p.getX()
@@ -248,7 +247,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			g.fillRect(x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
 		} else {
 			g.drawImage(ResourceManager.getInstance().getBaseImage(y), x
-					* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+					* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 		}
 	}
 
@@ -385,13 +384,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	@Override
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w,
 			int h) {
-		long now = System.currentTimeMillis();
-
-		if (now - lastImageUpdate > 100) {
-			repaint();
-			lastImageUpdate = now;
-		}
-
+		repaint();
 		return true;
 	}
 }

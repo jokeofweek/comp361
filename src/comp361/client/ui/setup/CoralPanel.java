@@ -13,14 +13,12 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import comp361.client.GameClient;
 import comp361.client.ui.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.setup.NewGamePanel.ReadyActionListener;
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
 import comp361.shared.data.Ship;
-import comp361.shared.packets.server.GameDescriptorReadyUpdatePacket;
 
 public class CoralPanel extends JPanel implements Observer {
 	// Number of tiles along the x and y of the panel
@@ -36,7 +34,7 @@ public class CoralPanel extends JPanel implements Observer {
 
 	// Preload images
 	private Image waterImage = ResourceManager.getInstance().getWaterImage();
-	private BufferedImage reefImage = ResourceManager.getInstance().getReefImage();
+	private Image reefImage = ResourceManager.getInstance().getReefImage();
 
 	private CoralReefGenerator reefGenerator;
 
@@ -44,7 +42,6 @@ public class CoralPanel extends JPanel implements Observer {
 	private int[] shipPositions;
 	private int selectedShip = 0;
 	private boolean[][] reefMask;
-	private long lastImageUpdate = 0;
 	private ReadyActionListener readyActionListener;
 
 	public CoralPanel(int shipInventory, CoralReefGenerator reefGenerator, ReadyActionListener readyActionListener) {
@@ -120,7 +117,7 @@ public class CoralPanel extends JPanel implements Observer {
 		// Draw base image on left of screen
 		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
 			g.drawImage(ResourceManager.getInstance().getBaseImage(y + Constants.BASE_Y_OFFSET),
-					0, (y + BASE_OFFSET) * Constants.TILE_SIZE, null);
+					0, (y + BASE_OFFSET) * Constants.TILE_SIZE, this);
 		}
 	}
 
@@ -175,13 +172,13 @@ public class CoralPanel extends JPanel implements Observer {
 
 	private void drawShip(Graphics2D g, int[] offsets, int shipWidth) {
 		ResourceManager rm = ResourceManager.getInstance();
-		BufferedImage headImage = rm.getHeadImage(Direction.RIGHT, 1, 1, true);
+		BufferedImage headImage = (BufferedImage)rm.getHeadImage(Direction.RIGHT, 1, 1, true);
 		g.drawImage(headImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
 		
-		BufferedImage tailImage = rm.getTailImage(Direction.RIGHT, 1, 1, true);
+		BufferedImage tailImage = (BufferedImage)rm.getTailImage(Direction.RIGHT, 1, 1, true);
 		g.drawImage(tailImage, offsets[0], offsets[1], null);
 		
-		BufferedImage bodyImage = rm.getBodyImage(Direction.RIGHT, 1, 1);
+		BufferedImage bodyImage = (BufferedImage)rm.getBodyImage(Direction.RIGHT, 1, 1);
 		for (int i = 1; i < shipWidth - 1; i++) {
 			g.drawImage(bodyImage, (i * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
 		}
@@ -284,13 +281,7 @@ public class CoralPanel extends JPanel implements Observer {
 
 	@Override
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
-		long now = System.currentTimeMillis();
-
-		if (now - lastImageUpdate > 100) {
-			repaint();
-			lastImageUpdate = now;
-		}
-
+		repaint();
 		return true;
 	}
 	
