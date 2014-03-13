@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import comp361.client.GameClient;
+import comp361.client.resources.BackgroundPlayer;
 import comp361.shared.Constants;
 
 /**
@@ -126,6 +127,9 @@ public class StartWindow extends JFrame {
 					// Create the login window
 					clientWindow.setPanel(new LoginPanel(gameClient, clientWindow));
 
+					// Play background music
+					startBackgroundMusic();
+
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(null,
 							"An error occured connecting to the server.");
@@ -143,4 +147,11 @@ public class StartWindow extends JFrame {
 		return panel;
 	}
 
+	private void startBackgroundMusic() {
+		new Thread(new Runnable() {
+			public void run() {
+				new BackgroundPlayer().play();
+			}
+		}).start();
+	}
 }
