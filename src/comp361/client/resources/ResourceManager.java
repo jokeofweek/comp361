@@ -1,4 +1,4 @@
-package comp361.client.ui;
+package comp361.client.resources;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -10,8 +10,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import comp361.client.resources.ImageManager;
-import comp361.client.resources.SoundManager;
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
 

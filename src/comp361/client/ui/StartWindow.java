@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import comp361.client.GameClient;
 import comp361.client.resources.BackgroundPlayer;
+import comp361.client.resources.ResourceManager;
 import comp361.shared.Constants;
 
 /**

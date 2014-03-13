@@ -30,7 +30,7 @@ import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.data.event.GameEvent;
-import comp361.client.ui.ResourceManager;
+import comp361.client.resources.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;

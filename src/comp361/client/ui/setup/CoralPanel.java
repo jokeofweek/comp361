@@ -13,7 +13,7 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import comp361.client.ui.ResourceManager;
+import comp361.client.resources.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.setup.NewGamePanel.ReadyActionListener;
 import comp361.shared.Constants;
