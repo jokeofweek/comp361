@@ -9,6 +9,7 @@ public class Constants {
 	public static final String DATA_PATH = "./data/";
 	public static final String CLIENT_DATA_PATH = DATA_PATH + "client/";
 	public static final String GFX_DATA_PATH = CLIENT_DATA_PATH + "gfx/";
+	public static final String SFX_DATA_PATH = CLIENT_DATA_PATH + "sfx/";
 	public static final String SERVER_DATA_PATH = DATA_PATH + "server/";
 	
 	// Screen size
