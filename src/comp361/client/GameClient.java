@@ -8,7 +8,6 @@ import comp361.client.data.GameDescriptorManager;
 import comp361.client.data.GameManager;
 import comp361.client.data.PlayerManager;
 import comp361.client.network.ClientPacketListener;
-import comp361.shared.data.Game;
 import comp361.shared.network.NetworkManager;
 
 public class GameClient extends Observable {

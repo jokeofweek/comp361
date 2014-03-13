@@ -2,7 +2,6 @@ package comp361.client;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import comp361.client.ui.StartWindow;
 

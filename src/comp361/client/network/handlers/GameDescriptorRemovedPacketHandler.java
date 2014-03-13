@@ -1,7 +1,6 @@
 package comp361.client.network.handlers;
 
 import comp361.client.GameClient;
-import comp361.shared.packets.server.GameDescriptorCreatedPacket;
 import comp361.shared.packets.server.GameDescriptorRemovedPacket;
 
 public class GameDescriptorRemovedPacketHandler implements

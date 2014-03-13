@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.util.Observable;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import comp361.client.GameClient;

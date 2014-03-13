@@ -1,8 +1,6 @@
 package comp361.client.data.event;
 
 import java.awt.Point;
-import java.util.Collection;
-import java.util.List;
 
 import comp361.shared.data.Ship;
 

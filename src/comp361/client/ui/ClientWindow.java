@@ -11,7 +11,6 @@ import javax.swing.SwingUtilities;
 
 import comp361.client.GameClient;
 import comp361.shared.Constants;
-import comp361.shared.packets.shared.GameOverPacket;
 
 /**
  * This is the main client window.

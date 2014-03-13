@@ -2,7 +2,6 @@ package comp361.client.ui;
 
 import java.awt.Dimension;
 import java.awt.LayoutManager;
-import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JComponent;

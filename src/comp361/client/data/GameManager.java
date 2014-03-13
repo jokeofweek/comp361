@@ -3,7 +3,6 @@ package comp361.client.data;
 import java.util.Observable;
 
 import comp361.client.GameClient;
-import comp361.server.GameServer;
 import comp361.shared.data.Game;
 import comp361.shared.data.GameResult;
 import comp361.shared.packets.shared.GameMovePacket;
