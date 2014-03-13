@@ -86,23 +86,28 @@ public class ResourceManager {
 		return images.get(Constants.GFX_DATA_PATH + EVENT_FILENAME);
 	}
 	
-	public Image getBaseImage(int y) {
-		String filename = Constants.GFX_DATA_PATH + "base-";
+	public Image getBaseImage(int y, boolean isDestroyed) {
+		String name = "base-";
 		
 		switch (y) {
 		case Constants.BASE_Y_OFFSET:
-			
-			filename += "top";
+			name += "top";
 			break;
 		case Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1:
-			filename += "bottom";
+			name += "bottom";
 			break;
 		default:
-			filename += "body";
+			name += "body";
 		}
 		
-		filename += "-anim.gif";
-		return images.get(filename);
+		name += "-anim";
+		
+		if (isDestroyed) {
+			name += "-dead";
+		}
+		
+		name += ".gif";
+		return ImageManager.getInstance().getImage(name);
 	}
 	
 	public Image getMineImage() {

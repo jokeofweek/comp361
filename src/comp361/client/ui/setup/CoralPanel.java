@@ -121,7 +121,7 @@ public class CoralPanel extends JPanel implements Observer {
 	private void drawBase(Graphics2D g) {
 		// Draw base image on left of screen
 		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
-			g.drawImage(ResourceManager.getInstance().getBaseImage(y + Constants.BASE_Y_OFFSET),
+			g.drawImage(ResourceManager.getInstance().getBaseImage(y + Constants.BASE_Y_OFFSET, false),
 					0, (y + BASE_OFFSET) * Constants.TILE_SIZE, this);
 		}
 	}

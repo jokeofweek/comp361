@@ -290,14 +290,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawBase(Graphics2D g, int x, int y) {
 		Point p = new Point(x, y);
-		Image baseImage = null;
-
-		if (game.getField().isBaseDestroyed(p)) {
-			baseImage = ImageManager.getInstance().getImage("base-anim-dead");
-		} else {
-			baseImage = ImageManager.getInstance().getImage("base-anim");
-		}
-
+		Image baseImage = ResourceManager.getInstance().getBaseImage(y, game.getField().isBaseDestroyed(p));
 		g.drawImage(baseImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
