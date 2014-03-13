@@ -675,13 +675,6 @@ public class Ship {
 			Point endPoint = game.getFurthestPosition(this, l);
 			if (endPoint != null) {
 				setPosition(endPoint);
-				// Once we've moved, explode any adjacent mines
-				if (!isMineLayer() && endPoint != null) {
-					for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
-						game.explodeMine(minePoint);
-						events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
-					}
-				}
 			} 
 			// Test if we didn't make it all the way. If there was a collision, add it as an event.
 			if (endPoint == null || !endPoint.equals(p)) {
@@ -697,11 +690,17 @@ public class Ship {
 					last = lineP;
 				}
 			}
-		} 
+		} 	
 		
-
-		
-		
+		// Once we've moved, explode any adjacent mines
+		if (!isMineLayer()) {
+			for (Point minePoint : getSurroundingPoints()) {
+				if (game.getField().getCellType(minePoint) == CellType.MINE) {
+					game.explodeMine(minePoint);
+					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
+				}
+			}
+		}
 
 	}
 
@@ -1078,7 +1077,8 @@ public class Ship {
 				boolean isValid = true;
 				for (Point adjP : game.getField().getAdjacentPoints(p)) {
 					// Adjacent point must also be water
-					if (game.getField().getCellType(adjP) != CellType.WATER) {
+					if (game.getField().getCellType(adjP) != CellType.WATER &&
+							game.getField().getCellType(adjP) != CellType.MINE) {
 						isValid = false;
 						break;
 					}
