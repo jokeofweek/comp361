@@ -424,7 +424,7 @@ public class Game {
 		List<GameEvent> events = new ArrayList<>();
 
 		if (packet.moveType == MoveType.MOVE) {
-			ship.moveShip(packet.contextPoint);
+			ship.moveShip(packet.contextPoint, events);
 		} else if (packet.moveType == MoveType.CANNON) {
 			ship.fireCannon(packet.contextPoint, events);
 		} else if (packet.moveType == MoveType.TORPEDO) {

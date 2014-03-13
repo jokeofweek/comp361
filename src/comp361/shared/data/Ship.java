@@ -237,14 +237,14 @@ public class Ship {
 				// destroy the mine
 				this.game.getField().setCellType(p, CellType.WATER);
 				// Log the event
-				events.add(new GameEvent(p, Cause.CANNON, Effect.MINE_DESTROYED, this));
+				events.add(new GameEvent(p, Cause.CANNON, Effect.MINE_DESTROYED, null));
 			} else if (this.game.getField().getCellType(p) == CellType.BASE){
 				// Test if the base was destroyed beforehand
 				boolean alreadyDestroyed = this.game.getField().isBaseDestroyed(p);
 				// damage the base
 				this.game.getField().damageBase(p);
 
-				events.add(new GameEvent(p, Cause.CANNON, alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED, this));
+				events.add(new GameEvent(p, Cause.CANNON, alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED, null));
 			} else {
 				boolean hit = false;
 				for (Ship s : this.game.getShips()) { 
@@ -254,7 +254,7 @@ public class Ship {
 						// Log the event
 						hit = true;
 						events.add(new GameEvent(p, 
-								Cause.CANNON, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
+								Cause.CANNON, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, s));
 						break;
 					}
 				}
@@ -321,14 +321,14 @@ public class Ship {
 					this.game.getField().damageBase(p);
 
 					events.add(new GameEvent(p, 
-							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), this));
+							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.MINE) {
 					// Remove the mine
 					game.getField().setCellType(p, CellType.WATER);
 					// Log the event
 					events.add(new GameEvent(p, 
-							Cause.TORPEDO, Effect.MINE_DESTROYED, this));
+							Cause.TORPEDO, Effect.MINE_DESTROYED, null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.REEF) {
 					// Do nothing!
@@ -339,7 +339,7 @@ public class Ship {
 							s.hitWithTorpedo(p, this.facing);
 
 							// Log the event
-							events.add(new GameEvent(p, Cause.TORPEDO, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
+							events.add(new GameEvent(p, Cause.TORPEDO, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, s));
 							return;
 						}
 					}
@@ -516,7 +516,7 @@ public class Ship {
 	 * @param p
 	 *            the new position of the ship
 	 */
-	public void moveShip(Point p) {
+	public void moveShip(Point p, List<GameEvent> events) {
 		Line trajectory = getLineTo(p);
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
@@ -524,15 +524,31 @@ public class Ship {
 
 		
 		// Get the furthest possible position
-		Point endPoint = game.getFurthestPosition(this, new Line(points.get(0), points.get(points.size() - 1)));
+		Line l = new Line(points.get(0), points.get(points.size() - 1));
+		Point endPoint = game.getFurthestPosition(this, l);
 		if (endPoint != null) {
 			if(!shiftShip(p))
 			{
 				setPosition(endPoint);
+				// If there was a collision with another ship.
+				if (!endPoint.equals(p)) {
+					Point last = null;
+					for (Point lineP : l.getPoints()) {
+						if (last != null && last.equals(endPoint)) {
+							// If the collision point wasnt a mine, log the event
+							if (game.getField().getCellType(lineP) != CellType.MINE) {
+								events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
+							}
+							break;
+						}
+						last = lineP;
+					}
+				}
 				// Once we've moved, explode any adjacent mines
 				if (!isMineLayer() && endPoint != null) {
 					for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
 						game.explodeMine(minePoint);
+						events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_DESTROYED, null));
 					}
 				}
 			}
