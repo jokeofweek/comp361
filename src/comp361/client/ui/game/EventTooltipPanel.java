@@ -2,7 +2,6 @@ package comp361.client.ui.game;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.util.Observable;
 import java.util.Observer;
 
