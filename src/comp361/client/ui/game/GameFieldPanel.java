@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -17,9 +19,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import java.util.TimerTask;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import comp361.client.GameClient;
 import comp361.client.data.EventTooltipContext;
@@ -49,6 +53,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private EventTooltipContext eventContext;
 	private List<GameEvent> events = new ArrayList<>();
 
+	private int alphaPulseCounter = 0;
+	private boolean alphaPulsingForwards = true;
+	private Color[] sonarColors = new Color[Constants.PULSE_ALPHA_INTERVALS];
+	
 	// Cached field of vision
 	private Set<Point> fov;
 	private Set<Point> sonarFov;
@@ -81,6 +89,30 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		// Calculate the FOV
 		recalculateFieldsOfVision();
+		
+		// Setup the pulse colors
+		for (int i = 0; i < sonarColors.length; i++) {
+			sonarColors[i] = new Color(Constants.SONAR_RED, Constants.SONAR_GREEN,
+					Constants.SONAR_BLUE, Constants.SONAR_ALPHA + Constants.PULSE_ALPHA_DELTA * i);
+		}
+		
+		new Timer(150, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (alphaPulsingForwards) {
+					if (alphaPulseCounter == Constants.PULSE_ALPHA_INTERVALS - 2) {
+						alphaPulsingForwards = false;
+					}
+					alphaPulseCounter++;
+				} else {
+					if (alphaPulseCounter == 1) {
+						alphaPulsingForwards = true;
+					}
+					alphaPulseCounter--;
+				}
+				repaint();
+			}
+		}).start();
 	}
 
 	@Override
@@ -166,7 +198,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 				// If the point is in the sonar fov, add overlay
 				if (sonarFov.contains(new Point(x, y))) {
-					g.setColor(Constants.SONAR_COLOR);
+					g.setColor(sonarColors[alphaPulseCounter]);
 					g.fillRect(x * Constants.TILE_SIZE,
 							y * Constants.TILE_SIZE, Constants.TILE_SIZE,
 							Constants.TILE_SIZE);
