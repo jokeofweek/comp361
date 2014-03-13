@@ -403,6 +403,112 @@ public class Ship {
 					(int) position.getY());
 		return new Line(tail, position);
 	}
+	
+	/**
+	 * @param p the point to shift to
+	 * @return if the point requires a shift or a straightforward move
+	 */
+	public boolean shiftShip(Point p)
+	{	
+		if(facing == Direction.RIGHT){
+			if(p.x < this.position.x && p.y == this.position.y){
+				Point newPosition = new Point(this.position.x - 1, this.position.y);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.y < this.position.y){
+				Point newPosition = new Point(this.position.x, this.position.y - 1);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.y > this.position.y){
+				Point newPosition = new Point(this.position.x, this.position.y + 1);
+				setPosition(newPosition);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		else if(facing == Direction.LEFT){
+			if(p.x > this.position.x && p.y == this.position.y){
+				Point newPosition = new Point(this.position.x + 1, this.position.y);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.y < this.position.y){
+				Point newPosition = new Point(this.position.x, this.position.y - 1);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.y > this.position.y){
+				Point newPosition = new Point(this.position.x, this.position.y + 1);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else
+			{
+				return false;
+			}
+		}
+		
+		else if(facing == Direction.UP){
+			if(p.y > this.position.y && p.x == this.position.x){
+				Point newPosition = new Point(this.position.x, this.position.y - 1);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.x < this.position.x){
+				Point newPosition = new Point(this.position.x - 1, this.position.y);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.x > this.position.x){
+				Point newPosition = new Point(this.position.x + 1, this.position.y);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else
+			{
+				return false;
+			}
+		}
+		
+		else{
+			if(p.y < this.position.y && p.x == this.position.x){
+				Point newPosition = new Point(this.position.x, this.position.y + 1);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.x < this.position.x){
+				Point newPosition = new Point(this.position.x - 1, this.position.y);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else if(p.x > this.position.x){
+				Point newPosition = new Point(this.position.x + 1, this.position.y);
+				setPosition(newPosition);
+				return true;
+			}
+			
+			else
+			{
+				return false;
+			}
+		}
+	}
 
 	/**
 	 * Moves the ship to the position, given there are no obstacles on the path.
@@ -415,20 +521,28 @@ public class Ship {
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
 		points.remove(0);
+
 		
 		// Get the furthest possible position
 		Point endPoint = game.getFurthestPosition(this, new Line(points.get(0), points.get(points.size() - 1)));
 		if (endPoint != null) {
-			setPosition(endPoint);
-			
-			// Once we've moved, explode any adjacent mines
-			if (!isMineLayer()) {
-				for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
-					// TODO: Log events here dawg!
-					game.explodeMine(minePoint);
+			if(!shiftShip(p))
+			{
+				setPosition(endPoint);
+				// Once we've moved, explode any adjacent mines
+				if (!isMineLayer() && endPoint != null) {
+					for (Point minePoint : game.getField().getAdjacentMines(endPoint)) {
+						game.explodeMine(minePoint);
+					}
 				}
 			}
 		}
+		
+		System.out.println("Ship position: " + this.position);
+		System.err.println("Press position" + p);
+		
+		
+
 	}
 
 	/**
