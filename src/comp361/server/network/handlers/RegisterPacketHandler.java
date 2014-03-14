@@ -6,7 +6,9 @@ import comp361.server.data.store.AccountDataStore;
 import comp361.server.data.store.DataStoreException;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
+import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.packets.client.RegisterPacket;
+import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
 
 public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket> {
@@ -42,6 +44,13 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 			// If successful, send the initial data packets
 			session.sendTCP(gameServer.getAccountManager().getPlayerListPacket());
 			session.sendTCP(gameServer.getGameDescriptorManager().getGameDescriptorListPacket());
+			
+			// Send the login to all other players
+			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();
+			updatePacket.player = account.getPlayer();
+			updatePacket.status = PlayerUpdateStatus.LOGGED_IN;
+			gameServer.getServer().sendToAllTCP(updatePacket);
+			gameServer.getLogger().debug("Account " + object.accountName + " logged in");
 		}
 		
 	}
