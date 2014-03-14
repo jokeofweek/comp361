@@ -397,17 +397,13 @@ public class Ship {
 	public Line getShipLine() {
 		Point tail = new Point(position);
 		if (this.facing == Direction.UP)
-			tail = new Point((int) position.getX(), (int) (position.getY()
-					+ size - 1));
+			tail = new Point(position.x, position.y+size-1);
 		else if (this.facing == Direction.DOWN)
-			tail = new Point((int) position.getX(), (int) (position.getY()
-					- size + 1));
+			tail = new Point(position.x, position.y-size+1);
 		else if (this.facing == Direction.LEFT)
-			tail = new Point((int) position.getX() + size - 1,
-					(int) position.getY());
+			tail = new Point(position.x+size-1, position.y);
 		else if (this.facing == Direction.RIGHT)
-			tail = new Point((int) position.getX() - size + 1,
-					(int) position.getY());
+			tail = new Point(position.x-size+1, position.y);
 		return new Line(tail, position);
 	}
 	
@@ -931,13 +927,22 @@ public class Ship {
 	public List<Point> getPointsInTurnRadius(Direction d) {
 		List<Point> points = new ArrayList<Point>();
 		Point pivot = getShipLine().getTail();
-		Line newLine = new Line(pivot, d, this.size);
+		Line newLine = new Line(pivot, d, this.size);//includes point in front of potential head
 		Line temp;
-		for(int i = 0;i<this.size;i++)
+		Line shipLine = this.getShipLine();// temporary, will be replaced below to include point in front of head
+		if(this.facing == Direction.DOWN)
+			shipLine = new Line(pivot, new Point(position.x, position.y+1));
+		else if(this.facing == Direction.UP)
+			shipLine = new Line(pivot, new Point(position.x, position.y-1));
+		else if(this.facing == Direction.RIGHT)
+			shipLine = new Line(pivot, new Point(position.x+1, position.y));
+		else if(this.facing == Direction.LEFT)
+			shipLine = new Line(pivot, new Point(position.x-1, position.y));
+		for(int i = this.size-1;i>=0;i--)
 		{
-			temp = new Line(this.getShipLine().getPoints().get(i), newLine.getPoints().get(i));
+			temp = new Line(shipLine.getPoints().get(i), newLine.getPoints().get(i));
 			points.addAll(temp.getPoints());
-			points.remove(this.getShipLine().getPoints().get(i));
+			points.remove(shipLine.getPoints().get(i));
 		}
 		System.out.println("Ship tail: "+this.getShipLine().getTail());
 		System.out.println("Ship head: "+this.getShipLine().getHead());
