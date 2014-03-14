@@ -819,14 +819,7 @@ public class Ship {
 		} 	
 		
 		// Once we've moved, explode any adjacent mines
-		if (!isMineLayer()) {
-			for (Point minePoint : getSurroundingPoints()) {
-				if (game.getField().getCellType(minePoint) == CellType.MINE) {
-					game.explodeMine(minePoint);
-					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
-				}
-			}
-		}
+		explodeSurroundingMines(events);
 
 	}
 
@@ -898,29 +891,25 @@ public class Ship {
 	/**
 	 * @param d
 	 *            the new direction of the ship
-	 * @return true if the turning operation succeeds, false otherwise
+	 * @param events The list of events to append to
 	 */
-	public boolean turnShip(Direction d) {
-		if (this.canTurnToFace(d)) {
-			Point pivot;
-			pivot = getShipLine().getTail();
+	public void turnShip(Direction d, List<GameEvent> events) {
+		List<Point> radiusPoints = getPointsInTurnRadius(d);
+		ObstacleType obstacleType = game.getClosestObstacleType(radiusPoints);
+		if (obstacleType == null) {
+			Point pivot = getShipLine().getTail();
 			setPosition(new Line(pivot, d, this.size).getHead());
 			this.facing = d;
-			return true;
+		} else {
+			Point obstaclePoint = game.getClosestObstaclePosition(radiusPoints);
+			if (obstacleType == ObstacleType.MINE) {
+				
+			} else {
+				events.add(new GameEvent(obstaclePoint, null, Effect.SHIP_COLLISION, null));
+			}
 		}
-		return false;
 	}
 
-	/**
-	 * @param d
-	 *            the direction the ship would face
-	 * @return true if the ship can turn to the direction, false otherwise
-	 */
-	public boolean canTurnToFace(Direction d) {
-		if (d == this.facing.opposite() && !canTurn180)
-			return false;
-		return !(game.hasObstacle(getPointsInTurnRadius(d)));
-	}
 
 	/**
 	 * @param d
@@ -1186,7 +1175,7 @@ public class Ship {
 			points.add(new Point(p.x + (xOffset * -1), p.y + (yOffset * -1)));
 		}
 
-		return points;
+		return game.getField().filterInBoundPoints(points);
 	}
 
 	/**
@@ -1291,29 +1280,43 @@ public class Ship {
 			}
 			
 
-			boolean hitMine = false;
-			for (int i = 0; i < turns && !hitMine; i++) {
+			for (int i = 0; i < turns; i++) {
 				// If we encountered a collision, back up.
 				if (!turnOnCenter(left, events)) {
 					break;
 				}
 
 				// Once we've moved, explode any adjacent mines
-				if (!isMineLayer()) {
-					for (Point minePoint : getSurroundingPoints()) {
-						if (game.getField().getCellType(minePoint) == CellType.MINE) {
-							game.explodeMine(minePoint);
-							hitMine = true;
-							events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
-						}
-					}
+				if (explodeSurroundingMines(events)) {
+					// Break to ensure we only turn 90degrees if we encounter mines along the first turn.
+					break;
 				}
 			}
 
 		} else {
-			System.out.println("Turning to face " + getTurnPoints().get(p));
-			turnShip(getTurnPoints().get(p));
+			turnShip(getTurnPoints().get(p), events);
+			explodeSurroundingMines(events);
 		}
+	}
+	
+	/**
+	 * Explodes all mine surrounding the ship.
+	 * @param events The list of events to append to.
+	 * @return true if at least one mine was hit
+	 */
+	private boolean explodeSurroundingMines(List<GameEvent> events) {
+		// Once we've moved, explode any adjacent mines
+		boolean hitMine = false;
+		if (!isMineLayer()) {
+			for (Point minePoint : getSurroundingPoints()) {
+				if (game.getField().getCellType(minePoint) == CellType.MINE) {
+					game.explodeMine(minePoint);
+					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
+					hitMine = true;
+				}
+			}
+		}
+		return hitMine;
 	}
 	
 	/**
