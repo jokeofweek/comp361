@@ -153,7 +153,7 @@ public class ServerPacketListener extends Listener {
 	@Override
 	public void idle(Connection connection) {
 		super.idle(connection);
-		gameServer.getLogger().debug("Connection " + connection.getID() + " idle.");
+		// gameServer.getLogger().debug("Connection " + connection.getID() + " idle.");
 		
 	}
 	
