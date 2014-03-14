@@ -805,6 +805,12 @@ public class Ship {
 						if (game.getField().getCellType(lineP) != CellType.WATER) {
 							events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
 						}
+						// If there are any ships at the the point, log the event
+						for (Ship s : game.getShips()) {
+							if (s.pointBelongsToShip(lineP)) {
+								events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
+							}
+						}
 						break;
 					}
 					last = lineP;
