@@ -71,7 +71,7 @@ public class GameInfoPanel extends JPanel implements Observer {
 		for (int i = 0; i < descriptor.getMaxPlayers(); i++) {
 			if (players[i] != null) {
 				if (descriptor.getReadyPlayers().contains(players[i])) {
-					model.addElement("- " + players[i] + "<ready>");
+					model.addElement("- " + players[i] + " <ready>");
 				} else {
 					model.addElement("- " + players[i]);
 				}

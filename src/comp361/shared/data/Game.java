@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import comp361.client.data.event.Cause;
+import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
 import comp361.client.ui.setup.CoralReefGenerator;
 import comp361.shared.Constants;
@@ -241,8 +243,9 @@ public class Game {
 	 * 
 	 * @param minePoint
 	 *            The position of the mine to explode
+	 * @param events The list of events to append the mine explosion event to.
 	 */
-	public void explodeMine(Point minePoint) {
+	public void explodeMine(Point minePoint, List<GameEvent> events) {
 		// Get the adjacent points
 		for (Point p : field.getAdjacentPoints(minePoint)) {
 			// Look through each ship, testing if they touch the mine
@@ -256,17 +259,9 @@ public class Game {
 		}
 		// Update the field
 		field.setCellType(minePoint, CellType.WATER);
+		events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
 	}
 
-	/**
-	 * @param s
-	 *            The ship to damage
-	 * @param collidingPoint
-	 *            The point of the ship colliding with the mine
-	 */
-	public void applyRotationMineDamage(Ship s, Point collidingPoint) {
-		// TODO: implement this
-	}
 
 	/**
 	 * @param points

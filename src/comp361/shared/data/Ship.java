@@ -902,7 +902,11 @@ public class Ship {
 			this.facing = d;
 		} else {
 			Point obstaclePoint = game.getClosestObstaclePosition(radiusPoints);
-			if (obstacleType == ObstacleType.MINE) {
+			if (obstacleType == ObstacleType.MINE && !isMineLayer()) {
+				// Explode the mine
+				game.explodeMine(obstaclePoint, events);
+				// Damage the block that hit it
+				doMineDamage(getCollidingBlockPosition(obstaclePoint));
 				
 			} else {
 				events.add(new GameEvent(obstaclePoint, null, Effect.SHIP_COLLISION, null));
@@ -940,9 +944,9 @@ public class Ship {
 	 * @return the position of the square on the ship colliding with p
 	 */
 	public Point getCollidingBlockPosition(Point p) {
-		Point point = new Point();
-		// TODO: implement this
-		return point;
+		// TODO This should determine the ship point that rotated onto point p.
+		//       This damages the right square when rotating over a mine.
+		return position;
 	}
 
 	/**
@@ -1310,8 +1314,7 @@ public class Ship {
 		if (!isMineLayer()) {
 			for (Point minePoint : getSurroundingPoints()) {
 				if (game.getField().getCellType(minePoint) == CellType.MINE) {
-					game.explodeMine(minePoint);
-					events.add(new GameEvent(minePoint, Cause.MINE, Effect.MINE_EXPLODED, null));
+					game.explodeMine(minePoint, events);
 					hitMine = true;
 				}
 			}
