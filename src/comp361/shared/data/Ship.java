@@ -801,9 +801,12 @@ public class Ship {
 				Point last = null;
 				for (Point lineP : l.getPoints()) {
 					if (last == endPoint || (last != null && last.equals(endPoint))) {
-						// If the collision point wasnt a mine, log the event
+						// If the collision point wasn't a mine, log the event
 						if (game.getField().getCellType(lineP) != CellType.WATER) {
+							if (game.getField().getCellType(lineP) != CellType.MINE ||
+									isMineLayer()) {
 							events.add(new GameEvent(lineP, null, Effect.SHIP_COLLISION, null));
+							}
 						}
 						// If there are any ships at the the point, log the event
 						for (Ship s : game.getShips()) {
