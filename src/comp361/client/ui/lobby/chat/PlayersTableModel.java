@@ -28,7 +28,7 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public int getRowCount() {
-		return playerNames.size();
+		return (playerNames == null) ? 0 : playerNames.size();
 	}
 
 	@Override
@@ -49,6 +49,9 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public String getValueAt(int row, int col) {
 		String playerName = playerNames.get(row);
+		if (playerManager.getPlayer(playerName) == null) {
+			return "";
+		}
 		if (col == 0) {
 			return playerName;
 		} else if (col == 1) {
@@ -67,17 +70,12 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 		final PlayersTableModel self = this;
 		// We've updated our list of player names, so trigger a refresh of the table
 		// data.
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				self.playerManager = playerManager;
-				// Get the list of player names and sort them
-				playerNames = new ArrayList<String>(playerManager.getPlayers());
-				Collections.sort(playerNames);
-				
-				fireTableDataChanged();
-			}
-		});
+		self.playerManager = playerManager;
+		// Get the list of player names and sort them
+		playerNames = new ArrayList<String>(playerManager.getPlayers());
+		Collections.sort(playerNames);
+		
+		fireTableDataChanged();
 	}
 	
 	@Override

@@ -94,6 +94,11 @@ public class Session extends Connection {
 						getGameDescriptorId(), gameServer, false,
 						this.getAccount().getName(),
 						this.getAccount().getName() + " disconnected", true, true);
+				
+				// Super hax. Need to update stats but the connection is removed once you've
+				// disconnected.
+				getAccount().getPlayer().getStatistics().setLosses(
+						getAccount().getPlayer().getStatistics().getLosses() + 1);
 			}
 
 			PlayerUpdatePacket updatePacket = new PlayerUpdatePacket();

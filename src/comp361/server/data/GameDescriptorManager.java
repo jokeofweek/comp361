@@ -14,6 +14,7 @@ import comp361.shared.data.GameResult;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.GameDescriptorRemovedPacket;
+import comp361.shared.packets.server.UpdatePlayerStatisticsPacket;
 import comp361.shared.packets.shared.GameOverPacket;
 
 /**
@@ -216,9 +217,25 @@ public class GameDescriptorManager {
 				if (sendPacket) {
 					if (!draw && s.getAccount().getName().equals(loser)) {
 						s.sendTCP(lossPacket);
+						// Update the player's statistics
+						s.getAccount().getPlayer().getStatistics().setLosses(
+								s.getAccount().getPlayer().getStatistics().getLosses() + 1);
+						
 					} else {
 						s.sendTCP(winPacket);
+						if (draw) {
+							s.getAccount().getPlayer().getStatistics().setDraws(
+									s.getAccount().getPlayer().getStatistics().getDraws() + 1);
+						} else {
+							s.getAccount().getPlayer().getStatistics().setWins(
+									s.getAccount().getPlayer().getStatistics().getWins() + 1);
+						}
 					}
+					
+					UpdatePlayerStatisticsPacket packet = new UpdatePlayerStatisticsPacket();
+					packet.name = s.getAccount().getPlayer().getName();
+					packet.statistics = s.getAccount().getPlayer().getStatistics();
+					server.getServer().sendToAllTCP(packet);
 				}
 				
 				// Update the session type back to lobby

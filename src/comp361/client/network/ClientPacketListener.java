@@ -20,6 +20,7 @@ import comp361.client.network.handlers.GameStartPacketHandler;
 import comp361.client.network.handlers.GenericPublishPacketHandler;
 import comp361.client.network.handlers.PlayerListPacketHandler;
 import comp361.client.network.handlers.PlayerUpdatePacketHandler;
+import comp361.client.network.handlers.UpdatePlayerStatisticsPacketHandler;
 import comp361.shared.packets.server.GameDescriptorCreatedPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
@@ -32,6 +33,7 @@ import comp361.shared.packets.server.LoginError;
 import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
+import comp361.shared.packets.server.UpdatePlayerStatisticsPacket;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
@@ -82,6 +84,7 @@ public class ClientPacketListener extends Listener {
 		handlers.put(GameOverPacket.class, new GameOverPacketHandler());
 		handlers.put(GameDescriptorRemovedPacket.class, new GameDescriptorRemovedPacketHandler());
 		handlers.put(InGameMessagePacket.class, genericHandler);
+		handlers.put(UpdatePlayerStatisticsPacket.class, new UpdatePlayerStatisticsPacketHandler());
 
 		return handlers;
 	}

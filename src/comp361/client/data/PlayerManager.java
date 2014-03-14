@@ -6,6 +6,7 @@ import java.util.Observable;
 import java.util.Set;
 
 import comp361.shared.data.Player;
+import comp361.shared.data.Statistics;
 import comp361.shared.packets.server.PlayerListPacket;
 
 
@@ -63,6 +64,17 @@ public class PlayerManager extends Observable {
 		for (Player player : packet.players) {
 			internalAddPlayer(player);
 		}
+		setChanged();
+		notifyObservers();
+	}
+	
+	/**
+	 * Updates a player's stats.
+	 * @param player The player.
+	 * @param stats The stats.
+	 */
+	public void updateStatistics(String player, Statistics stats) {
+		this.players.get(player).setStatistics(stats);
 		setChanged();
 		notifyObservers();
 	}
