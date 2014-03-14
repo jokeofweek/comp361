@@ -584,7 +584,7 @@ public class Ship {
 		else if(facing == Direction.UP){
 			if(p.y > this.position.y && p.x == this.position.x){
 				Point newPosition = new Point(this.position.x, this.position.y + 1);
-				Point collisionCheckPosition = new Point(this.position.x, this.position.y - this.size);
+				Point collisionCheckPosition = new Point(this.position.x, this.position.y + this.size);
 
 				for(Ship ship : getGame().getShips()){
 					if(ship.pointBelongsToShip(collisionCheckPosition)){
@@ -667,7 +667,7 @@ public class Ship {
 			//Shift backwards (up)
 			if(p.y < this.position.y && p.x == this.position.x){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
-				Point collisionCheckPosition = new Point(this.position.x, this.position.y + this.size);
+				Point collisionCheckPosition = new Point(this.position.x, this.position.y - this.size);
 				
 				for(Ship ship : getGame().getShips()){
 					if(ship.pointBelongsToShip(collisionCheckPosition)){
