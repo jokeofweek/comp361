@@ -30,11 +30,11 @@ import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
 import comp361.client.data.event.GameEvent;
-import comp361.client.resources.ImageManager;
 import comp361.client.resources.ResourceManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;
+import comp361.shared.data.Direction;
 import comp361.shared.data.Game;
 import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -226,54 +226,58 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void drawShip(Graphics g, Ship ship, boolean isOwnShip, boolean sunk,
-			Set<Point> fov) {
+	public void drawShip(Graphics g, Ship ship, boolean isOwner, boolean sunk, Set<Point> fov) {
+		Graphics2D g2 = (Graphics2D) g;
 
-		Graphics2D g2d = (Graphics2D) g;
-		
+		Image img;
+		BufferedImage buff;
+		RescaleOp op = sunk ? SUNKEN_SHIP_TRANSFORM : null;
+
+		Direction dir = ship.getDirection();
+		int maxHealth = ship.getMaxHealthPerSquare();
+		int health;
+
 		ResourceManager rm = ResourceManager.getInstance();
-		// Get the ship's line
 		List<Point> points = ship.getShipLine().getPoints();
-		// Render the head
+
 		Point head = points.remove(points.size() - 1);
-		
-		// Create a filter if the ship is sunk
-		RescaleOp op = null;
-		if (sunk) {
-			op = SUNKEN_SHIP_TRANSFORM;
-		}
-		
-		if (isOwnShip || fov.contains(head) || GOD_MODE) {
-			
-			BufferedImage headImage = (BufferedImage)rm.getShipHeadImage(ship.getDirection(),
-					ship.getHealth(ship.getSize()-1), ship.getMaxHealthPerSquare(), isOwnShip);
-
-			g2d.drawImage(headImage, op, (int)head.x * Constants.TILE_SIZE,  (int)head.y * Constants.TILE_SIZE);		
-		}
-
-		// Render the tail
 		Point tail = points.remove(0);
-		if (isOwnShip || fov.contains(tail) || GOD_MODE) {
-			BufferedImage tailImage = (BufferedImage)rm.getShipTailImage(ship.getDirection(),
-					ship.getHealth(0), ship.getMaxHealthPerSquare(), isOwnShip);
 
-			g2d.drawImage(tailImage, op, (int) tail.getX()
-					* Constants.TILE_SIZE, (int) tail.getY()
-					* Constants.TILE_SIZE);
+		// Render ship head
+		if (isOwner || fov.contains(head) || GOD_MODE) {
+			health = ship.getHealth(ship.getSize()-1);
+			int x = (int)head.x * Constants.TILE_SIZE;
+			int y = (int)head.y * Constants.TILE_SIZE;
+
+			// Get image as buffered image
+			img = rm.getShipHeadImage(dir, health, maxHealth, isOwner);
+			buff = ResourceManager.toBufferedImage(img, this);
+			g2.drawImage(buff, op, x, y);		
 		}
 
-		// Render the body
-		BufferedImage bodyImage;
-		for (int i = 0; i < points.size(); i++) {
-			Point p = points.get(i);
-			if (isOwnShip || fov.contains(p) || GOD_MODE) {
-				bodyImage = (BufferedImage)rm.getShipBodyImage(ship.getDirection(),
-						ship.getHealth(i+1), ship.getMaxHealthPerSquare());
-
-				g2d.drawImage(bodyImage, op, (int) p.getX()
-						* Constants.TILE_SIZE, (int) p.getY()
-						* Constants.TILE_SIZE);
+		// Render ship tail
+		if (isOwner || fov.contains(tail) || GOD_MODE) {
+			health = ship.getHealth(0);
+			int x = (int)tail.x * Constants.TILE_SIZE;
+			int y = (int)tail.y * Constants.TILE_SIZE;
 			
+			// Get image as buffered image
+			img = rm.getShipTailImage(dir, health, maxHealth, isOwner);
+			buff = ResourceManager.toBufferedImage(img, this);
+			g2.drawImage(buff, op, x, y);
+		}
+
+		// Render ship body
+		for (int i = 0; i < points.size(); i++) {
+			Point body = points.get(i);
+			if (isOwner || fov.contains(body) || GOD_MODE) {
+				health = ship.getHealth(i+1);
+				int x = (int)body.x * Constants.TILE_SIZE;
+				int y = (int)body.y * Constants.TILE_SIZE;
+
+				img = rm.getShipBodyImage(dir, health, maxHealth);
+				buff = ResourceManager.toBufferedImage(img, this);
+				g2.drawImage(buff, op, x, y);
 			}
 		}
 	}
@@ -300,10 +304,16 @@ public class GameFieldPanel extends JPanel implements Observer {
 	}
 	
 	private void drawGameEvents(Graphics g) {
-		BufferedImage image = (BufferedImage) ResourceManager.getInstance().getEventImage();
-		Graphics2D g2d = (Graphics2D)g;
+		Graphics2D g2 = (Graphics2D) g;
+
+		Image image = ResourceManager.getInstance().getEventImage();
+		BufferedImage buff = ResourceManager.toBufferedImage(image, this);
+
 		for (GameEvent e : events) {
-			g2d.drawImage(image, EVENT_TRANSFORM, e.getPoint().x * Constants.TILE_SIZE, e.getPoint().y * Constants.TILE_SIZE);
+			int x = e.getPoint().x * Constants.TILE_SIZE;
+			int y = e.getPoint().y * Constants.TILE_SIZE;
+
+			g2.drawImage(buff, EVENT_TRANSFORM, x, y);
 		}
 	}
 
