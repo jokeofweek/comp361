@@ -19,6 +19,7 @@ import comp361.shared.data.Player;
 import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.data.Ship;
 import comp361.shared.data.Statistics;
+import comp361.shared.data.range.BeforeTailRange;
 import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
@@ -78,6 +79,7 @@ public class NetworkManager {
 		kryo.register(CellType[][].class);
 		kryo.register(Point.class);
 		kryo.register(Range.class);
+		kryo.register(BeforeTailRange.class);
 		kryo.register(TailRange.class);
 		kryo.register(CenterRange.class);
 		kryo.register(GameDescriptor.class);

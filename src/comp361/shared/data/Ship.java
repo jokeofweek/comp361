@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.java.swing.plaf.windows.WindowsTreeUI.CollapsedIcon;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
-
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
+import comp361.shared.data.range.BeforeTailRange;
 import comp361.shared.data.range.CenterRange;
 import comp361.shared.data.range.Range;
 import comp361.shared.data.range.TailRange;
@@ -25,20 +23,19 @@ public class Ship {
 
 	public static final Ship CRUISER_TEMPLATE = new Ship("Cruiser", 5, 10, 0,
 			ArmorType.HEAVY, false, false, false, false, true, false, false,
-			false, new TailRange(10, 3), null, new CenterRange(15, 11));
+			false, new BeforeTailRange(10, 3), null, new CenterRange(15, 11));
 	public static final Ship DESTROYER_TEMPLATE = new Ship("Destroyer", 4, 8,
 			0, ArmorType.NORMAL, false, false, false, false, false, true,
-			false, false, new TailRange(8, 3), null, new CenterRange(12, 9));
-	// TODO: Fix torpedo cannon range
+			false, false, new BeforeTailRange(8, 3), null, new CenterRange(12, 9));
 	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo Boat", 3, 9, 0,
 			ArmorType.NORMAL, true, false, false, false, false, true, false,
-			true, new TailRange(6, 3), null, new CenterRange(5, 5));
+			true, new BeforeTailRange(6, 3), null, new TailRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
 			5, ArmorType.HEAVY, false, true, false, false, false, true, true,
 			false, new CenterRange(6, 5), null, new CenterRange(4, 5));
 	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3,
 			0, ArmorType.NORMAL, true, false, true, false, false, false, false,
-			true, new TailRange(6, 3), new TailRange(12, 3), new CenterRange(
+			true, new BeforeTailRange(6, 3), new BeforeTailRange(12, 3), new CenterRange(
 					5, 3));
 
 	private static final Ship[] DEFAULT_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,

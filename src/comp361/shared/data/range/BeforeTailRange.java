@@ -6,22 +6,22 @@ import java.awt.Rectangle;
 import comp361.shared.data.Ship;
 
 /**
- * This range starts from the tail.
+ * This range starts from the point before the tail.
  */
-public class TailRange extends Range {
+public class BeforeTailRange extends Range {
 
-	public TailRange() {
+	public BeforeTailRange() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public TailRange(int width, int height) {
+	public BeforeTailRange(int width, int height) {
 		super(width, height);
 	}
 
 	@Override
 	public Rectangle getRectangle(Ship source) {
 		// Get the point before the tail.
-		Point p = source.getShipLine().getPoints().get(0);
+		Point p = source.getShipLine().getPoints().get(1);
 
 		switch (source.getDirection()) {
 		case LEFT:
