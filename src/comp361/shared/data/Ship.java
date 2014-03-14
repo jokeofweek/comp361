@@ -903,16 +903,9 @@ public class Ship {
 	public boolean turnShip(Direction d) {
 		if (this.canTurnToFace(d)) {
 			Point pivot;
+			pivot = getShipLine().getTail();
+			setPosition(new Line(pivot, d, this.size).getHead());
 			this.facing = d;
-			if (this.turnsOnCenter) {
-				// ship turns on its center
-				pivot = getShipLine().getPoints().get(this.size / 2);
-				this.position = new Line(pivot, d, this.size / 2).getHead();
-			} else {
-				// ship turns on its tail
-				pivot = getShipLine().getTail();
-				this.position = new Line(pivot, d, this.size).getHead();
-			}
 			return true;
 		}
 		return false;
@@ -936,14 +929,19 @@ public class Ship {
 	 */
 	public List<Point> getPointsInTurnRadius(Direction d) {
 		List<Point> points = new ArrayList<Point>();
-		Point pivot, corner1, corner2;
-		if (turnsOnCenter) {
-			pivot = getShipLine().getPoints().get(this.size / 2);
-			// if(d == facing.opposite())
-
-		} else {
-			pivot = getShipLine().getTail();
+		Point pivot = getShipLine().getTail();
+		Line newLine = new Line(pivot, d, this.size);
+		Line temp;
+		for(int i = 0;i<this.size;i++)
+		{
+			temp = new Line(this.getShipLine().getPoints().get(i), newLine.getPoints().get(i));
+			points.addAll(temp.getPoints());
+			points.remove(this.getShipLine().getPoints().get(i));
 		}
+		System.out.println("Ship tail: "+this.getShipLine().getTail());
+		System.out.println("Ship head: "+this.getShipLine().getHead());
+		System.out.println("Potential ship head:"+ new Line(pivot, d, this.size).getHead());
+		System.out.println(points);
 		return points;
 	}
 
