@@ -10,6 +10,7 @@ public class GameEvent {
 	private Cause cause;
 	private Effect effect;
 	private Ship victimShip;
+	private boolean playedSound;
 
 	public GameEvent(Point point, Cause cause, Effect effect, Ship victimShip) {
 		this.point = point;
@@ -34,4 +35,11 @@ public class GameEvent {
 		return victimShip;
 	}
 
+	public boolean getPlayedSound() {
+		return playedSound;
+	}
+
+	public void setPlayedSound(boolean playedSound) {
+		this.playedSound = playedSound;
+	}
 }

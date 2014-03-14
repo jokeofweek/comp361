@@ -29,8 +29,11 @@ import comp361.client.GameClient;
 import comp361.client.data.EventTooltipContext;
 import comp361.client.data.GameManager;
 import comp361.client.data.SelectionContext;
+import comp361.client.data.event.Cause;
+import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
 import comp361.client.resources.ResourceManager;
+import comp361.client.resources.SoundManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.CellType;
@@ -139,7 +142,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		}
 		
 		// Draw the game events
-		drawGameEvents(g2d);
+		drawGameEvents(g2d, fov);
 		drawSelectionContext(g2d);
 		
 	}
@@ -301,7 +304,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 	
-	private void drawGameEvents(Graphics g) {
+	private void drawGameEvents(Graphics g, Set<Point> fov) {
 		Graphics2D g2 = (Graphics2D) g;
 
 		Image image = ResourceManager.getInstance().getEventImage();
@@ -312,6 +315,13 @@ public class GameFieldPanel extends JPanel implements Observer {
 			int y = e.getPoint().y * Constants.TILE_SIZE;
 
 			g2.drawImage(buff, x, y, null);
+			
+			if (fov.contains(e.getPoint()) && !e.getPlayedSound()) {
+				if (e.getCause() == Cause.CANNON && e.getEffect() != Effect.HIT_WATER) {
+					e.setPlayedSound(true);
+					SoundManager.getInstance().play("cannon");					
+				}
+			}
 		}
 	}
 
