@@ -9,17 +9,17 @@ public class Account {
 
 	private String name;
 	private String password;
+	private Player player;
 	
-	public Account() {
+	public Account(String name) {
+		this.name = name;
+		this.player = new Player(name);
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
-	}
 	
 	public String getPassword() {
 		return password;
@@ -33,8 +33,7 @@ public class Account {
 	 * @return a {@link Player} object which can be sent to the client.
 	 */
 	public Player getPlayer() {
-		// TODO: This is where statistics would be loaded to be sent to the client.
-		return new Player(name);
+		return player;
 	}
 	
 	@Override

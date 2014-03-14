@@ -8,8 +8,11 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Properties;
 
+import com.sun.org.glassfish.external.statistics.Statistic;
+
 import comp361.server.data.Account;
 import comp361.shared.Constants;
+import comp361.shared.data.Statistics;
 
 /**
  * This data store stores accounts in Java properties files.
@@ -18,6 +21,9 @@ public class PropertyAccountDataStore extends AccountDataStore {
 
 	private static final String ACCOUNTS_PATH = Constants.SERVER_DATA_PATH + "accounts/";
 	private static final String FIELD_PASSWORD = "password";
+	private static final String FIELD_WINS = "wins";
+	private static final String FIELD_LOSSES = "losses";
+	private static final String FIELD_DRAWS = "draws";
 	
 	/**
 	 * Builds the path to the file for a given account.
@@ -55,9 +61,13 @@ public class PropertyAccountDataStore extends AccountDataStore {
 		}
 		
 		// Create the account and load in the properties
-		Account account = new Account();
-		account.setName(accountName);
+		Account account = new Account(accountName);
 		account.setPassword(properties.getProperty(FIELD_PASSWORD));
+		// Update the statistics
+		Statistics stats = account.getPlayer().getStatistics();
+		stats.setWins(Integer.parseInt(properties.getProperty(FIELD_WINS, "0")));
+		stats.setLosses(Integer.parseInt(properties.getProperty(FIELD_LOSSES, "0")));
+		stats.setDraws(Integer.parseInt(properties.getProperty(FIELD_DRAWS, "0")));
 		
 		return account;
 	}
@@ -68,6 +78,10 @@ public class PropertyAccountDataStore extends AccountDataStore {
 		
 		// Convert the account data to properties
 		properties.put(FIELD_PASSWORD, account.getPassword());
+		Statistics stats = account.getPlayer().getStatistics();
+		properties.put(FIELD_WINS, "" + stats.getWins());
+		properties.put(FIELD_LOSSES, "" + stats.getLosses());
+		properties.put(FIELD_DRAWS, "" + stats.getDraws());
 		
 		// Save the properties
 		OutputStream out = null;

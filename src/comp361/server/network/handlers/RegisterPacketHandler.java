@@ -20,8 +20,7 @@ public class RegisterPacketHandler implements ServerPacketHandler<RegisterPacket
 			session.sendTCP(RegisterError.ACCOUNT_ALREADY_EXISTS);
 		} else {
 			// Create the account
-			Account account = new Account();
-			account.setName(object.accountName);
+			Account account = new Account(object.accountName);
 			account.setPassword(object.password);
 			
 			// Try to save the account, sending the appropriate result or

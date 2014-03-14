@@ -17,6 +17,7 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 	private String[] headers;
 	private PlayerManager playerManager;
 	private List<String> playerNames;
+	private Class[] classes = {String.class, Integer.class, Integer.class};
 	
 	public PlayersTableModel(PlayerManager playerManager, String[] headers) {
 		this.headers = headers;
@@ -31,6 +32,11 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 	}
 
 	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		return classes[columnIndex];
+	}
+	
+	@Override
 	public int getColumnCount() {
 		return headers.length;
 	}
@@ -42,12 +48,13 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public String getValueAt(int row, int col) {
+		String playerName = playerNames.get(row);
 		if (col == 0) {
-			return playerNames.get(row);
+			return playerName;
 		} else if (col == 1) {
-			return Math.floor(Math.random() * 100) + "";
+			return "" + playerManager.getPlayer(playerName).getStatistics().getTotalGames();
 		} else {
-			return Math.floor(Math.random() * 100) + "";
+			return "" + playerManager.getPlayer(playerName).getStatistics().getWins();
 		}
 	}
 	

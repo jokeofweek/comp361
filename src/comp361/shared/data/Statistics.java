@@ -7,8 +7,13 @@ import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-public class Statistics implements KryoSerializable {
-	private HashMap<String, Object> aStatistics;
+public class Statistics {
+	// Transient for now...
+	private transient HashMap<String, Object> aStatistics;
+	
+	private int wins;
+	private int losses;
+	private int draws;
 	
 	public Statistics()
 	{
@@ -82,15 +87,32 @@ public class Statistics implements KryoSerializable {
 			this.addStatistic(descriptions[i], data[i]);
 		}
 	}
-
-	@Override
-	public void read(Kryo kryo, Input input) {
-		aStatistics = kryo.readObject(input, HashMap.class);
+	
+	public int getWins() {
+		return wins;
 	}
-
-	@Override
-	public void write(Kryo kryo, Output output) {
-		kryo.writeObject(output, aStatistics);
-		
+	
+	public int getDraws() {
+		return draws;
+	}
+	
+	public int getLosses() {
+		return losses;
+	}
+	
+	public int getTotalGames() {
+		return wins + draws + losses;
+	}
+	
+	public void setDraws(int draws) {
+		this.draws = draws;
+	}
+	
+	public void setLosses(int losses) {
+		this.losses = losses;
+	}
+	
+	public void setWins(int wins) {
+		this.wins = wins;
 	}
 }

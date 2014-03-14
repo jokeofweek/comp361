@@ -3,6 +3,7 @@ package comp361.server.session;
 import com.esotericsoftware.kryonet.Connection;
 import comp361.server.GameServer;
 import comp361.server.data.Account;
+import comp361.server.data.store.DataStoreException;
 import comp361.shared.data.PlayerUpdateStatus;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
@@ -100,6 +101,15 @@ public class Session extends Connection {
 			updatePacket.status = PlayerUpdateStatus.LOGGED_OUT;
 			gameServer.getServer().sendToAllExceptTCP(this.getID(),
 					updatePacket);
+			
+			// Save the account
+			try {
+				gameServer.getAccountDataStore().saveAccount(getAccount());
+				gameServer.getLogger().debug(getAccount().getName() + " was saved");
+			} catch (DataStoreException e) {
+				e.printStackTrace();
+				gameServer.getLogger().error(e.getMessage());
+			}
 		}
 
 		// Update the session type.

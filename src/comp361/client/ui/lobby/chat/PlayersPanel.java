@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.TableRowSorter;
 
 import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
@@ -43,6 +44,7 @@ public class PlayersPanel extends JPanel {
 		JTable playersTable = new JTable(players, columnNames);
 		tableModel = new PlayersTableModel(gameClient.getPlayerManager(), columnNames);
 		playersTable.setModel(tableModel);
+		playersTable.setRowSorter(new TableRowSorter<PlayersTableModel>(tableModel));
 		
 		JPanel playersTablePanel = new JPanel(new BorderLayout());
 		playersTablePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
