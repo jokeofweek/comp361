@@ -942,7 +942,16 @@ public class Ship {
 		for(int i = this.size; i>=1; i--)
 		{
 			temp = new Line(shipLine.getPoints().get(i), newLine.getPoints().get(i));
-			points.addAll(temp.getPoints());
+			// For the last line, remove first and last points
+			
+			if (i == this.size) {
+				List<Point> tempPoints = temp.getPoints();
+				tempPoints.remove(0);
+				tempPoints.remove(tempPoints.size() - 1);
+				points.addAll(tempPoints);
+			} else {
+				points.addAll(temp.getPoints());
+			}
 			points.remove(shipLine.getPoints().get(i));
 		}
 		return points;
