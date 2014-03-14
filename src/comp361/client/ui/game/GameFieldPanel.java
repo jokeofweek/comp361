@@ -46,8 +46,6 @@ public class GameFieldPanel extends JPanel implements Observer {
 	// Transforms
 	private static final RescaleOp SUNKEN_SHIP_TRANSFORM = 
 			new RescaleOp(new float[]{0f, 0f, 0f, Constants.SUNKEN_SHIP_ALPHA}, new float[4], null);
-	private static final RescaleOp EVENT_TRANSFORM = 
-			new RescaleOp(new float[]{1f, 1f, 1f, Constants.GAME_EVENT_ALPHA}, new float[4], null);
 
 	private GameClient client;
 	private Game game;
@@ -313,7 +311,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			int x = e.getPoint().x * Constants.TILE_SIZE;
 			int y = e.getPoint().y * Constants.TILE_SIZE;
 
-			g2.drawImage(buff, EVENT_TRANSFORM, x, y);
+			g2.drawImage(buff, x, y, null);
 		}
 	}
 
