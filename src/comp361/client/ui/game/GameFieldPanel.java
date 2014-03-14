@@ -317,9 +317,15 @@ public class GameFieldPanel extends JPanel implements Observer {
 			g2.drawImage(buff, x, y, null);
 			
 			if (fov.contains(e.getPoint()) && !e.getPlayedSound()) {
-				if (e.getCause() == Cause.CANNON && e.getEffect() != Effect.HIT_WATER) {
-					e.setPlayedSound(true);
-					SoundManager.getInstance().play("cannon");					
+				SoundManager sm = SoundManager.getInstance();
+				e.setPlayedSound(true);
+				
+				if (e.getEffect() == Effect.HIT_WATER) {
+					sm.play("hit-water");
+				} else {
+					if (e.getCause() == Cause.CANNON) {
+						sm.play("cannon");
+					}
 				}
 			}
 		}
