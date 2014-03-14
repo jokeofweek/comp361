@@ -28,7 +28,7 @@ public class Line extends Line2D
 		if(direction == Direction.LEFT)
 			this.head = new Point((int)(tail.getX()-length + 1), (int)tail.getY());
 		if(direction == Direction.RIGHT)
-			this.head = new Point((int)(tail.getX()+length + 1), (int)tail.getY());
+			this.head = new Point((int)(tail.getX()+length - 1), (int)tail.getY());
 	}
 	
 	@Override
