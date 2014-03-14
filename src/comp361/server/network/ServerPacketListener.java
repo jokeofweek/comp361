@@ -148,17 +148,23 @@ public class ServerPacketListener extends Listener {
 			// Call the super
 			super.received(connection, object);
 		}
-
 	}
 
+	@Override
+	public void idle(Connection connection) {
+		super.idle(connection);
+		gameServer.getLogger().debug("Connection " + connection.getID() + " idle.");
+		
+	}
+	
 	@Override
 	public void disconnected(Connection connection) {
 		super.disconnected(connection);
 		
 		// Properly disconnect the session
 		((Session) connection).disconnect();
-
-		gameServer.getLogger().debug("Socket disconnected.");
+		
+		gameServer.getLogger().debug("Connection " + connection.getID() + " disconnected.");
 	}
 
 }
