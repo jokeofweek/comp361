@@ -74,8 +74,15 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 		// Get the list of player names and sort them
 		playerNames = new ArrayList<String>(playerManager.getPlayers());
 		Collections.sort(playerNames);
-		
-		fireTableDataChanged();
+	
+		new Runnable() {
+			
+			@Override
+			public void run() {
+
+				fireTableDataChanged();
+			}
+		};
 	}
 	
 	@Override
