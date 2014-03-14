@@ -910,7 +910,7 @@ public class Ship {
 				// Explode the mine
 				game.explodeMine(obstaclePoint, events);
 				// Damage the block that hit it
-				doMineDamage(getCollidingBlockPosition(obstaclePoint));
+				doMineDamage(getCollidingBlockPosition(obstaclePoint, d));
 				
 			} else {
 				events.add(new GameEvent(obstaclePoint, null, Effect.SHIP_COLLISION, null));
@@ -927,39 +927,57 @@ public class Ship {
 	public List<Point> getPointsInTurnRadius(Direction d) {
 		List<Point> points = new ArrayList<Point>();
 		Point pivot = getShipLine().getTail();
-		Line newLine = new Line(pivot, d, this.size);//includes point in front of potential head
+		Line newLine = new Line(pivot, d, this.size + 1);//includes point in front of potential head
 		Line temp;
-		Line shipLine = this.getShipLine();// temporary, will be replaced below to include point in front of head
-		if(this.facing == Direction.DOWN)
+		Line shipLine = null; 
+		if(this.facing == Direction.DOWN) {
 			shipLine = new Line(pivot, new Point(position.x, position.y+1));
-		else if(this.facing == Direction.UP)
+		} else if(this.facing == Direction.UP) {
 			shipLine = new Line(pivot, new Point(position.x, position.y-1));
-		else if(this.facing == Direction.RIGHT)
+		} else if(this.facing == Direction.RIGHT) {
 			shipLine = new Line(pivot, new Point(position.x+1, position.y));
-		else if(this.facing == Direction.LEFT)
+		} else if(this.facing == Direction.LEFT) {
 			shipLine = new Line(pivot, new Point(position.x-1, position.y));
-		for(int i = this.size-1;i>=0;i--)
+		}
+		for(int i = this.size; i>=1; i--)
 		{
 			temp = new Line(shipLine.getPoints().get(i), newLine.getPoints().get(i));
 			points.addAll(temp.getPoints());
 			points.remove(shipLine.getPoints().get(i));
 		}
-		System.out.println("Ship tail: "+this.getShipLine().getTail());
-		System.out.println("Ship head: "+this.getShipLine().getHead());
-		System.out.println("Potential ship head:"+ new Line(pivot, d, this.size).getHead());
-		System.out.println(points);
 		return points;
 	}
 
 	/**
 	 * @param p
 	 *            the position of the colliding object
+	 * @param turnDirection The direction we are turning to face
 	 * @return the position of the square on the ship colliding with p
 	 */
-	public Point getCollidingBlockPosition(Point p) {
-		// TODO This should determine the ship point that rotated onto point p.
-		//       This damages the right square when rotating over a mine.
-		return position;
+	public Point getCollidingBlockPosition(Point p, Direction turnDirection) {
+		// Go through each line, testing if the point is in there
+		List<Point> points = new ArrayList<Point>();
+		Point pivot = getShipLine().getTail();
+		Line newLine = new Line(pivot, turnDirection, this.size + 1);
+		Line temp;
+		Line shipLine = null; 
+		if(this.facing == Direction.DOWN) {
+			shipLine = new Line(pivot, new Point(position.x, position.y+1));
+		} else if(this.facing == Direction.UP) {
+			shipLine = new Line(pivot, new Point(position.x, position.y-1));
+		} else if(this.facing == Direction.RIGHT) {
+			shipLine = new Line(pivot, new Point(position.x+1, position.y));
+		} else if(this.facing == Direction.LEFT) {
+			shipLine = new Line(pivot, new Point(position.x-1, position.y));
+		}
+		for(int i = this.size; i>=1; i--)
+		{
+			temp = new Line(shipLine.getPoints().get(i), newLine.getPoints().get(i));
+			if (temp.getPoints().contains(p)) {
+				return getShipLine().getPoints().get(i - 1);
+			}
+		}
+		throw new IllegalArgumentException(p + " is not in one of the turn lines.");
 	}
 
 	/**
