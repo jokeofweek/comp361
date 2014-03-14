@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -892,6 +893,16 @@ public class Ship {
 	 */
 	public void turnShip(Direction d, List<GameEvent> events) {
 		List<Point> radiusPoints = getPointsInTurnRadius(d);
+		
+		// Sort the points based on the distance to the head
+		final Point2D head = new Point2D.Double(position.x, position.y);
+		Collections.sort(radiusPoints, new Comparator<Point>() {
+			@Override
+			public int compare(Point o1, Point o2) {
+				return (int) Math.round(o1.distanceSq(head) - o2.distanceSq(head));
+			}
+		});
+		
 		ObstacleType obstacleType = game.getClosestObstacleType(radiusPoints);
 		if (obstacleType == null) {
 			Point pivot = getShipLine().getTail();
