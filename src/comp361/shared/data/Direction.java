@@ -37,6 +37,6 @@ public enum Direction {
 	 */
 	public boolean isPerpendicularTo(Direction other)
 	{
-		return this.ordinal() == (other.ordinal()+1)%4 || this.ordinal() == (other.ordinal()-1)%4;
+		return this != other && this.opposite() != other;
 	}
 }

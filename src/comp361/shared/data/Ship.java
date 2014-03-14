@@ -4,12 +4,14 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.sun.java.swing.plaf.windows.WindowsTreeUI.CollapsedIcon;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 
 import comp361.client.data.event.Cause;
@@ -341,10 +343,7 @@ public class Ship {
 				} else {
 					for (Ship s : game.getShips()) {
 						if (s.pointBelongsToShip(p)) {
-							s.hitWithTorpedo(p, this.facing);
-
-							// Log the event
-							events.add(new GameEvent(p, Cause.TORPEDO, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, s));
+							s.hitWithTorpedo(p, this.facing, events);
 							return;
 						}
 					}
@@ -359,33 +358,38 @@ public class Ship {
 	 * @param shootingDirection
 	 *            the direction of the incoming torpedo
 	 */
-	public void hitWithTorpedo(Point p, Direction shootingDirection) {
+	public void hitWithTorpedo(Point p, Direction shootingDirection, List<GameEvent> events) {
+		List<Point> damagedPoints = new ArrayList<Point>();
+		int startIndex = getShipLine().getPoints().indexOf(p); 
 		// damage the right square
-		if (health[getShipLine().getPoints().indexOf(p)] > 0)
+		if (health[getShipLine().getPoints().indexOf(p)] > 0) {
 			health[getShipLine().getPoints().indexOf(p)]--;
+		}
+		damagedPoints.add(p);
 		// if perpendicular, damage another adjacent square
 		if (shootingDirection.isPerpendicularTo(facing)) {
-			if (facing.isHorizontal()) {
-				// try to damage two potential points
-				Point secondP1 = new Point(p.x, p.y + 1);
-				Point secondP2 = new Point(p.x, p.y - 1);
-				if (pointBelongsToShip(secondP1)
-						&& health[getShipLine().getPoints().indexOf(secondP1)] > 0)
-					health[getShipLine().getPoints().indexOf(secondP1)]--;
-				else if (pointBelongsToShip(secondP2)
-						&& health[getShipLine().getPoints().indexOf(secondP2)] > 0)
-					health[getShipLine().getPoints().indexOf(secondP2)]--;
-			} else {
-				// try to damage two potential points
-				Point secondP1 = new Point(p.x + 1, p.y);
-				Point secondP2 = new Point(p.x - 1, p.y);
-				if (pointBelongsToShip(secondP1)
-						&& health[getShipLine().getPoints().indexOf(secondP1)] > 0)
-					health[getShipLine().getPoints().indexOf(secondP1)]--;
-				else if (pointBelongsToShip(secondP2)
-						&& health[getShipLine().getPoints().indexOf(secondP2)] > 0)
-					health[getShipLine().getPoints().indexOf(secondP2)]--;
+			// Build a list of the two adjacent points
+			List<Integer> indices = Arrays.asList(startIndex - 1, startIndex + 1);
+			Collections.shuffle(indices);
+			for (int i = 0; i < indices.size(); i++) {
+				if (indices.get(i) >= 0 && indices.get(i) < health.length) {
+					// If the square still has some health, pick it for damage
+					if (health[indices.get(i)] > 0) {
+						health[indices.get(i)]--;
+						damagedPoints.add(getShipLine().getPoints().get(indices.get(i)));
+						break;
+					// If it's the last adjacent square, then mark it as hit anyways even if it's damaged
+					} else if (i == indices.size() - 1) {
+						damagedPoints.add(getShipLine().getPoints().get(indices.get(i)));
+					}
+				}
 			}
+		}
+		
+		// Log events
+		for (Point point : damagedPoints) {
+			// Log the event
+			events.add(new GameEvent(point, Cause.TORPEDO, isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, this));
 		}
 	}
 
@@ -991,11 +995,11 @@ public class Ship {
 			// Add all the points to the right of the ship
 			Point sidePoint = new Point(this.position.x + 1, this.position.y + (getSize() / 2));
 			points.add(sidePoint);
-			System.out.println(sidePoint);
+
 			// Add all the points to the left of the ship
 			sidePoint = new Point(this.position.x - 1, this.position.y + (getSize() / 2));
 			points.add(sidePoint);
-			System.out.println(sidePoint);
+
 			// Add all the points above(in front of) the ship
 			Point movementCap = new Point(this.position.x, this.position.y
 					- this.getSpeed());
@@ -1309,6 +1313,7 @@ public class Ship {
 			}
 
 		} else {
+			System.out.println("Turning to face " + getTurnPoints().get(p));
 			turnShip(getTurnPoints().get(p));
 		}
 	}
@@ -1326,8 +1331,6 @@ public class Ship {
 		
 		List<Point> points = new ArrayList<Point>();
 		Point finalPoint = null;
-		System.out.println(position);
-		System.out.println(getTurnPoints());
 		if (facing == Direction.LEFT) {
 			points.add(new Point(position.x, position.y + (left ? 1 : -1)));
 			points.add(new Point(position.x + 2, position.y + (left ? -1 : 1)));
@@ -1373,7 +1376,6 @@ public class Ship {
 			}
 		}
 
-		System.out.println("Turning " + facing + "," + position + " -> " + (left ? facing.getCounterClockwise() : facing.getClockwise()) + "," + finalPoint + " - " + left);
 		setPosition(finalPoint);
 		setDirection(left ? facing.getCounterClockwise() : facing.getClockwise());
 		return true;
