@@ -16,7 +16,7 @@ import comp361.shared.data.Ship;
 public class GamesTableModel extends AbstractTableModel implements Observer {
 
 	public static final int JOIN_COLUMN = 4;
-	private static final String[] headers =  {"Name", "Players", "Private?", "Ship Set", "Join"};
+	private static final String[] headers =  {"Name", "Opponent", "Private?", "Ship Set", "Join"};
 	
 	private GameDescriptorManager manager;
 	/**
@@ -74,14 +74,21 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
 			// Caclulate number of players
-			String[] players = descriptor.getPlayers();
-			int count = 0;
-			for (int i = 0; i < players.length; i++) {
-				if (players[i] != null) {
-					count++;
+//			String[] players = descriptor.getPlayers();
+//			int count = 0;
+//			for (int i = 0; i < players.length; i++) {
+//				if (players[i] != null) {
+//					count++;
+//				}
+//			}
+//			return count + " / " + descriptor.getMaxPlayers();
+			// Return the name of the player in the game
+			for (String player : descriptor.getPlayers()) {
+				if (player != null) {
+					return player;
 				}
 			}
-			return count + " / " + descriptor.getMaxPlayers();
+			return "";
 		} else if (columnIndex == 2) {
 			if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
 				return "\u2713";
