@@ -177,13 +177,13 @@ public class CoralPanel extends JPanel implements Observer {
 
 	private void drawShip(Graphics2D g, int[] offsets, int shipWidth) {
 		ResourceManager rm = ResourceManager.getInstance();
-		BufferedImage headImage = (BufferedImage)rm.getShipHeadImage(Direction.RIGHT, 1, 1, true);
+		Image headImage = rm.getShipHeadImage(Direction.RIGHT, 1, 1, true);
 		g.drawImage(headImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
 		
-		BufferedImage tailImage = (BufferedImage)rm.getShipTailImage(Direction.RIGHT, 1, 1, true);
+		Image tailImage = rm.getShipTailImage(Direction.RIGHT, 1, 1, true);
 		g.drawImage(tailImage, offsets[0], offsets[1], null);
 		
-		BufferedImage bodyImage = (BufferedImage)rm.getShipBodyImage(Direction.RIGHT, 1, 1);
+		Image bodyImage = rm.getShipBodyImage(Direction.RIGHT, 1, 1);
 		for (int i = 1; i < shipWidth - 1; i++) {
 			g.drawImage(bodyImage, (i * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
 		}

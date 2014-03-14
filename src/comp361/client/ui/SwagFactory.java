@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -51,7 +52,7 @@ public class SwagFactory {
 		File font_file = new File("fonts/SF Pixelate Bold.ttf");
 		try {
 			FONT = Font.createFont(Font.TRUETYPE_FONT, font_file).deriveFont(FONT_SIZE);
-			HEADER_FONT = FONT.deriveFont(HEADER_SIZE);
+			HEADER_FONT =  Font.createFont(Font.TRUETYPE_FONT, font_file).deriveFont(HEADER_SIZE);
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -76,6 +77,8 @@ public class SwagFactory {
 			styleTextField((JTextField) component);
 		} else if (component instanceof JComboBox) {
 			styleComboBox((JComboBox) component);
+		} else if (component instanceof JList) {
+			styleList((JList) component);
 		} else if(component instanceof JEditorPane){
 			styleEditorPane((JEditorPane) component);
 		}
@@ -102,6 +105,10 @@ public class SwagFactory {
 	
 	private static void styleComboBox(JComboBox field) {
 		field.setBackground(Color.WHITE);
+		field.setFont(FONT);
+	}
+	
+	private static void styleList(JList field) {
 		field.setFont(FONT);
 	}
 	

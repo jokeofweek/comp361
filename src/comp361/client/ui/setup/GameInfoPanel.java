@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -37,13 +38,22 @@ public class GameInfoPanel extends JPanel implements Observer {
 		// Put the game name at the top
 		JLabel gameNameLabel = new JLabel(name);
 		SwagFactory.style(gameNameLabel);
+		gameNameLabel.setFont(SwagFactory.HEADER_FONT);
 		gameNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		add(gameNameLabel, BorderLayout.NORTH);
 
+		JPanel listPanel = new JPanel(new BorderLayout());
+		
+		JLabel connectedLabel = new JLabel("Connected Players:");
+		SwagFactory.style(connectedLabel);
+		listPanel.add(connectedLabel, BorderLayout.NORTH);
+		
 		model = new DefaultListModel<>();
 		playerNameList = new JList<>(model);
 		refreshData();
-		add(playerNameList);
+		listPanel.add(playerNameList);
+		
+		add(listPanel);
 	}
 
 	private void refreshData() {
@@ -56,14 +66,21 @@ public class GameInfoPanel extends JPanel implements Observer {
 		}
 		model.clear();
 		// Add all players in the game descriptor
-		for (String player : descriptor.getPlayers()) {
-			if (player != null) {
-				if (descriptor.getReadyPlayers().contains(player)) {
-					model.addElement(player + "<ready>");
+		String[] players = descriptor.getPlayers();
+		int added = 0;
+		for (int i = 0; i < descriptor.getMaxPlayers(); i++) {
+			if (players[i] != null) {
+				if (descriptor.getReadyPlayers().contains(players[i])) {
+					model.addElement("- " + players[i] + "<ready>");
 				} else {
-					model.addElement(player + " ");
+					model.addElement("- " + players[i]);
 				}
+				added++;
 			}
+		}
+		// Add for leftover slots
+		for (int i = added; i < descriptor.getMaxPlayers(); i++) {
+			model.addElement("- <free slot>");
 		}
 	}
 

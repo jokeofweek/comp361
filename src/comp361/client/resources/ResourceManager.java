@@ -2,58 +2,55 @@ package comp361.client.resources;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.awt.image.ImageObserver;
 
 import comp361.shared.Constants;
 import comp361.shared.data.Direction;
 
 public class ResourceManager {
 	private static ResourceManager instance;
-
-	private final String EVENT_FILENAME = "exclamation.png";
 	
-	private final String DEFAULT_STATE = null;
-	private final String HIT_STATE = "hit";
-	private final String DEAD_STATE = "dead";
+	private final String ANIM = "anim";
+	private final String BASE = "base";
+	private final String BLUE = "blue";
+	private final String BODY = "body";
+	private final String BOTTOM = "bottom";
+	private final String DASH = "-";
+	private final String DEAD = "dead";
+	private final String HEAD = "head";
+	private final String HIT = "hit";
+	private final String RED = "red";
+	private final String SHIP = "ship";
+	private final String TAIL = "tail";
+	private final String TOP = "top";
 	
-	private final Direction[] directions = Direction.values();
-	private final String[] colors = {"blue", "red"};
-	private final String[] states = {DEFAULT_STATE, HIT_STATE, DEAD_STATE};
-	private final String[] baseParts = {"base-top", "base-body", "base-bottom"};
-	
-	private final Image WATER_IMAGE = ImageManager.getInstance().getImage("bg-anim");
+	// Preload images that don't change
 	private final Image MINE_IMAGE = ImageManager.getInstance().getImage("mine-anim");
+	private final Image POI_IMAGE = ImageManager.getInstance().getImage("poi");
 	private final Image REEF_IMAGE = ImageManager.getInstance().getImage("reef");
-	private final Map<String, Image> images = new HashMap<String, Image>();
+	private final Image WATER_IMAGE = ImageManager.getInstance().getImage("bg-anim");
 
 	public static ResourceManager getInstance() {
 		if (instance == null) {
-			ImageManager.getInstance();
-			SoundManager.getInstance();
 			instance = new ResourceManager();
 		}
 		return instance;
 	}
 
 	private ResourceManager() {
-		// Load all the resources
-		try {
-			loadHeadImages();
-			loadBodyImages();
-			loadTailImages();
-			loadEventImage();
-			loadBaseImages();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			System.exit(1);
-		}
+		// Chillin' like a villain
+	}
 
+	public Image getMineImage() {
+		return MINE_IMAGE;
+	}
+
+	public Image getEventImage() {
+		return POI_IMAGE;
+	}
+
+	public Image getReefImage() {
+		return REEF_IMAGE;
 	}
 
 	public Image getWaterImage() {
@@ -62,150 +59,75 @@ public class ResourceManager {
 
 	public Image getShipBodyImage(Direction dir, int health, int maxHealth) {
 		String state = getState(health, maxHealth);
-		String filename = getFilename("ship-body", dir.ordinal()+1, state);
-		return images.get(filename);
+		String direction = String.valueOf(dir.ordinal() + 1);
+		return ImageManager.getInstance().getImage(join(SHIP, BODY, direction, state));
 	}
 
 	public Image getShipHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
-		String filename = getFilename("ship-head", dir.ordinal()+1, isOwner, state);
-		return images.get(filename);
+		String direction = String.valueOf(dir.ordinal() + 1);
+		String color = getColor(isOwner);
+		return ImageManager.getInstance().getImage(join(SHIP, HEAD, color, direction, state));
 	}
 	
 	public Image getShipTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
-		String filename = getFilename("ship-tail", dir.ordinal()+1, isOwner, state);
-		return images.get(filename);
-	}
-	
-	public Image getReefImage() {
-		return REEF_IMAGE;
-	}
-	
-	public Image getEventImage() {
-		return images.get(Constants.GFX_DATA_PATH + EVENT_FILENAME);
+		String direction = String.valueOf(dir.ordinal() + 1);
+		String color = getColor(isOwner);
+		return ImageManager.getInstance().getImage(join(SHIP, TAIL, color, direction , state));
 	}
 	
 	public Image getBaseImage(int y, boolean isDestroyed) {
-		String name = "base-";
+		String state = isDestroyed ? DEAD : null;
+		String part;
 		
-		switch (y) {
-		case Constants.BASE_Y_OFFSET:
-			name += "top";
-			break;
-		case Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1:
-			name += "bottom";
-			break;
-		default:
-			name += "body";
-		}
-		
-		name += "-anim";
-		
-		if (isDestroyed) {
-			name += "-dead";
-		}
-		
-		name += ".gif";
-		return ImageManager.getInstance().getImage(name);
-	}
-	
-	public Image getMineImage() {
-		return MINE_IMAGE;
-	}
-
-	private void loadHeadImages() throws IOException {
-		String filename = null;
-		BufferedImage image = null;
-		
-		for (Direction dir : directions) {
-			for (String state : states) {
-				for (String color : colors) {
-					filename = getFilename("ship-head", dir.ordinal()+1, color, state);
-					image = ImageIO.read(new File(filename));
-					images.put(filename, image);
-				}
-			}
-		}
-	}
-	
-	private void loadBodyImages() throws IOException {
-		String filename = null;
-		BufferedImage image = null;
-		
-		for (Direction dir : directions) {
-			for (String state : states) {
-				filename = getFilename("ship-body", dir.ordinal()+1, state);
-				image = ImageIO.read(new File(filename));
-				images.put(filename, image);
-			}
-		}
-	}
-	
-	private void loadTailImages() throws IOException {
-		String filename = null;
-		BufferedImage image = null;
-		
-		for (Direction dir : directions) {
-			for (String state : states) {
-				for (String color : colors) {
-					filename = getFilename("ship-tail", dir.ordinal()+1, color, state);
-					image = ImageIO.read(new File(filename));
-					images.put(filename, image);
-				}
-			}
-		}
-	}
-	
-	private void loadEventImage() throws IOException {
-		String filename = Constants.GFX_DATA_PATH + EVENT_FILENAME;
-		BufferedImage image = ImageIO.read(new File(filename));
-		images.put(filename, image);
-	}
-	
-	private void loadBaseImages() throws IOException {
-		String filename = null;
-		Image image = null;
-		
-		for (String part : baseParts) {
-			filename = Constants.GFX_DATA_PATH + part + "-anim.gif";
-			image = new ImageIcon(filename).getImage();
-			images.put(filename, image);
-		}
-	}
-
-	private String getFilename(String part, int variant, String state) {
-		return getFilename(part, variant, null, state);
-	}
-	
-	private String getFilename(String part, int variant, boolean isOwner, String state) {
-		String color = isOwner ? "blue" : "red";
-		return getFilename(part, variant, color, state);
-	}
-	
-	private String getFilename(String filename, int variant, String color, String state) {
-		if (color != null) {
-			filename += "-" + color;
-		}
-		
-		if (variant > 0) {
-			filename += "-" + variant;
-		}
-		
-		if (state != null) {
-			filename += "-" + state;
-		}
-		
-		return Constants.GFX_DATA_PATH + filename + ".png";
-	}
-	
-	private String getState(int health, int maxHealth) {
-		if (health == maxHealth) {
-			return DEFAULT_STATE;
-		} else if (health == 0) {
-			return DEAD_STATE;
+		if (y == Constants.BASE_Y_OFFSET) {
+			part = TOP;
+		} else if (y == Constants.BASE_Y_OFFSET) {
+			part = BOTTOM;
 		} else {
-			return HIT_STATE;
+			part = BODY;
 		}
+		
+		return ImageManager.getInstance().getImage(join(BASE, part, ANIM, state));
+	}
+	
+	public static BufferedImage toBufferedImage(Image image, ImageObserver o) {
+		int size = Constants.TILE_SIZE;
+		BufferedImage buffer = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		buffer.createGraphics().drawImage(image, 0, 0, size, size, o);
+		return buffer;
+	}
+
+	private String getState(final int health, final int maxHealth) {
+		if (health == maxHealth) {
+			return null;
+		} else if (health == 0) {
+			return DEAD;
+		} else {
+			return HIT;
+		}
+	}
+
+	private String getColor(boolean isOwner) {
+		return isOwner ? BLUE : RED;
+	}
+
+	private String join(String... strings) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < strings.length; i++) {
+			if (strings[i] == null) {
+				continue;
+			}
+			
+			sb.append(strings[i]);
+			
+			if (i < strings.length - 1 && strings[i+1] != null) {
+				sb.append(DASH);
+			}
+		}
+		
+		return sb.toString();
 	}
 }
