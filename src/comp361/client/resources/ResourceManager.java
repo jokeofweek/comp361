@@ -123,7 +123,7 @@ public class ResourceManager {
 			
 			sb.append(strings[i]);
 			
-			if (i < strings.length - 1) {
+			if (i < strings.length - 1 && strings[i+1] != null) {
 				sb.append(DASH);
 			}
 		}

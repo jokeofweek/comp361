@@ -262,7 +262,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			int y = (int)tail.y * Constants.TILE_SIZE;
 			
 			// Get image as buffered image
-			img = rm.getShipHeadImage(dir, health, maxHealth, isOwner);
+			img = rm.getShipTailImage(dir, health, maxHealth, isOwner);
 			buff = ResourceManager.toBufferedImage(img, this);
 			g2.drawImage(buff, op, x, y);
 		}
