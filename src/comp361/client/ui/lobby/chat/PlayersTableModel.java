@@ -75,14 +75,13 @@ public class PlayersTableModel extends AbstractTableModel implements Observer {
 		playerNames = new ArrayList<String>(playerManager.getPlayers());
 		Collections.sort(playerNames);
 	
-		new Runnable() {
-			
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 
 				fireTableDataChanged();
 			}
-		};
+		});
 	}
 	
 	@Override
