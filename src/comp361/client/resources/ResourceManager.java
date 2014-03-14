@@ -13,7 +13,7 @@ public class ResourceManager {
 	private final String ANIM = "anim";
 	private final String BASE = "base";
 	private final String BLUE = "blue";
-	private final String BODY = "top";
+	private final String BODY = "body";
 	private final String BOTTOM = "bottom";
 	private final String DASH = "-";
 	private final String DEAD = "dead";
