@@ -83,7 +83,7 @@ public class ResourceManager {
 		
 		if (y == Constants.BASE_Y_OFFSET) {
 			part = TOP;
-		} else if (y == Constants.BASE_Y_OFFSET) {
+		} else if (y == Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1) {
 			part = BOTTOM;
 		} else {
 			part = BODY;
