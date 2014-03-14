@@ -163,7 +163,7 @@ public class NewGamePanel extends ClientPanel {
 		JPanel inputPanel = new JPanel(new GridLayout(1, 2));
 
 		// Message text field
-		final JTextField messageField = new JTextField("u wot m8?");
+		final JTextField messageField = new JTextField("Chat here...");
 		messageField.setForeground(Color.GRAY);
 		messageField.addMouseListener(new MouseAdapter() {
 			private boolean cleared = false;

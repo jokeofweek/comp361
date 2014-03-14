@@ -386,7 +386,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private void drawLongRangeRadarOutlines(Graphics g) {
 		g.setColor(Constants.LONG_RANGE_RADAR_BORDER);
 		for (Ship s : game.getShips()) {
-			if (s.getOwner().equals(isP1 ? game.getP1() : game.getP2()) || GOD_MODE) {
+			if (!s.isSunk() && s.getOwner().equals(isP1 ? game.getP1() : game.getP2()) || GOD_MODE) {
 				if (s.hasLongRangeRadar() && s.isLongRangeRadarEnabled()) {
 					// Render outline around rectangle for long range radar	
 					Rectangle r = s.getActiveRadar().getRectangle(s);
