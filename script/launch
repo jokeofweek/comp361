@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+JAVA_CMD   = 'java -Dfile.encoding=US-ASCII -classpath ./bin:./lib/kryonet-2.18-all.jar:./lib/commons-lang3-3.2.1.jar:./lib/jl1.0.1.jar'
+SERVER_APP = 'comp361.server.ServerApplication'
+CLIENT_APP = 'comp361.client.ClientApplication'
+CLIENTS    = (ARGV.detect { |arg| arg[0] != '-' } || 2).to_i
+
+def task(desc, &block)
+	print "#{desc}... "
+	yield
+	puts 'Done.'
+end
+
+def stop_server(pid)
+	task 'Stopping server' do
+		`kill -9 #{pid}`
+	end
+end
+
+def start_server
+	task 'Starting server' do
+		system "#{JAVA_CMD} #{SERVER_APP}&"
+	end
+end
+
+def start_client(id)
+	task "Starting client #{id}" do
+		system "#{JAVA_CMD} #{CLIENT_APP}&"
+	end
+end
+
+server = `lsof -i -P | grep ":5000"`.gsub(/\s+/, ' ')
+server_running = server.length > 0
+
+if server_running
+	puts 'Server already running'
+
+	if ARGV.include?('-r') || ARGV.include?('--restart')
+		server_running = false
+		pid = server.split[1]
+		stop_server(pid)
+		start_server
+	end
+else
+	start_server
+end
+
+CLIENTS.times do |id|
+	start_client(id + 1)
+end
+
+puts
+puts "Happy shipping!                                                       "
+puts "                                    # #  ( )                          "
+puts "                                 ___#_#___|__                         "
+puts "                             _  |____________|  _                     "
+puts "                      _=====| | |            | | |==== _              "
+puts "                =====| |.---------------------------. | |====         "
+puts "  <--------------------'   .  .  .  .  .  .  .  .   '--------------/ "
+puts "    \\                                               S.S. ASTLEY   /   "
+puts "     \\___________________________________________________________/    "
+puts " wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
