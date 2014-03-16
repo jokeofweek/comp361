@@ -6,41 +6,41 @@ CLIENT_APP = 'comp361.client.ClientApplication'
 CLIENTS    = (ARGV.detect { |arg| arg[0] != '-' } || 2).to_i
 
 def stop_server(pid)
-	print 'Stopping server... '
-	`kill -9 #{pid}`
-	puts 'Done.'
+  print 'Stopping server... '
+  `kill -9 #{pid}`
+  puts 'Done.'
 end
 
 def start_server
-	print 'Starting server... '
-	system "#{JAVA_CMD} #{SERVER_APP}&"
-	puts 'Done.'
+  print 'Starting server... '
+  system "#{JAVA_CMD} #{SERVER_APP}&"
+  puts 'Done.'
 end
 
 def start_client(id)
-	print "Starting client #{id}... "
-	system "#{JAVA_CMD} #{CLIENT_APP}&"
-	puts 'Done.'
+  print "Starting client #{id}... "
+  system "#{JAVA_CMD} #{CLIENT_APP}&"
+  puts 'Done.'
 end
 
 server = `lsof -i -P | grep ":5000"`.gsub(/\s+/, ' ')
 server_running = server.length > 0
 
 if server_running
-	puts 'Server already running'
+  puts 'Server already running'
 
-	if ARGV.include?('-r') || ARGV.include?('--restart')
-		server_running = false
-		pid = server.split[1]
-		stop_server(pid)
-		start_server
-	end
+  if ARGV.include?('-r') || ARGV.include?('--restart')
+    server_running = false
+    pid = server.split[1]
+    stop_server(pid)
+    start_server
+  end
 else
-	start_server
+  start_server
 end
 
 CLIENTS.times do |id|
-	start_client(id + 1)
+  start_client(id + 1)
 end
 
 puts
