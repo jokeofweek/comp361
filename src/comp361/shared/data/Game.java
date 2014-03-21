@@ -420,6 +420,9 @@ public class Game {
 
 		if (packet.moveType == MoveType.MOVE) {
 			ship.moveShip(packet.contextPoint, events);
+		} else if (packet.moveType == MoveType.KAMIKAZE) {
+			ship.moveShip(packet.contextPoint, events);
+			ship.explode(events);
 		} else if (packet.moveType == MoveType.CANNON) {
 			ship.fireCannon(packet.contextPoint, events);
 		} else if (packet.moveType == MoveType.TORPEDO) {
