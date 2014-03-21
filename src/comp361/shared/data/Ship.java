@@ -38,12 +38,16 @@ public class Ship {
 			0, ArmorType.NORMAL, CannonType.NORMAL, true, false, true, false,  false, false,
 			true, new BeforeTailRange(6, 3), new BeforeTailRange(12, 3), new CenterRange(
 					5, 3));
+	public static final Ship KAMIKAZE_BOAT_TEMPLATE = new Ship("Kamikaze Boat", 1, 2,
+			0, ArmorType.HEAVY, CannonType.NONE, false, false, false, false,  false, false,
+			false, new CenterRange(5, 5), null, null);
 
 	private static final Ship[] DEFAULT_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
 		Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE,
 		Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE,
 		Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE,
-		Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE };
+		Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE,
+		Ship.KAMIKAZE_BOAT_TEMPLATE };
 	private static final Ship[] ACCELERATED_INVENTORY = { Ship.TORPEDO_TEMPLATE };
 	
 
