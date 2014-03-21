@@ -72,6 +72,9 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			if (context.getShip().hasTorpedoes()) {
 				weapons.add("Torpedoes");
 			}
+			if (context.getShip().canKamikaze()) {
+				weapons.add("Special");
+			}
 			if (weapons.size() > 0) {
 				String weaponStr = weapons.get(0);
 				weapons.remove(0);
@@ -129,6 +132,12 @@ public class ShipInfoPanel extends JPanel implements Observer {
 					}
 				});
 				actionButtons.add(fireTorpedoButton);	
+			}
+			
+			if (context.getShip().canKamikaze()) {
+				JButton fireCannonButton = new JButton("Kamikaze");
+				fireCannonButton.addActionListener(new MoveContextActionListener(MoveType.KAMIKAZE));
+				actionButtons.add(fireCannonButton);
 			}
 			
 			// If we have mines and there is a place we can drop the mine, show the button

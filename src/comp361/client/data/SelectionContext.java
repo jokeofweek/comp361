@@ -50,7 +50,7 @@ public class SelectionContext extends Observable {
 	public void updatePoints() {
 		if (ship == null || type == null) {
 			points = new ArrayList<>();
-		} else if (getType() == MoveType.MOVE) {
+		} else if (getType() == MoveType.MOVE || getType() == MoveType.KAMIKAZE) {
 			points = ship.getValidMovePoints();
 		} else if (getType() == MoveType.TURN) {
 			points = ship.getValidTurnPoints();
