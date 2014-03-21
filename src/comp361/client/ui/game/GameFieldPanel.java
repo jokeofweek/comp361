@@ -238,6 +238,15 @@ public class GameFieldPanel extends JPanel implements Observer {
 		int maxHealth = ship.getMaxHealthPerSquare();
 		int health;
 
+		if (ship.getSize() == 1) {
+			g.setColor(Color.black);
+			g.fillRect(ship.getPosition().x * Constants.TILE_SIZE, 
+					ship.getPosition().y * Constants.TILE_SIZE,
+					Constants.TILE_SIZE,
+					Constants.TILE_SIZE);
+			return;
+		}
+		
 		ResourceManager rm = ResourceManager.getInstance();
 		List<Point> points = ship.getShipLine().getPoints();
 

@@ -72,13 +72,15 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			if (context.getShip().hasTorpedoes()) {
 				weapons.add("Torpedoes");
 			}
-			String weaponStr = weapons.get(0);
-			weapons.remove(0);
-			for (String weapon : weapons) {
-				weaponStr += ", " + weapon;
+			if (weapons.size() > 0) {
+				String weaponStr = weapons.get(0);
+				weapons.remove(0);
+				for (String weapon : weapons) {
+					weaponStr += ", " + weapon;
+				}
+				labelContainer.add(new JLabel(weapons.size() == 0 ? "Weapon:" : "Weapons:"));
+				labelContainer.add(new JLabel(weaponStr));
 			}
-			labelContainer.add(new JLabel(weapons.size() == 0 ? "Weapon:" : "Weapons:"));
-			labelContainer.add(new JLabel(weaponStr));
 			
 			// Build armor label
 			labelContainer.add(new JLabel("Armor: " + (context.getShip().getArmor() == ArmorType.HEAVY ? "Heavy" : "Normal")));
@@ -101,9 +103,12 @@ public class ShipInfoPanel extends JPanel implements Observer {
 				actionButtons.add(moveShipButton);
 			}
 			
-			JButton turnShipButton = new JButton("Turn");
-			turnShipButton.addActionListener(new MoveContextActionListener(MoveType.TURN));
-			actionButtons.add(turnShipButton);
+			// If the ship isn't size 1, then we can turn
+			if (context.getShip().getSize() > 1) {
+				JButton turnShipButton = new JButton("Turn");
+				turnShipButton.addActionListener(new MoveContextActionListener(MoveType.TURN));
+				actionButtons.add(turnShipButton);
+			}
 			
 			if (context.getShip().getCannonType() != CannonType.NONE) {
 				JButton fireCannonButton = new JButton("Fire Cannon");
