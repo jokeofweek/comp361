@@ -73,6 +73,7 @@ public class EventTooltipPanel extends JPanel implements Observer {
 							SwagFactory.style(causeLabel);
 							labelContainer.add(causeLabel);
 						}
+
 						JLabel effectLabel = new JLabel(event.getEffect().toString());
 						if (event.getEffect() == Effect.SHIP_SUNK) {
 							effectLabel.setText(event.getEffect().toString().replace("#", event.getVictimShip().getName()));

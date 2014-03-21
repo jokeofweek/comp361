@@ -1036,7 +1036,7 @@ public class Ship {
 	public Set<Point> getValidMovePoints() {
 
 		Set<Point> points = new HashSet<Point>();
-
+		
 		if (this.facing == Direction.UP) {
 			// The point below (behind) the ship
 			int backY = this.position.y + this.size;
@@ -1448,7 +1448,7 @@ public class Ship {
 	
 	public void explode(List<GameEvent> events) {
 		// Add the event at the ships point
-		events.add(new GameEvent(getPosition(), Cause.KAMIKAZE, null, this));
+		events.add(new GameEvent(getPosition(), Cause.KAMIKAZE, Effect.SHIP_EXPLODED, this));
 		
 		Point[] offsets = new Point[]{
 				new Point(position.x - 1, position.y - 1),
@@ -1460,6 +1460,38 @@ public class Ship {
 				new Point(position.x + 1, position.y),
 				new Point(position.x + 1, position.y + 1),
 		};
+
+		// Damage all surrounding squares
+		List<Point> damagedPoints = new ArrayList<>();
+		List<Ship> damagedShips = new ArrayList<Ship>();
+		for (Point p : offsets) {
+			// Test for ships
+			for (Ship s : game.getShips()) {
+				if (s.pointBelongsToShip(p)) {
+					int healthIndex = s.getShipLine().getPoints().indexOf(p);
+
+					s.health[healthIndex] = 0;
+					damagedPoints.add(p);
+					damagedShips.add(s);
+					break;
+				}
+			}
+			// Test for base
+			if (game.getBasePoints(game.getP1()).contains(p) || 
+					game.getBasePoints(game.getP2()).contains(p)) {
+				game.getField().damageBase(p);
+				events.add(new GameEvent(p, Cause.KAMIKAZE, Effect.BASE_DESTROYED, null));
+			}
+		}
+		
+		// Need to show game events after in case we hit a ship twice, so that one effect
+		// doesn't show hit and the other sunk.
+		for (int i = 0; i < damagedPoints.size(); i++) {
+			events.add(new GameEvent(damagedPoints.get(i), Cause.KAMIKAZE,
+					damagedShips.get(i).isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, 
+					damagedShips.get(i)));
+		}
+		 
 		
 		// Destroy the kamikaze ship after
 		for (int i = 0; i < health.length; i++) {

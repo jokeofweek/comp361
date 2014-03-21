@@ -237,22 +237,23 @@ public class GameFieldPanel extends JPanel implements Observer {
 		Direction dir = ship.getDirection();
 		int maxHealth = ship.getMaxHealthPerSquare();
 		int health;
-
-		if (ship.getSize() == 1) {
-			g.setColor(Color.black);
-			g.fillRect(ship.getPosition().x * Constants.TILE_SIZE, 
-					ship.getPosition().y * Constants.TILE_SIZE,
-					Constants.TILE_SIZE,
-					Constants.TILE_SIZE);
-			return;
-		}
-		
 		ResourceManager rm = ResourceManager.getInstance();
 		List<Point> points = ship.getShipLine().getPoints();
 
+		if (ship.getSize() == 1) {
+			if (isOwner || fov.contains(ship.getPosition()) || GOD_MODE) {
+				g.setColor(Color.black);
+				g.fillRect(ship.getPosition().x * Constants.TILE_SIZE, 
+						ship.getPosition().y * Constants.TILE_SIZE,
+						Constants.TILE_SIZE,
+						Constants.TILE_SIZE);
+			}
+			return;
+		}	
+		
 		Point head = points.remove(points.size() - 1);
 		Point tail = points.remove(0);
-
+		
 		// Render ship head
 		if (isOwner || fov.contains(head) || GOD_MODE) {
 			health = ship.getHealth(ship.getSize()-1);
