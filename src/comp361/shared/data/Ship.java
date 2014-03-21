@@ -24,23 +24,23 @@ public class Ship {
 
 	public static final Ship CRUISER_TEMPLATE = new Ship("Cruiser", 5, 10, 0,
 			ArmorType.HEAVY, CannonType.HEAVY, false, false, false, false, false, false,
-			false, new BeforeTailRange(10, 3), null, new CenterRange(15, 11));
+			false, false, new BeforeTailRange(10, 3), null, new CenterRange(15, 11));
 	public static final Ship DESTROYER_TEMPLATE = new Ship("Destroyer", 4, 8,
 			0, ArmorType.NORMAL, CannonType.NORMAL, false, false, false, false, true,
-			false, false, new BeforeTailRange(8, 3), null, new CenterRange(12, 9));
+			false, false, false, new BeforeTailRange(8, 3), null, new CenterRange(12, 9));
 	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo Boat", 3, 9, 0,
 			ArmorType.NORMAL, CannonType.NORMAL, true, false, false, false, true, false,
-			true, new BeforeTailRange(6, 3), null, new TailRange(5, 5));
+			true, false, new BeforeTailRange(6, 3), null, new TailRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
 			5, ArmorType.HEAVY, CannonType.NORMAL, false, true, false, false, true, true,
-			false, new CenterRange(6, 5), null, new CenterRange(4, 5));
+			false, false, new CenterRange(6, 5), null, new CenterRange(4, 5));
 	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3,
 			0, ArmorType.NORMAL, CannonType.NORMAL, true, false, true, false,  false, false,
-			true, new BeforeTailRange(6, 3), new BeforeTailRange(12, 3), new CenterRange(
+			true, false, new BeforeTailRange(6, 3), new BeforeTailRange(12, 3), new CenterRange(
 					5, 3));
 	public static final Ship KAMIKAZE_BOAT_TEMPLATE = new Ship("Kamikaze Boat", 1, 2,
 			0, ArmorType.HEAVY, CannonType.NONE, false, false, false, false,  false, false,
-			false, new CenterRange(5, 5), null, null);
+			false, true, new CenterRange(5, 5), null, null);
 
 	private static final Ship[] DEFAULT_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.CRUISER_TEMPLATE,
 		Ship.DESTROYER_TEMPLATE, Ship.DESTROYER_TEMPLATE,
@@ -76,6 +76,7 @@ public class Ship {
 	private boolean hasTorpedoes;
 	private boolean hasSonar;
 	private boolean canTurn180;
+	private boolean canKamikaze;
 	private Range radar;
 	private Range longRadar;
 	private Range cannonRange;
@@ -87,8 +88,8 @@ public class Ship {
 	public Ship(String name, int size, int speed, int mineCount,
 			ArmorType armor, CannonType cannonType, boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
-			boolean hasTorpedoes, boolean hasSonar,
-			boolean canTurn180, Range radar, Range longRadar, Range cannonRange) {
+			boolean hasTorpedoes, boolean hasSonar, boolean canTurn180, boolean canKamikaze, 
+			Range radar, Range longRadar, Range cannonRange) {
 		super();
 		this.name = name;
 		this.size = size;
@@ -107,13 +108,14 @@ public class Ship {
 		this.radar = radar;
 		this.longRadar = longRadar;
 		this.cannonRange = cannonRange;
+		this.canKamikaze = canKamikaze;
 		Arrays.fill(health, armor.getHealthPointsPerSquare());
 	}
 
 	public Ship clone(Game game, String owner) {
 		Ship s = new Ship(name, size, speed, mineCount, armor, cannonType, turnsOnCenter,
 				isMineLayer, hasLongRangeRadar, longRangeRadarEnabled,
-				hasTorpedoes, hasSonar, canTurn180, radar,
+				hasTorpedoes, hasSonar, canTurn180, canKamikaze, radar,
 				longRadar, cannonRange);
 		s.owner = owner;
 		s.game = game;
@@ -225,6 +227,13 @@ public class Ship {
 	 */
 	public boolean canTurn180() {
 		return this.canTurn180;
+	}
+	
+	/**
+	 * @return true if the ship can kamikaze.
+	 */
+	public boolean canKamikaze() {
+		return this.canKamikaze;
 	}
 
 	/**
@@ -1198,7 +1207,7 @@ public class Ship {
 	/**
 	 * @return a set containing the points directly adjacent to the ship.
 	 */
-	private Set<Point> getSurroundingPoints() {
+	public Set<Point> getSurroundingPoints() {
 		Set<Point> points = new HashSet<>();
 
 		// Get the points all along the ship line
@@ -1435,5 +1444,26 @@ public class Ship {
 		setDirection(left ? facing.getCounterClockwise() : facing.getClockwise());
 		return true;
 		
+	}
+	
+	public void explode(List<GameEvent> events) {
+		// Add the event at the ships point
+		events.add(new GameEvent(getPosition(), Cause.KAMIKAZE, null, this));
+		
+		Point[] offsets = new Point[]{
+				new Point(position.x - 1, position.y - 1),
+				new Point(position.x - 1, position.y),
+				new Point(position.x - 1, position.y + 1),
+				new Point(position.x, position.y - 1),
+				new Point(position.x, position.y + 1),
+				new Point(position.x + 1, position.y - 1),
+				new Point(position.x + 1, position.y),
+				new Point(position.x + 1, position.y + 1),
+		};
+		
+		// Destroy the kamikaze ship after
+		for (int i = 0; i < health.length; i++) {
+			health[i] = 0;
+		}
 	}
 }

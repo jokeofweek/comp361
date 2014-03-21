@@ -3,7 +3,9 @@ package comp361.client.data.event;
 public enum Cause {
 	CANNON("Cannon"),
 	TORPEDO("Torpedo"),
+	KAMIKAZE("Kamikaze"),
 	MINE("Mine");
+	
 	
 	private String text;
 	private Cause(String text) {

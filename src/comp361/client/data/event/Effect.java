@@ -2,6 +2,7 @@ package comp361.client.data.event;
 
 public enum Effect {
 	SHIP_COLLISION("Ship Collision"),
+	SHIP_EXPLODED("Ship Exploded"),
 	MINE_EXPLODED("Mine Exploded"),
 	MINE_DESTROYED("Mine Destroyed"),
 	SHIP_HIT("Ship Hit"), 
