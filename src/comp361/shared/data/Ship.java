@@ -201,6 +201,14 @@ public class Ship {
 	}
 
 	/**
+	 * @return the range of the radar
+	 */
+	public Range getRadarRange()
+	{
+		return this.radar;
+	}
+	
+	/**
 	 * @param mineCount
 	 *            the new number of mines the ship carries
 	 */
@@ -1036,6 +1044,10 @@ public class Ship {
 	public Set<Point> getValidMovePoints() {
 
 		Set<Point> points = new HashSet<Point>();
+		
+		//special case for Kamikaze boat, where movement range == radar range
+		if(this.canKamikaze())
+			return this.getRadarRange().getPoints(this);
 
 		if (this.facing == Direction.UP) {
 			// The point below (behind) the ship
