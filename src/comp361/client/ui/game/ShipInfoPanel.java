@@ -1,7 +1,6 @@
 package comp361.client.ui.game;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,8 +10,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,6 +20,7 @@ import comp361.client.data.SelectionContext;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.ArmorType;
+import comp361.shared.data.CannonType;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
 
@@ -68,7 +66,9 @@ public class ShipInfoPanel extends JPanel implements Observer {
 
 			// Build list of weapons
 			List<String> weapons = new ArrayList<>();
-			weapons.add(context.getShip().hasHeavyCannon() ? "Heavy Cannon" : "Cannon");
+			if (context.getShip().getCannonType() != CannonType.NONE) {
+				weapons.add(context.getShip().getCannonType() == CannonType.HEAVY ? "Heavy Cannon" : "Cannon");
+			}
 			if (context.getShip().hasTorpedoes()) {
 				weapons.add("Torpedoes");
 			}
@@ -105,9 +105,11 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			turnShipButton.addActionListener(new MoveContextActionListener(MoveType.TURN));
 			actionButtons.add(turnShipButton);
 			
-			JButton fireCannonButton = new JButton("Fire Cannon");
-			fireCannonButton.addActionListener(new MoveContextActionListener(MoveType.CANNON));
-			actionButtons.add(fireCannonButton);
+			if (context.getShip().getCannonType() != CannonType.NONE) {
+				JButton fireCannonButton = new JButton("Fire Cannon");
+				fireCannonButton.addActionListener(new MoveContextActionListener(MoveType.CANNON));
+				actionButtons.add(fireCannonButton);
+			}
 			
 			if (context.getShip().hasTorpedoes()) {
 				JButton fireTorpedoButton = new JButton("Fire Torpedo");

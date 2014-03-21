@@ -23,19 +23,19 @@ import comp361.shared.data.range.TailRange;
 public class Ship {
 
 	public static final Ship CRUISER_TEMPLATE = new Ship("Cruiser", 5, 10, 0,
-			ArmorType.HEAVY, false, false, false, false, true, false, false,
+			ArmorType.HEAVY, CannonType.HEAVY, false, false, false, false, false, false,
 			false, new BeforeTailRange(10, 3), null, new CenterRange(15, 11));
 	public static final Ship DESTROYER_TEMPLATE = new Ship("Destroyer", 4, 8,
-			0, ArmorType.NORMAL, false, false, false, false, false, true,
+			0, ArmorType.NORMAL, CannonType.NORMAL, false, false, false, false, true,
 			false, false, new BeforeTailRange(8, 3), null, new CenterRange(12, 9));
 	public static final Ship TORPEDO_TEMPLATE = new Ship(	"Torpedo Boat", 3, 9, 0,
-			ArmorType.NORMAL, true, false, false, false, false, true, false,
+			ArmorType.NORMAL, CannonType.NORMAL, true, false, false, false, true, false,
 			true, new BeforeTailRange(6, 3), null, new TailRange(5, 5));
 	public static final Ship MINE_LAYER_TEMPLATE = new Ship("Mine Layer", 2, 6,
-			5, ArmorType.HEAVY, false, true, false, false, false, true, true,
+			5, ArmorType.HEAVY, CannonType.NORMAL, false, true, false, false, true, true,
 			false, new CenterRange(6, 5), null, new CenterRange(4, 5));
 	public static final Ship RADAR_BOAT_TEMPLATE = new Ship("Radar Boat", 3, 3,
-			0, ArmorType.NORMAL, true, false, true, false, false, false, false,
+			0, ArmorType.NORMAL, CannonType.NORMAL, true, false, true, false,  false, false,
 			true, new BeforeTailRange(6, 3), new BeforeTailRange(12, 3), new CenterRange(
 					5, 3));
 
@@ -68,7 +68,7 @@ public class Ship {
 	private boolean isMineLayer;
 	private boolean hasLongRangeRadar;
 	private boolean longRangeRadarEnabled;
-	private boolean hasHeavyCannon;
+	private CannonType cannonType;
 	private boolean hasTorpedoes;
 	private boolean hasSonar;
 	private boolean canTurn180;
@@ -81,9 +81,9 @@ public class Ship {
 	}
 
 	public Ship(String name, int size, int speed, int mineCount,
-			ArmorType armor, boolean turnsOnCenter, boolean isMineLayer,
+			ArmorType armor, CannonType cannonType, boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
-			boolean hasHeavyCannon, boolean hasTorpedoes, boolean hasSonar,
+			boolean hasTorpedoes, boolean hasSonar,
 			boolean canTurn180, Range radar, Range longRadar, Range cannonRange) {
 		super();
 		this.name = name;
@@ -96,7 +96,7 @@ public class Ship {
 		this.isMineLayer = isMineLayer;
 		this.hasLongRangeRadar = hasLongRangeRadar;
 		this.longRangeRadarEnabled = longRangeRadarEnabled;
-		this.hasHeavyCannon = hasHeavyCannon;
+		this.cannonType = cannonType;
 		this.hasTorpedoes = hasTorpedoes;
 		this.hasSonar = hasSonar;
 		this.canTurn180 = canTurn180;
@@ -107,9 +107,9 @@ public class Ship {
 	}
 
 	public Ship clone(Game game, String owner) {
-		Ship s = new Ship(name, size, speed, mineCount, armor, turnsOnCenter,
+		Ship s = new Ship(name, size, speed, mineCount, armor, cannonType, turnsOnCenter,
 				isMineLayer, hasLongRangeRadar, longRangeRadarEnabled,
-				hasHeavyCannon, hasTorpedoes, hasSonar, canTurn180, radar,
+				hasTorpedoes, hasSonar, canTurn180, radar,
 				longRadar, cannonRange);
 		s.owner = owner;
 		s.game = game;
@@ -210,10 +210,10 @@ public class Ship {
 	}
 
 	/**
-	 * @return true if the ship is equipped with a heavy cannon, false otherwise
+	 * @return the type of Cannon that the ship has.
 	 */
-	public boolean hasHeavyCannon() {
-		return this.hasHeavyCannon;
+	public CannonType getCannonType() {
+		return cannonType;
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class Ship {
 				boolean hit = false;
 				for (Ship s : this.game.getShips()) { 
 					if (s.pointBelongsToShip(p)) {
-						s.hitWithCannon(p, this.hasHeavyCannon);
+						s.hitWithCannon(p, this.cannonType);
 						
 						// Log the event
 						hit = true;
@@ -276,12 +276,11 @@ public class Ship {
 	/**
 	 * @param p
 	 *            the target point of the enemy cannon ball
-	 * @param isHeavyCannon
-	 *            true if the enemy cannon ball is HEAVY, false otherwise
+	 * @param cannonType the type of the cannon.
 	 */
-	public void hitWithCannon(Point p, boolean isHeavyCannon) {
+	public void hitWithCannon(Point p, CannonType cannonType) {
 		if (health[getShipLine().getPoints().indexOf(p)] > 0) {
-			if (isHeavyCannon) {
+			if (cannonType == CannonType.HEAVY) {
 				health[getShipLine().getPoints().indexOf(p)] = 0;
 			} else {
 				health[getShipLine().getPoints().indexOf(p)]--;
