@@ -795,8 +795,8 @@ public class Ship {
 		
 		// Get the furthest possible position
 		Line l = new Line(points.get(0), points.get(points.size() - 1));
-		// Test if we are moving forwards or shifting
-		if (requiresShift(p)) {
+		// Test if we are moving forwards or shifting (shifts only if it's not a kamikaze boat)
+		if (requiresShift(p) && !this.canKamikaze) {
 			Point collisionPoint = shiftShip(p);
 			if(collisionPoint != null){
 				events.add(new GameEvent(collisionPoint, null, Effect.SHIP_COLLISION, null));
