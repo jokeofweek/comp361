@@ -8,16 +8,11 @@
 			<attribute name="javadoc_location" value="http://kryonet.googlecode.com/svn/api/v2/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/minueto.jar" sourcepath="src-minueto">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/D:/Coding/Workspace/comp361/javadoc-minueto/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.2.1.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/comp361/javadoc/commons-lang3-3.2.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

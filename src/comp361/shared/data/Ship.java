@@ -360,15 +360,14 @@ public class Ship {
 		List<Point> damagedPoints = new ArrayList<Point>();
 		int startIndex = getShipLine().getPoints().indexOf(p); 
 		// damage the right square
-		if (health[getShipLine().getPoints().indexOf(p)] > 0) {
-			health[getShipLine().getPoints().indexOf(p)]--;
+		if (health[startIndex] > 0) {
+			health[startIndex]--;
 		}
 		damagedPoints.add(p);
 		// if perpendicular, damage another adjacent square
 		if (shootingDirection.isPerpendicularTo(facing)) {
 			// Build a list of the two adjacent points
 			List<Integer> indices = Arrays.asList(startIndex - 1, startIndex + 1);
-			Collections.shuffle(indices);
 			for (int i = 0; i < indices.size(); i++) {
 				if (indices.get(i) >= 0 && indices.get(i) < health.length) {
 					// If the square still has some health, pick it for damage
