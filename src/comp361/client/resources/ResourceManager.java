@@ -26,7 +26,7 @@ public class ResourceManager {
 	private final String TOP = "top";
 
 	// Preload images that don't change
-	private final Image MINE_IMAGE = images.getImage("mine-anim");
+	private final Image MINE_IMAGE = images.getImage("mine");
 	private final Image POI_IMAGE = images.getImage("poi");
 	private final Image REEF_IMAGE = images.getImage("reef");
 	private final Image WATER_IMAGE = images.getImage("water");
