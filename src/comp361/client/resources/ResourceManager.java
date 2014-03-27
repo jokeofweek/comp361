@@ -30,7 +30,7 @@ public class ResourceManager {
 	private final Image MINE_IMAGE = images.getImage("mine-anim");
 	private final Image POI_IMAGE = images.getImage("poi");
 	private final Image REEF_IMAGE = images.getImage("reef");
-	private final Image WATER_IMAGE = images.getImage("bg-anim");
+	private final Image WATER_IMAGE = images.getImage("water");
 
 	public static ResourceManager getInstance() {
 		if (instance == null) {
