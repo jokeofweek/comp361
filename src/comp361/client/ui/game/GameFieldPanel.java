@@ -45,9 +45,9 @@ import comp361.shared.packets.shared.GameMovePacket;
 public class GameFieldPanel extends JPanel implements Observer {
 
 	private static boolean GOD_MODE = false;
-	
+
 	// Transforms
-	private static final RescaleOp SUNKEN_SHIP_TRANSFORM = 
+	private static final RescaleOp SUNKEN_SHIP_TRANSFORM =
 			new RescaleOp(new float[]{0f, 0f, 0f, Constants.SUNKEN_SHIP_ALPHA}, new float[4], null);
 
 	private GameClient client;
@@ -60,7 +60,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 	private int alphaPulseCounter = 0;
 	private boolean alphaPulsingForwards = true;
 	private Color[] sonarColors = new Color[Constants.PULSE_ALPHA_INTERVALS];
-	
+
 	// Cached field of vision
 	private Set<Point> fov;
 	private Set<Point> sonarFov;
@@ -93,13 +93,13 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		// Calculate the FOV
 		recalculateFieldsOfVision();
-		
+
 		// Setup the pulse colors
 		for (int i = 0; i < sonarColors.length; i++) {
 			sonarColors[i] = new Color(Constants.SONAR_RED, Constants.SONAR_GREEN,
 					Constants.SONAR_BLUE, Constants.SONAR_ALPHA + Constants.PULSE_ALPHA_DELTA * i);
 		}
-		
+
 		new Timer(150, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -130,7 +130,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		drawTiles(g2d, sonarFov);
 
 		drawLongRangeRadarOutlines(g2d);
-		
+
 		// Draw ship outline for selected ship
 		if (context.getShip() != null) {
 			drawShipSelection(g2d, context.getShip());
@@ -140,14 +140,14 @@ public class GameFieldPanel extends JPanel implements Observer {
 		if (!GOD_MODE) {
 			drawFogOfWar(g2d, fov);
 		}
-		
+
 		// Draw the game events
 		drawGameEvents(g2d, fov);
 		drawSelectionContext(g2d);
-		
+
 	}
 
-	
+
 	private void recalculateFieldsOfVision() {
 		List<Ship> ships = game.getPlayerShips(isP1 ? game.getP1() : game
 				.getP2());
@@ -174,7 +174,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		}
 	}
-	
+
 	private void drawShips(Graphics g, Set<Point> fov) {
 		// Draw sunken ships first
 		Set<Ship> liveShips = new HashSet<>();
@@ -185,11 +185,11 @@ public class GameFieldPanel extends JPanel implements Observer {
 				liveShips.add(ship);
 			}
 		}
-		
+
 		// Render live ships
 		for (Ship ship : liveShips) {
 			drawShip(g, ship, isP1 == ship.getOwner().equals(game.getP1()), false, fov);
-		}		
+		}
 	}
 
 	public void drawTiles(Graphics2D g, Set<Point> sonarFov) {
@@ -243,17 +243,17 @@ public class GameFieldPanel extends JPanel implements Observer {
 		if (ship.getSize() == 1) {
 			if (isOwner || fov.contains(ship.getPosition()) || GOD_MODE) {
 				g.setColor(Color.black);
-				g.fillRect(ship.getPosition().x * Constants.TILE_SIZE, 
+				g.fillRect(ship.getPosition().x * Constants.TILE_SIZE,
 						ship.getPosition().y * Constants.TILE_SIZE,
 						Constants.TILE_SIZE,
 						Constants.TILE_SIZE);
 			}
 			return;
-		}	
-		
+		}
+
 		Point head = points.remove(points.size() - 1);
 		Point tail = points.remove(0);
-		
+
 		// Render ship head
 		if (isOwner || fov.contains(head) || GOD_MODE) {
 			health = ship.getHealth(ship.getSize()-1);
@@ -263,7 +263,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			// Get image as buffered image
 			img = rm.getShipHeadImage(dir, health, maxHealth, isOwner);
 			buff = ResourceManager.toBufferedImage(img, this);
-			g2.drawImage(buff, op, x, y);		
+			g2.drawImage(buff, op, x, y);
 		}
 
 		// Render ship tail
@@ -271,7 +271,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 			health = ship.getHealth(0);
 			int x = (int)tail.x * Constants.TILE_SIZE;
 			int y = (int)tail.y * Constants.TILE_SIZE;
-			
+
 			// Get image as buffered image
 			img = rm.getShipTailImage(dir, health, maxHealth, isOwner);
 			buff = ResourceManager.toBufferedImage(img, this);
@@ -286,7 +286,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 				int x = (int)body.x * Constants.TILE_SIZE;
 				int y = (int)body.y * Constants.TILE_SIZE;
 
-				img = rm.getShipBodyImage(dir, health, maxHealth);
+				if (ship.hasLongRangeRadar()) {
+					img = rm.getRadarBodyImage(dir, health, maxHealth);
+				} else {
+					img = rm.getShipBodyImage(dir, health, maxHealth);
+				}
+
 				buff = ResourceManager.toBufferedImage(img, this);
 				g2.drawImage(buff, op, x, y);
 			}
@@ -295,7 +300,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 	private void drawReef(Graphics2D g, int x, int y) {
 		g.drawImage(ResourceManager.getInstance().getReefImage(), x
-				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, null);
+				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
 
 	private void drawMine(Graphics2D g, int x, int y) {
@@ -313,7 +318,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		g.drawImage(ResourceManager.getInstance().getWaterImage(), x
 				* Constants.TILE_SIZE, y * Constants.TILE_SIZE, this);
 	}
-	
+
 	private void drawGameEvents(Graphics g, Set<Point> fov) {
 		Graphics2D g2 = (Graphics2D) g;
 
@@ -324,12 +329,12 @@ public class GameFieldPanel extends JPanel implements Observer {
 			int x = e.getPoint().x * Constants.TILE_SIZE;
 			int y = e.getPoint().y * Constants.TILE_SIZE;
 
-			g2.drawImage(buff, x, y, null);
-			
+			g2.drawImage(buff, x, y, this);
+
 			if (fov.contains(e.getPoint()) && !e.getPlayedSound()) {
 				SoundManager sm = SoundManager.getInstance();
 				e.setPlayedSound(true);
-				
+
 				if (e.getEffect() == Effect.HIT_WATER) {
 					sm.play("hit-water");
 				} else {
@@ -398,7 +403,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 		for (Ship s : game.getShips()) {
 			if (!s.isSunk() && s.getOwner().equals(isP1 ? game.getP1() : game.getP2()) || GOD_MODE) {
 				if (s.hasLongRangeRadar() && s.isLongRangeRadarEnabled()) {
-					// Render outline around rectangle for long range radar	
+					// Render outline around rectangle for long range radar
 					Rectangle r = s.getActiveRadar().getRectangle(s);
 					g.drawRect(r.x * Constants.TILE_SIZE, r.y * Constants.TILE_SIZE,
 							(int)r.getWidth() * Constants.TILE_SIZE, (int)r.getHeight() * Constants.TILE_SIZE);
@@ -458,10 +463,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 			// Calculate the cursor position.
 			final int newX = e.getX() / Constants.TILE_SIZE;
 			final int newY = e.getY() / Constants.TILE_SIZE;
-			
+
 			// Repaint if it changed
 			boolean changed = (newX != cursorX || newY != cursorY);
-			
+
 
 			if (changed) {
 				// If the mouse, see if we have any game events using that position
@@ -474,7 +479,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 					}
 				}
 				eventContext.setEvent(foundEvent);
-				
+
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {

@@ -65,6 +65,12 @@ public class ResourceManager {
 		return images.getImage(join(SHIP, BODY, direction, state));
 	}
 
+	public Image getRadarBodyImage(Direction dir, int health, int maxHealth) {
+		String state = getState(health, maxHealth);
+		String direction = String.valueOf(dir.ordinal() + 1);
+		return images.getImage(join(RADAR, BODY, direction, state));
+	}
+
 	public Image getShipHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String direction = String.valueOf(dir.ordinal() + 1);
