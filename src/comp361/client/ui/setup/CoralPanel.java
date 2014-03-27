@@ -43,12 +43,14 @@ public class CoralPanel extends JPanel implements Observer {
 	private int selectedShip = 0;
 	private boolean[][] reefMask;
 	private ReadyActionListener readyActionListener;
+	private int shipInventory;
 
 	public CoralPanel(int shipInventory, CoralReefGenerator reefGenerator, ReadyActionListener readyActionListener) {
 		this.reefGenerator = reefGenerator;
 		this.reefMask = reefGenerator.getReef();
 		this.readyActionListener = readyActionListener;
-				
+		this.shipInventory = shipInventory;
+
 		// Setup the widths and positions
 		shipWidths = new int[Ship.SHIP_INVENTORIES[shipInventory].length];
 		shipPositions = new int[Ship.SHIP_INVENTORIES[shipInventory].length];
@@ -56,14 +58,14 @@ public class CoralPanel extends JPanel implements Observer {
 			shipWidths[i] = Ship.SHIP_INVENTORIES[shipInventory][i].getSize();
 			shipPositions[i] = (i + 1);
 		}
-		
-		
+
+
 		// Add self as listener to the reef
 		this.reefGenerator.addObserver(this);
-		
+
 		// Add the mouse listener
 		this.addMouseListener(new CoralMouseListener());
-		
+
 		// Set the size to be the size of the field plus ten columns on the left
 		// for the base.
 		SwagFactory.style(this);
@@ -73,14 +75,14 @@ public class CoralPanel extends JPanel implements Observer {
 		setMaximumSize(d);
 		setMinimumSize(d);
 	}
-	
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+
 		BufferedImage buffer = new BufferedImage(PANEL_WIDTH, PANEL_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D) buffer.getGraphics();
-		
+
 
 		g2d.setColor(Color.white);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -90,7 +92,7 @@ public class CoralPanel extends JPanel implements Observer {
 		drawValidShipPositionSquares(g2d);
 		drawSelectedShipHighlight(g2d);
 		drawShips(g2d);
-		
+
 		g.drawImage(buffer, 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
 	}
 
@@ -112,7 +114,7 @@ public class CoralPanel extends JPanel implements Observer {
 					// Calculate panel x and y position
 					int xPos = (x + Constants.CORAL_X_OFFSET) * Constants.TILE_SIZE;
 					int yPos = y * Constants.TILE_SIZE;
-					g.drawImage(reefImage, xPos, yPos, null);
+					g.drawImage(reefImage, xPos, yPos, this);
 				}
 			}
 		}
@@ -135,12 +137,12 @@ public class CoralPanel extends JPanel implements Observer {
 				Constants.TILE_SIZE, Constants.TILE_SIZE);
 
 		// Draw valid ship position below base
-		g.fillRect(0, (Constants.BASE_HEIGHT + BASE_OFFSET) * Constants.TILE_SIZE, 
+		g.fillRect(0, (Constants.BASE_HEIGHT + BASE_OFFSET) * Constants.TILE_SIZE,
 				Constants.TILE_SIZE, Constants.TILE_SIZE);
 
 		// Draw valid ship positions along right side of base
 		for (int y = 0; y < Constants.BASE_HEIGHT; y++) {
-			g.fillRect(Constants.TILE_SIZE, (y + BASE_OFFSET) * Constants.TILE_SIZE, 
+			g.fillRect(Constants.TILE_SIZE, (y + BASE_OFFSET) * Constants.TILE_SIZE,
 					Constants.TILE_SIZE, Constants.TILE_SIZE);
 		}
 
@@ -171,21 +173,28 @@ public class CoralPanel extends JPanel implements Observer {
 
 		for (int i = 0; i < shipPositions.length; i++) {
 			renderOffsets = getShipRenderOffsets(shipPositions[i]);
-			drawShip(g, renderOffsets, shipWidths[i]);
+			drawShip(g, renderOffsets, shipWidths[i], i);
 		}
 	}
 
-	private void drawShip(Graphics2D g, int[] offsets, int shipWidth) {
+	private void drawShip(Graphics2D g, int[] offsets, int shipWidth, int shipIndex) {
 		ResourceManager rm = ResourceManager.getInstance();
 		Image headImage = rm.getShipHeadImage(Direction.RIGHT, 1, 1, true);
-		g.drawImage(headImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
-		
+		g.drawImage(headImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], this);
+
 		Image tailImage = rm.getShipTailImage(Direction.RIGHT, 1, 1, true);
-		g.drawImage(tailImage, offsets[0], offsets[1], null);
-		
-		Image bodyImage = rm.getShipBodyImage(Direction.RIGHT, 1, 1);
+		g.drawImage(tailImage, offsets[0], offsets[1], this);
+
+		Image bodyImage;
+		if (Ship.SHIP_INVENTORIES[shipInventory][shipIndex].hasLongRangeRadar()) {
+			bodyImage = rm.getRadarBodyImage(Direction.RIGHT, 1, 1);
+		}
+		else {
+			bodyImage = rm.getShipBodyImage(Direction.RIGHT, 1, 1);
+		}
+
 		for (int i = 1; i < shipWidth - 1; i++) {
-			g.drawImage(bodyImage, (i * Constants.TILE_SIZE) + offsets[0], offsets[1], null);
+			g.drawImage(bodyImage, (i * Constants.TILE_SIZE) + offsets[0], offsets[1], this);
 		}
 	}
 
@@ -204,7 +213,7 @@ public class CoralPanel extends JPanel implements Observer {
 			(y + baseOffset) * Constants.TILE_SIZE,
 		};
 	}
-	
+
 	/**
 	 * This searches through all ships to see if there is a ship locted at a given
 	 * point in the grid.
@@ -225,9 +234,9 @@ public class CoralPanel extends JPanel implements Observer {
 		}
 		return -1;
 	}
-	
+
 	/**
-	 * This searches all slots where a ship can be placed to see if one was 
+	 * This searches all slots where a ship can be placed to see if one was
 	 * clicked on.
 	 * @param x the x position clicked
 	 * @param y the y position clicked
@@ -246,7 +255,7 @@ public class CoralPanel extends JPanel implements Observer {
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 		// Repaint on update from the reef generator
@@ -272,12 +281,12 @@ public class CoralPanel extends JPanel implements Observer {
 			if (selectedShip != -1 && slotAtPosition != -1) {
 				shipPositions[selectedShip] = slotAtPosition;
 				selectedShip = -1;
-				
+
 				// No longer ready!
 				if (readyActionListener.isReady()) {
 					readyActionListener.actionPerformed(null);
 				}
-				
+
 				repaint();
 				return;
 			}
@@ -289,7 +298,7 @@ public class CoralPanel extends JPanel implements Observer {
 		repaint();
 		return true;
 	}
-	
+
 	public int[] getShipPositions() {
 		return shipPositions;
 	}
