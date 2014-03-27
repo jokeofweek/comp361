@@ -3,6 +3,7 @@ package comp361.server;
 import java.io.IOException;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import comp361.server.data.AccountManager;
 import comp361.server.data.GameDescriptorManager;
@@ -43,7 +44,14 @@ public class GameServer {
 		server = new Server() {
 			protected Connection newConnection() {
 				logger.debug("Connection established.");
-				return new Session(self);
+				Session s = new Session(self);
+				s.addListener(new Listener() {
+					@Override
+					public void connected(Connection conn) {
+						conn.setTimeout(5 * 60000);
+					}
+				});
+				return s;
 			};			
 		};
 
