@@ -9,7 +9,8 @@ import comp361.shared.data.Direction;
 
 public class ResourceManager {
 	private static ResourceManager instance;
-	
+	private static final ImageManager images = ImageManager.getInstance();
+
 	private final String ANIM = "anim";
 	private final String BASE = "base";
 	private final String BLUE = "blue";
@@ -19,16 +20,17 @@ public class ResourceManager {
 	private final String DEAD = "dead";
 	private final String HEAD = "head";
 	private final String HIT = "hit";
+	private final String RADAR = "radar";
 	private final String RED = "red";
 	private final String SHIP = "ship";
 	private final String TAIL = "tail";
 	private final String TOP = "top";
-	
+
 	// Preload images that don't change
-	private final Image MINE_IMAGE = ImageManager.getInstance().getImage("mine-anim");
-	private final Image POI_IMAGE = ImageManager.getInstance().getImage("poi");
-	private final Image REEF_IMAGE = ImageManager.getInstance().getImage("reef");
-	private final Image WATER_IMAGE = ImageManager.getInstance().getImage("bg-anim");
+	private final Image MINE_IMAGE = images.getImage("mine-anim");
+	private final Image POI_IMAGE = images.getImage("poi");
+	private final Image REEF_IMAGE = images.getImage("reef");
+	private final Image WATER_IMAGE = images.getImage("bg-anim");
 
 	public static ResourceManager getInstance() {
 		if (instance == null) {
@@ -60,27 +62,27 @@ public class ResourceManager {
 	public Image getShipBodyImage(Direction dir, int health, int maxHealth) {
 		String state = getState(health, maxHealth);
 		String direction = String.valueOf(dir.ordinal() + 1);
-		return ImageManager.getInstance().getImage(join(SHIP, BODY, direction, state));
+		return images.getImage(join(SHIP, BODY, direction, state));
 	}
 
 	public Image getShipHeadImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String direction = String.valueOf(dir.ordinal() + 1);
 		String color = getColor(isOwner);
-		return ImageManager.getInstance().getImage(join(SHIP, HEAD, color, direction, state));
+		return images.getImage(join(SHIP, HEAD, color, direction, state));
 	}
-	
+
 	public Image getShipTailImage(Direction dir, int health, int maxHealth, boolean isOwner) {
 		String state = getState(health, maxHealth);
 		String direction = String.valueOf(dir.ordinal() + 1);
 		String color = getColor(isOwner);
-		return ImageManager.getInstance().getImage(join(SHIP, TAIL, color, direction , state));
+		return images.getImage(join(SHIP, TAIL, color, direction, state));
 	}
-	
+
 	public Image getBaseImage(int y, boolean isDestroyed) {
 		String state = isDestroyed ? DEAD : null;
 		String part;
-		
+
 		if (y == Constants.BASE_Y_OFFSET) {
 			part = TOP;
 		} else if (y == Constants.BASE_Y_OFFSET + Constants.BASE_HEIGHT - 1) {
@@ -88,10 +90,10 @@ public class ResourceManager {
 		} else {
 			part = BODY;
 		}
-		
-		return ImageManager.getInstance().getImage(join(BASE, part, ANIM, state));
+
+		return images.getImage(join(BASE, part, ANIM, state));
 	}
-	
+
 	public static BufferedImage toBufferedImage(Image image, ImageObserver o) {
 		int size = Constants.TILE_SIZE;
 		BufferedImage buffer = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
@@ -115,19 +117,19 @@ public class ResourceManager {
 
 	private String join(String... strings) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (int i = 0; i < strings.length; i++) {
 			if (strings[i] == null) {
 				continue;
 			}
-			
+
 			sb.append(strings[i]);
-			
+
 			if (i < strings.length - 1 && strings[i+1] != null) {
 				sb.append(DASH);
 			}
 		}
-		
+
 		return sb.toString();
 	}
 }
