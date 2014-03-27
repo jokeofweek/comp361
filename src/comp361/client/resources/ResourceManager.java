@@ -10,20 +10,19 @@ import comp361.shared.data.Direction;
 public class ResourceManager {
 	private static ResourceManager instance;
 	private static final ImageManager images = ImageManager.getInstance();
-
-	private final String BASE = "base";
-	private final String BLUE = "blue";
-	private final String BODY = "body";
-	private final String BOTTOM = "bottom";
-	private final String DASH = "-";
-	private final String DEAD = "dead";
-	private final String HEAD = "head";
-	private final String HIT = "hit";
-	private final String RADAR = "radar";
-	private final String RED = "red";
-	private final String SHIP = "ship";
-	private final String TAIL = "tail";
-	private final String TOP = "top";
+	private static final String BASE = "base";
+	private static final String BLUE = "blue";
+	private static final String BODY = "body";
+	private static final String BOTTOM = "bottom";
+	private static final String DASH = "-";
+	private static final String DEAD = "dead";
+	private static final String HEAD = "head";
+	private static final String HIT = "hit";
+	private static final String RADAR = "radar";
+	private static final String RED = "red";
+	private static final String SHIP = "ship";
+	private static final String TAIL = "tail";
+	private static final String TOP = "top";
 
 	// Preload images that don't change
 	private final Image MINE_IMAGE = images.getImage("mine");
