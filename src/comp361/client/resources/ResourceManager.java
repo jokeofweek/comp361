@@ -11,7 +11,6 @@ public class ResourceManager {
 	private static ResourceManager instance;
 	private static final ImageManager images = ImageManager.getInstance();
 
-	private final String ANIM = "anim";
 	private final String BASE = "base";
 	private final String BLUE = "blue";
 	private final String BODY = "body";
@@ -97,7 +96,7 @@ public class ResourceManager {
 			part = BODY;
 		}
 
-		return images.getImage(join(BASE, part, ANIM, state));
+		return images.getImage(join(BASE, part, state));
 	}
 
 	public static BufferedImage toBufferedImage(Image image, ImageObserver o) {
