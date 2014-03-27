@@ -286,7 +286,7 @@ public class GameFieldPanel extends JPanel implements Observer {
 				int x = (int)body.x * Constants.TILE_SIZE;
 				int y = (int)body.y * Constants.TILE_SIZE;
 
-				if (ship.hasLongRangeRadar()) {
+				if (ship.hasLongRangeRadar() && !ship.isSunk()) {
 					img = rm.getRadarBodyImage(dir, health, maxHealth);
 				} else {
 					img = rm.getShipBodyImage(dir, health, maxHealth);
