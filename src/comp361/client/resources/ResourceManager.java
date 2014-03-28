@@ -18,6 +18,7 @@ public class ResourceManager {
 	private static final String DEAD = "dead";
 	private static final String HEAD = "head";
 	private static final String HIT = "hit";
+	private static final String KAMIKAZE = "kamikaze";
 	private static final String RADAR = "radar";
 	private static final String RED = "red";
 	private static final String SHIP = "ship";
@@ -81,6 +82,12 @@ public class ResourceManager {
 		String direction = String.valueOf(dir.ordinal() + 1);
 		String color = getColor(isOwner);
 		return images.getImage(join(SHIP, TAIL, color, direction, state));
+	}
+
+	public Image getKamikazeImage(Direction dir, boolean isOwner) {
+		String direction = String.valueOf(dir.ordinal() + 1);
+		String color = getColor(isOwner);
+		return images.getImage(join(KAMIKAZE, color, direction));
 	}
 
 	public Image getBaseImage(int y, boolean isDestroyed) {

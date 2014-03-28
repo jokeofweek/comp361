@@ -179,6 +179,13 @@ public class CoralPanel extends JPanel implements Observer {
 
 	private void drawShip(Graphics2D g, int[] offsets, int shipWidth, int shipIndex) {
 		ResourceManager rm = ResourceManager.getInstance();
+
+		if(Ship.SHIP_INVENTORIES[shipInventory][shipIndex].canKamikaze()) {
+			Image kamikazeImage = rm.getKamikazeImage(Direction.RIGHT, true);
+			g.drawImage(kamikazeImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], this);
+			return;
+		}
+
 		Image headImage = rm.getShipHeadImage(Direction.RIGHT, 1, 1, true);
 		g.drawImage(headImage, ((shipWidth - 1) * Constants.TILE_SIZE) + offsets[0], offsets[1], this);
 
@@ -188,8 +195,7 @@ public class CoralPanel extends JPanel implements Observer {
 		Image bodyImage;
 		if (Ship.SHIP_INVENTORIES[shipInventory][shipIndex].hasLongRangeRadar()) {
 			bodyImage = rm.getRadarBodyImage(Direction.RIGHT, 1, 1);
-		}
-		else {
+		} else {
 			bodyImage = rm.getShipBodyImage(Direction.RIGHT, 1, 1);
 		}
 

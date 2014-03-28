@@ -242,11 +242,10 @@ public class GameFieldPanel extends JPanel implements Observer {
 
 		if (ship.getSize() == 1) {
 			if (isOwner || fov.contains(ship.getPosition()) || GOD_MODE) {
-				g.setColor(Color.black);
-				g.fillRect(ship.getPosition().x * Constants.TILE_SIZE,
-						ship.getPosition().y * Constants.TILE_SIZE,
-						Constants.TILE_SIZE,
-						Constants.TILE_SIZE);
+				img = rm.getKamikazeImage(dir, isOwner);
+				buff = ResourceManager.toBufferedImage(img, this);
+				g2.drawImage(buff, op, ship.getPosition().x * Constants.TILE_SIZE,
+						ship.getPosition().y * Constants.TILE_SIZE);
 			}
 			return;
 		}
