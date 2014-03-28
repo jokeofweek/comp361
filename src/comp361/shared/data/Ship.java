@@ -49,7 +49,7 @@ public class Ship {
 		Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE,
 		Ship.KAMIKAZE_BOAT_TEMPLATE };
 	private static final Ship[] ACCELERATED_INVENTORY = { Ship.TORPEDO_TEMPLATE };
-	
+
 
 	public static final String[] SHIP_INVENTORY_NAMES = {"Default", "1 Torpedo Ship"};
 	public static final Ship[][] SHIP_INVENTORIES = {Ship.DEFAULT_INVENTORY, Ship.ACCELERATED_INVENTORY};
@@ -88,7 +88,7 @@ public class Ship {
 	public Ship(String name, int size, int speed, int mineCount,
 			ArmorType armor, CannonType cannonType, boolean turnsOnCenter, boolean isMineLayer,
 			boolean hasLongRangeRadar, boolean longRangeRadarEnabled,
-			boolean hasTorpedoes, boolean hasSonar, boolean canTurn180, boolean canKamikaze, 
+			boolean hasTorpedoes, boolean hasSonar, boolean canTurn180, boolean canKamikaze,
 			Range radar, Range longRadar, Range cannonRange) {
 		super();
 		this.name = name;
@@ -150,7 +150,7 @@ public class Ship {
 	public String getOwner() {
 		return this.owner;
 	}
-	
+
 	public ArmorType getArmor() {
 		return armor;
 	}
@@ -207,7 +207,7 @@ public class Ship {
 	{
 		return this.radar;
 	}
-	
+
 	/**
 	 * @param mineCount
 	 *            the new number of mines the ship carries
@@ -236,7 +236,7 @@ public class Ship {
 	public boolean canTurn180() {
 		return this.canTurn180;
 	}
-	
+
 	/**
 	 * @return true if the ship can kamikaze.
 	 */
@@ -272,18 +272,18 @@ public class Ship {
 				events.add(new GameEvent(p, Cause.CANNON, alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED, null));
 			} else {
 				boolean hit = false;
-				for (Ship s : this.game.getShips()) { 
+				for (Ship s : this.game.getShips()) {
 					if (s.pointBelongsToShip(p)) {
 						s.hitWithCannon(p, this.cannonType);
-						
+
 						// Log the event
 						hit = true;
-						events.add(new GameEvent(p, 
+						events.add(new GameEvent(p,
 								Cause.CANNON, s.isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, s));
 						break;
 					}
 				}
-				
+
 				// If hit nothing, log that
 				if (!hit) {
 					events.add(new GameEvent(p, Cause.CANNON, Effect.HIT_WATER, this));
@@ -344,14 +344,14 @@ public class Ship {
 					// damage the base
 					this.game.getField().damageBase(p);
 
-					events.add(new GameEvent(p, 
+					events.add(new GameEvent(p,
 							Cause.TORPEDO, (alreadyDestroyed ? Effect.BASE_HIT : Effect.BASE_DESTROYED), null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.MINE) {
 					// Remove the mine
 					game.getField().setCellType(p, CellType.WATER);
 					// Log the event
-					events.add(new GameEvent(p, 
+					events.add(new GameEvent(p,
 							Cause.TORPEDO, Effect.MINE_DESTROYED, null));
 					return;
 				} else if (game.getField().getCellType(p) == CellType.REEF) {
@@ -378,7 +378,7 @@ public class Ship {
 	 */
 	public void hitWithTorpedo(Point p, Direction shootingDirection, List<GameEvent> events) {
 		List<Point> damagedPoints = new ArrayList<Point>();
-		int startIndex = getShipLine().getPoints().indexOf(p); 
+		int startIndex = getShipLine().getPoints().indexOf(p);
 		// damage the right square
 		if (health[startIndex] > 0) {
 			health[startIndex]--;
@@ -402,7 +402,7 @@ public class Ship {
 				}
 			}
 		}
-		
+
 		// Log events
 		for (Point point : damagedPoints) {
 			// Log the event
@@ -425,25 +425,25 @@ public class Ship {
 			tail = new Point(position.x-size+1, position.y);
 		return new Line(tail, position);
 	}
-	
+
 	/**
 	 * @param p the point to shift to
 	 * @return if the point requires a shift or a straightforward move
 	 */
 	public Point shiftShip(Point p)
-	{	
+	{
 		//Shift backwards (Left)
 		if(facing == Direction.RIGHT){
 			if(p.x < this.position.x && p.y == this.position.y){
 				Point newPosition = new Point(this.position.x - 1, this.position.y);
 				Point collisionCheckPosition = new Point(this.position.x - this.size, this.position.y);
-				
+
 				for(Ship ship : getGame().getShips()){
 					if(ship.pointBelongsToShip(collisionCheckPosition)){
 						return collisionCheckPosition;
 					}
 				}
-				
+
 				if(getGame().getField().getCellType(collisionCheckPosition) == CellType.WATER){
 					setPosition(newPosition);
 					return null;
@@ -451,27 +451,27 @@ public class Ship {
 
 				return collisionCheckPosition;
 			}
-			
+
 			//Shift up
 			else if(p.y < this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x - this.size + 1, this.position.y - 1), new Point(this.position.x, this.position.y - 1));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
-					
+
 					for(Ship ship : getGame().getShips()){
 						if(ship.pointBelongsToShip(point)){
 							return point;
 						}
 					}
-					
+
 					if(getGame().getField().getCellType(point) != CellType.WATER){
 						collision = true;
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -481,26 +481,26 @@ public class Ship {
 					return null;
 				}
 			}
-			
+
 			//Shift down
 			else if(p.y > this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y + 1);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x - this.size + 1, this.position.y + 1), new Point(this.position.x, this.position.y + 1));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
-					
+
 					for(Ship ship : getGame().getShips()){
 						if(ship.pointBelongsToShip(point)){
 							return point;
 						}
 					}
-					
+
 					if(getGame().getField().getCellType(point) != CellType.WATER){
 						collision = true;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -509,21 +509,21 @@ public class Ship {
 				{
 					return null;
 				}
-				
+
 			}
-			
+
 			else
 			{
 				return null;
 			}
 		}
-		
+
 		else if(facing == Direction.LEFT){
 			//Shift Backwards (Right)
 			if(p.x > this.position.x && p.y == this.position.y){
 				Point newPosition = new Point(this.position.x + 1, this.position.y);
 				Point collisionCheckPosition = new Point(this.position.x + this.size, this.position.y);
-				
+
 				for(Ship ship : getGame().getShips()){
 					if(ship.pointBelongsToShip(collisionCheckPosition)){
 						return collisionCheckPosition;
@@ -536,11 +536,11 @@ public class Ship {
 				}
 				return collisionCheckPosition;
 			}
-			
+
 			//Shift up
 			else if(p.y < this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x + this.size - 1, this.position.y - 1), new Point(this.position.x, this.position.y - 1));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
@@ -554,7 +554,7 @@ public class Ship {
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -564,11 +564,11 @@ public class Ship {
 					return null;
 				}
 			}
-			
+
 			//Shift down
 			else if(p.y > this.position.y){
 				Point newPosition = new Point(this.position.x, this.position.y + 1);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x + this.size - 1, this.position.y + 1), new Point(this.position.x, this.position.y + 1));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
@@ -582,7 +582,7 @@ public class Ship {
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -592,13 +592,13 @@ public class Ship {
 					return null;
 				}
 			}
-			
+
 			else
 			{
 				return null;
 			}
 		}
-		
+
 		//Shift backwards (down)
 		else if(facing == Direction.UP){
 			if(p.y > this.position.y && p.x == this.position.x){
@@ -615,14 +615,14 @@ public class Ship {
 					setPosition(newPosition);
 					return null;
 				}
-				
+
 				return collisionCheckPosition;
 			}
-			
+
 			//Shift left
 			else if(p.x < this.position.x){
 				Point newPosition = new Point(this.position.x - 1, this.position.y);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x - 1, this.position.y + this.size - 1), new Point(this.position.x - 1, this.position.y));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
@@ -636,7 +636,7 @@ public class Ship {
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -646,11 +646,11 @@ public class Ship {
 					return null;
 				}
 			}
-			
+
 			//Shift right
 			else if(p.x > this.position.x){
 				Point newPosition = new Point(this.position.x + 1, this.position.y);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x + 1, this.position.y + this.size - 1), new Point(this.position.x + 1, this.position.y));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
@@ -664,7 +664,7 @@ public class Ship {
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -674,20 +674,20 @@ public class Ship {
 					return null;
 				}
 			}
-			
-			
+
+
 			else
 			{
 				return null;
 			}
 		}
-		
+
 		else{ // Direction = DOWN
 			//Shift backwards (up)
 			if(p.y < this.position.y && p.x == this.position.x){
 				Point newPosition = new Point(this.position.x, this.position.y - 1);
 				Point collisionCheckPosition = new Point(this.position.x, this.position.y - this.size);
-				
+
 				for(Ship ship : getGame().getShips()){
 					if(ship.pointBelongsToShip(collisionCheckPosition)){
 						return collisionCheckPosition;
@@ -698,14 +698,14 @@ public class Ship {
 					setPosition(newPosition);
 					return null;
 				}
-				
+
 				return collisionCheckPosition;
 			}
-			
+
 			//Shift left
 			else if(p.x < this.position.x){
 				Point newPosition = new Point(this.position.x - 1, this.position.y);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x - 1, this.position.y - this.size + 1), new Point(this.position.x - 1, this.position.y));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
@@ -719,7 +719,7 @@ public class Ship {
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -729,11 +729,11 @@ public class Ship {
 					return null;
 				}
 			}
-			
+
 			//Shift right
 			else if(p.x > this.position.x){
 				Point newPosition = new Point(this.position.x + 1, this.position.y);
-				
+
 				Line collisionLine = new Line(new Point(this.position.x + 1, this.position.y - this.size + 1), new Point(this.position.x + 1, this.position.y));
 				boolean collision = false;
 				for(Point point : collisionLine.getPoints()){
@@ -747,7 +747,7 @@ public class Ship {
 						return point;
 					}
 				}
-				
+
 				if(!collision){
 					setPosition(newPosition);
 					return null;
@@ -757,7 +757,7 @@ public class Ship {
 					return null;
 				}
 			}
-			
+
 			else
 			{
 				return null;
@@ -776,7 +776,7 @@ public class Ship {
 		else if (facing == Direction.RIGHT) xOffset = 1;
 		else if (facing == Direction.UP) yOffset = -1;
 		else yOffset = 1;
-		
+
 		// Iterate along entire line which is in front of our ship, testing if
 		// we encounter the point.
 		Point cur = new Point(position.x + xOffset, position.y + yOffset);
@@ -788,10 +788,10 @@ public class Ship {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Moves the ship to the position, given there are no obstacles on the path.
-	 * 
+	 *
 	 * @param p
 	 *            the new position of the ship
 	 */
@@ -800,7 +800,7 @@ public class Ship {
 		List<Point> points = trajectory.getPoints();
 		// Remove the head.
 		points.remove(0);
-		
+
 		// Get the furthest possible position
 		Line l = new Line(points.get(0), points.get(points.size() - 1));
 		// Test if we are moving forwards or shifting (shifts only if it's not a kamikaze boat)
@@ -809,12 +809,15 @@ public class Ship {
 			if(collisionPoint != null){
 				events.add(new GameEvent(collisionPoint, null, Effect.SHIP_COLLISION, null));
 			}
-			
+
 		} else {
 			Point endPoint = game.getFurthestPosition(this, l);
+			int dx = endPoint.x - this.position.x;
+			int dy = endPoint.y - this.position.y;
+
 			if (endPoint != null) {
 				setPosition(endPoint);
-			} 
+			}
 			// Test if we didn't make it all the way. If there was a collision, add it as an event.
 			if (endPoint == null || !endPoint.equals(p)) {
 				Point last = null;
@@ -838,8 +841,20 @@ public class Ship {
 					last = lineP;
 				}
 			}
-		} 	
-		
+
+			if (this.canKamikaze) {
+				if (dy == 2) {
+					this.facing = Direction.DOWN;
+				} else if (dy == -2) {
+					this.facing = Direction.UP;
+				} else if (dx == 2) {
+					this.facing = Direction.RIGHT;
+				} else if (dx == -2) {
+					this.facing = Direction.LEFT;
+				}
+			}
+		}
+
 		// Once we've moved, explode any adjacent mines
 		explodeSurroundingMines(events);
 
@@ -847,7 +862,7 @@ public class Ship {
 
 	/**
 	 * This sets the position of the ship's head.
-	 * 
+	 *
 	 * @param position
 	 *            The new position.
 	 */
@@ -893,7 +908,7 @@ public class Ship {
 	public void setLongRangeRadarEnabled(boolean longRangeRadarEnabled) {
 		this.longRangeRadarEnabled = longRangeRadarEnabled;
 	}
-	
+
 	/**
 	 * @return true if the ship has a sonar, false otherwise
 	 */
@@ -917,7 +932,7 @@ public class Ship {
 	 */
 	public void turnShip(Direction d, List<GameEvent> events) {
 		List<Point> radiusPoints = getPointsInTurnRadius(d);
-		
+
 		// Sort the points based on the distance to the head
 		final Point2D head = new Point2D.Double(position.x, position.y);
 		Collections.sort(radiusPoints, new Comparator<Point>() {
@@ -926,7 +941,7 @@ public class Ship {
 				return (int) Math.round(o1.distanceSq(head) - o2.distanceSq(head));
 			}
 		});
-		
+
 		ObstacleType obstacleType = game.getClosestObstacleType(radiusPoints);
 		if (obstacleType == null) {
 			Point pivot = getShipLine().getTail();
@@ -939,7 +954,7 @@ public class Ship {
 				game.explodeMine(obstaclePoint, events);
 				// Damage the block that hit it
 				doMineDamage(getCollidingBlockPosition(obstaclePoint, d));
-				
+
 			} else {
 				events.add(new GameEvent(obstaclePoint, null, Effect.SHIP_COLLISION, null));
 			}
@@ -957,7 +972,7 @@ public class Ship {
 		Point pivot = getShipLine().getTail();
 		Line newLine = new Line(pivot, d, this.size + 1);//includes point in front of potential head
 		Line temp;
-		Line shipLine = null; 
+		Line shipLine = null;
 		if(this.facing == Direction.DOWN) {
 			shipLine = new Line(pivot, new Point(position.x, position.y+1));
 		} else if(this.facing == Direction.UP) {
@@ -971,7 +986,7 @@ public class Ship {
 		{
 			temp = new Line(shipLine.getPoints().get(i), newLine.getPoints().get(i));
 			// For the last line, remove first and last points
-			
+
 			if (i == this.size) {
 				List<Point> tempPoints = temp.getPoints();
 				tempPoints.remove(0);
@@ -997,7 +1012,7 @@ public class Ship {
 		Point pivot = getShipLine().getTail();
 		Line newLine = new Line(pivot, turnDirection, this.size + 1);
 		Line temp;
-		Line shipLine = null; 
+		Line shipLine = null;
 		if(this.facing == Direction.DOWN) {
 			shipLine = new Line(pivot, new Point(position.x, position.y+1));
 		} else if(this.facing == Direction.UP) {
@@ -1044,7 +1059,7 @@ public class Ship {
 	public Set<Point> getValidMovePoints() {
 
 		Set<Point> points = new HashSet<Point>();
-		
+
 		//special case for Kamikaze boat, where movement range == radar range
 		if(this.canKamikaze())
 			return this.getRadarRange().getPoints(this);
@@ -1054,7 +1069,7 @@ public class Ship {
 			int backY = this.position.y + this.size;
 			Point backPoint = new Point(this.position.x, backY);
 			points.add(backPoint);
-			
+
 			// Add all the points to the right of the ship
 			Point sidePoint = new Point(this.position.x + 1, this.position.y + (getSize() / 2));
 			points.add(sidePoint);
@@ -1163,32 +1178,32 @@ public class Ship {
 
 		return game.getField().filterInBoundPoints(points);
 	}
-	
+
 	/**
 	 * @return a map containing the points to turn to as well as the new facing direction.
 	 */
 	private Map<Point, Direction> getTurnPoints() {
 		Map<Point, Direction> points = new HashMap<>();
-		
+
 		int yDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 1 : 0;
 		int xDelta = (facing == Direction.LEFT || facing == Direction.RIGHT) ? 0 : 1;
-				
-		points.put(new Point(position.x + xDelta, position.y + yDelta), 
-				(facing == Direction.LEFT || facing == Direction.DOWN) ? facing.getCounterClockwise() :  
+
+		points.put(new Point(position.x + xDelta, position.y + yDelta),
+				(facing == Direction.LEFT || facing == Direction.DOWN) ? facing.getCounterClockwise() :
 				facing.getClockwise());
-		points.put(new Point(position.x - xDelta, position.y - yDelta), 
+		points.put(new Point(position.x - xDelta, position.y - yDelta),
 				(facing == Direction.RIGHT || facing == Direction.UP) ? facing.getCounterClockwise() : facing.getClockwise());
-		
+
 		if (canTurn180()) {
 			// Get the last point
 			Point2D tail = getShipLine().getP1();
 			points.put(new Point((int)tail.getX() + (yDelta * (facing == Direction.RIGHT ? - 1 : 1)),
 					(int)tail.getY() + (xDelta * (facing == Direction.DOWN ? - 1 : 1))), facing.opposite());
 		}
-		
+
 		return points;
 	}
-	
+
 	/**
 	 * @return the set of points we can turn to.
 	 */
@@ -1264,7 +1279,7 @@ public class Ship {
 				points.add(p);
 			}
 		}
-		
+
 		return game.getField().filterInBoundPoints(points);
 	}
 
@@ -1292,7 +1307,7 @@ public class Ship {
 						}
 					}
 				}
-				
+
 				if (isValid) {
 					points.add(p);
 				}
@@ -1300,7 +1315,7 @@ public class Ship {
 		}
 		return game.getField().filterInBoundPoints(points);
 	}
-	
+
 	/**
 	 * @return true if a ship is sunk (eg. no squares have health)
 	 */
@@ -1312,7 +1327,7 @@ public class Ship {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Apply mine damage to a square of the ship.
 	 * @param p The ship point to be damaged.
@@ -1329,14 +1344,14 @@ public class Ship {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return true if the ship can move, or false if its LRR is enabled
 	 */
 	public boolean canMove() {
 		return !(hasLongRangeRadar && isLongRangeRadarEnabled());
 	}
-	
+
 
 	/**
 	 * Turns a ship to a point.
@@ -1346,15 +1361,15 @@ public class Ship {
 		if (turnsOnCenter) {
 			// Get the direction of the point we're turning to
 			Direction newFacingDirection = getTurnPoints().get(p);
-			
+
 			boolean left = (facing.opposite() == newFacingDirection) || (facing.getCounterClockwise() == newFacingDirection);
 			int turns = 1;
-			
+
 			// If it is opposite, we're turning 180
 			if (facing.opposite() == newFacingDirection) {
 				turns = 2;
 			}
-			
+
 
 			for (int i = 0; i < turns; i++) {
 				// If we encountered a collision, back up.
@@ -1374,7 +1389,7 @@ public class Ship {
 			explodeSurroundingMines(events);
 		}
 	}
-	
+
 	/**
 	 * Explodes all mine surrounding the ship.
 	 * @param events The list of events to append to.
@@ -1393,7 +1408,7 @@ public class Ship {
 		}
 		return hitMine;
 	}
-	
+
 	/**
 	 * Turns a 3-size ship on its center.
 	 * @param left True if we're turning left
@@ -1404,7 +1419,7 @@ public class Ship {
 		if (this.getSize() != 3) {
 			throw new RuntimeException("Hard-coded for size 3 ships yo.");
 		}
-		
+
 		List<Point> points = new ArrayList<Point>();
 		Point finalPoint = null;
 		if (facing == Direction.LEFT) {
@@ -1432,7 +1447,7 @@ public class Ship {
 			points.add(new Point(position.x + 1, position.y + 1));
 			finalPoint = new Point(position.x + (left? -1 : 1), position.y + 1);
 		}
-		
+
 		// Test all points
 		for (int i = 0; i < points.size(); i++) {
 			Point p = points.get(i);
@@ -1455,13 +1470,13 @@ public class Ship {
 		setPosition(finalPoint);
 		setDirection(left ? facing.getCounterClockwise() : facing.getClockwise());
 		return true;
-		
+
 	}
-	
+
 	public void explode(List<GameEvent> events) {
 		// Add the event at the ships point
 		events.add(new GameEvent(getPosition(), Cause.KAMIKAZE, Effect.SHIP_EXPLODED, this));
-		
+
 		Point[] offsets = new Point[]{
 				new Point(position.x - 1, position.y - 1),
 				new Point(position.x - 1, position.y),
@@ -1489,22 +1504,22 @@ public class Ship {
 				}
 			}
 			// Test for base
-			if (game.getBasePoints(game.getP1()).contains(p) || 
+			if (game.getBasePoints(game.getP1()).contains(p) ||
 					game.getBasePoints(game.getP2()).contains(p)) {
 				game.getField().damageBase(p);
 				events.add(new GameEvent(p, Cause.KAMIKAZE, Effect.BASE_DESTROYED, null));
 			}
 		}
-		
+
 		// Need to show game events after in case we hit a ship twice, so that one effect
 		// doesn't show hit and the other sunk.
 		for (int i = 0; i < damagedPoints.size(); i++) {
 			events.add(new GameEvent(damagedPoints.get(i), Cause.KAMIKAZE,
-					damagedShips.get(i).isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT, 
+					damagedShips.get(i).isSunk() ? Effect.SHIP_SUNK : Effect.SHIP_HIT,
 					damagedShips.get(i)));
 		}
-		 
-		
+
+
 		// Destroy the kamikaze ship after
 		for (int i = 0; i < health.length; i++) {
 			health[i] = 0;
