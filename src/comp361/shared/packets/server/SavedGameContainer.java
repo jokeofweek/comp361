@@ -6,4 +6,5 @@ import comp361.shared.data.GameDescriptor;
 public class SavedGameContainer {
 	public GameDescriptor descriptor;
 	public Game game;
+	public String fileName;
 }

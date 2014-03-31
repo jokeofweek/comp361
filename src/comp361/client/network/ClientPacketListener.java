@@ -1,6 +1,8 @@
 package comp361.client.network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -34,6 +36,7 @@ import comp361.shared.packets.server.LoginError;
 import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
+import comp361.shared.packets.server.SavedGamesListPacket;
 import comp361.shared.packets.server.UpdatePlayerStatisticsPacket;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -88,6 +91,7 @@ public class ClientPacketListener extends Listener {
 		handlers.put(GameDescriptorRemovedPacket.class, new GameDescriptorRemovedPacketHandler());
 		handlers.put(InGameMessagePacket.class, genericHandler);
 		handlers.put(SaveResponsePacket.class, genericHandler);
+		handlers.put(SavedGamesListPacket.class, genericHandler);
 		handlers.put(UpdatePlayerStatisticsPacket.class, new UpdatePlayerStatisticsPacketHandler());
 		handlers.put(RequestSavePacket.class, new RequestSavePacketHandler());
 		return handlers;

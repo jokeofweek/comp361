@@ -14,6 +14,7 @@ import comp361.server.network.ServerPacketListener;
 import comp361.server.session.Session;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.network.NetworkManager;
+import comp361.shared.packets.server.SavedGameContainer;
 
 public class GameServer {
 
@@ -38,6 +39,7 @@ public class GameServer {
 		this.accountDataStore = accountDataStore;
 		this.accountManager = new AccountManager();
 		this.gameDescriptorManager = new GameDescriptorManager();
+		this.saveGameManager = new SaveGameManager(this);
 
 		// Set up the server. The newConnection callback is called every time a
 		// connection is detected and allows us to wrap a connection object
@@ -109,6 +111,10 @@ public class GameServer {
 	 */
 	public GameDescriptorManager getGameDescriptorManager() {
 		return gameDescriptorManager;
+	}
+	
+	public SaveGameManager getSaveGameManager() {
+		return saveGameManager;
 	}
 	
 }

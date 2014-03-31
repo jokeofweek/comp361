@@ -17,14 +17,18 @@ import javax.swing.SwingConstants;
 
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
+import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.game.WaitForPanel.Callback;
+import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.Constants;
 import comp361.shared.data.ArmorType;
 import comp361.shared.data.CannonType;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.RequestSavePacket;
+import comp361.shared.packets.shared.SaveResponsePacket;
 
 public class ShipInfoPanel extends JPanel implements Observer {
 
@@ -237,7 +241,20 @@ public class ShipInfoPanel extends JPanel implements Observer {
 	private class SaveActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			window.setPanel(new WaitingForSavePanel(client, window, window.getPanel()));
+			window.setPanel(new WaitForPanel(client, window, window.getPanel(), new Callback() {
+				@Override
+				public boolean receivePacket(Object object) {
+					// Switch either to lobby or back to game if the save was accepted
+					if (object instanceof SaveResponsePacket) {
+						if (((SaveResponsePacket)object).accepted) {
+							window.setPanel(new LobbyPanel(client, window));	
+						} else {
+							return true;
+						}
+					}
+					return false;
+				}
+			}));
 			// Send the save packet
 			RequestSavePacket packet = new RequestSavePacket();
 			packet.requester = client.getPlayerName();

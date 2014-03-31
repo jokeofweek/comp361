@@ -16,7 +16,7 @@ public class LoadGamesPanel extends JPanel {
 
 		JPanel container = new JPanel(new BorderLayout());
 
-		tableModel = new LoadGamesTableModel(gameClient.getGameDescriptorManager());
+		tableModel = new LoadGamesTableModel();
 		LoadGamesTable table = new LoadGamesTable(gameClient, tableModel);
 
 

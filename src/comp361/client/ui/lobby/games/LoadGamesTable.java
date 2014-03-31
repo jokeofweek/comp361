@@ -32,7 +32,7 @@ public class LoadGamesTable extends JTable {
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
 
 		        // Get the game descriptor
-		        GameDescriptor descriptor = model.getGameDescriptor(modelRow);
+		        /*GameDescriptor descriptor = model.getGameDescriptor(modelRow);
 		        if (!descriptor.isStarted()) {
 		        	boolean canJoin = false;
 		        	// Prompt for password if there is a game password
@@ -56,7 +56,7 @@ public class LoadGamesTable extends JTable {
 		        } else {
 		        	// TODO Handle case where you want to observe a game.
 		        }
-
+*/
 			}
 		}, LoadGamesTableModel.JOIN_COLUMN);
 	}

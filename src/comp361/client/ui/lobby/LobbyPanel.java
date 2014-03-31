@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.BorderFactory;
@@ -21,14 +23,19 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.game.WaitForPanel;
+import comp361.client.ui.game.WaitForPanel.Callback;
 import comp361.client.ui.lobby.chat.ChatPanel;
 import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
 import comp361.client.ui.lobby.games.LoadGamesPanel;
 import comp361.client.ui.setup.NewGamePanel;
 import comp361.shared.Constants;
+import comp361.shared.packets.client.RequestSavedGamesPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GenericError;
+import comp361.shared.packets.server.SavedGameContainer;
+import comp361.shared.packets.server.SavedGamesListPacket;
 import comp361.shared.packets.shared.MessagePacket;
 
 public class LobbyPanel extends ClientPanel {
@@ -97,10 +104,22 @@ public class LobbyPanel extends ClientPanel {
 		newGameButton.addActionListener(new NewGameActionListener());
 
 		JButton loadGameButton = new JButton("Load Game");
+		final ClientPanel self = this;
 		loadGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setContentPanel(loadGamesPanel);
+				getClientWindow().setPanel(new WaitForPanel(getGameClient(), getClientWindow(), self, new Callback() {
+					@Override
+					public boolean receivePacket(Object object) {
+						if (object instanceof SavedGamesListPacket) {
+							loadGamesPanel.getTableModel().refreshData(((SavedGamesListPacket)object).containers);
+							setContentPanel(loadGamesPanel);
+							return true;
+						}
+						return false;
+					}
+				}));
+				getGameClient().getClient().sendTCP(new RequestSavedGamesPacket());
 			}
 		});
 
@@ -199,8 +218,6 @@ public class LobbyPanel extends ClientPanel {
 		getGameClient().getGameDescriptorManager().addObserver(
 				gamesPanel.getTableModel());
 		gamesPanel.getTableModel().refreshData(
-				getGameClient().getGameDescriptorManager());
-		loadGamesPanel.getTableModel().refreshData(
 				getGameClient().getGameDescriptorManager());
 	}
 

@@ -29,6 +29,7 @@ import comp361.shared.packets.client.LeaveGamePacket;
 import comp361.shared.packets.client.LoginPacket;
 import comp361.shared.packets.client.NewGameDescriptorPacket;
 import comp361.shared.packets.client.RegisterPacket;
+import comp361.shared.packets.client.RequestSavedGamesPacket;
 import comp361.shared.packets.client.UpdateReadyPacket;
 import comp361.shared.packets.server.GameDescriptorCreatedPacket;
 import comp361.shared.packets.server.GameDescriptorListPacket;
@@ -43,6 +44,7 @@ import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
 import comp361.shared.packets.server.SavedGameContainer;
+import comp361.shared.packets.server.SavedGamesListPacket;
 import comp361.shared.packets.server.UpdatePlayerStatisticsPacket;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -119,6 +121,8 @@ public class NetworkManager {
 		kryo.register(RequestSavePacket.class);
 		kryo.register(SaveResponsePacket.class);
 		kryo.register(SavedGameContainer.class);
+		kryo.register(RequestSavedGamesPacket.class);
+		kryo.register(SavedGamesListPacket.class);
 	}
 
 	private NetworkManager() {

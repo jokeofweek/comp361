@@ -2,6 +2,7 @@ package comp361.client.ui.lobby.games;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -12,27 +13,25 @@ import javax.swing.table.AbstractTableModel;
 import comp361.client.data.GameDescriptorManager;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.data.Ship;
+import comp361.shared.packets.server.SavedGameContainer;
 
 public class LoadGamesTableModel extends AbstractTableModel implements Observer {
 
 	public static final int JOIN_COLUMN = 3;
 	private static final String[] headers =  {"Name", "Opponent", "Ship Set", "Load"};
 
-	private GameDescriptorManager manager;
 	/**
 	 * This is a list of the descriptors IDs.
 	 */
-	public static List<Integer> descriptors;
+	public static List<SavedGameContainer> containers;
 
-	public LoadGamesTableModel(GameDescriptorManager manager) {
-		this.manager = manager;
-
-		refreshData(manager);
+	public LoadGamesTableModel() {
+		containers = new ArrayList<SavedGameContainer>();
 	}
 
 	@Override
 	public int getRowCount() {
-		return descriptors.size();
+		return containers.size();
 	}
 
 	@Override
@@ -60,16 +59,13 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 		return col == JOIN_COLUMN;
 	}
 
-	public GameDescriptor getGameDescriptor(int row) {
-		return manager.getGameDescriptor(descriptors.get(row));
-	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (descriptors.size() == 0) {
+		if (containers.size() == 0) {
 			return null;
 		}
-		GameDescriptor descriptor = manager.getGameDescriptor(descriptors.get(rowIndex));
+		GameDescriptor descriptor = containers.get(rowIndex).descriptor;
 		if (columnIndex == 0) {
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
@@ -98,26 +94,19 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 		throw new IndexOutOfBoundsException();
 	}
 
-	public void refreshData(final GameDescriptorManager manager) {
-		this.manager = manager;
-
-		// We've updated our list, so trigger a refresh of the table
-		// data.
+	public void refreshData(final List<SavedGameContainer> savedGames) {
 		SwingUtilities.invokeLater(new Runnable() {
+			
 			@Override
 			public void run() {
-				// Create a list of the descriptors IDs and sort them
-				descriptors = new ArrayList<Integer>(manager.getGameDescriptorIds());
-				Collections.sort(descriptors);
-
-				// Remove full games
-				for (int i = descriptors.size() - 1; i >= 0; i--) {
-					GameDescriptor d = manager.getGameDescriptor(descriptors.get(i));
-					if (d.isStarted() || (d.getMaxPlayers() - d.getPlayerCount() == 0)) {
-						descriptors.remove(i);
+				containers = savedGames;
+				Collections.sort(containers, new Comparator<SavedGameContainer>() {
+					@Override
+					public int compare(SavedGameContainer o1,
+							SavedGameContainer o2) {
+						return o1.descriptor.getName().compareTo(o2.descriptor.getName());
 					}
-				}
-
+				});
 				fireTableDataChanged();
 			}
 		});
@@ -125,10 +114,8 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// If it was the player manager, then refresh data.
-		if (o instanceof GameDescriptorManager) {
-			refreshData((GameDescriptorManager)o);
-		}
+		// TODO Auto-generated method stub
+		
 	}
 
 }

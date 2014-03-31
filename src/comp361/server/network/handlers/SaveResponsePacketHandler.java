@@ -14,6 +14,7 @@ public class SaveResponsePacketHandler implements
 			SaveResponsePacket packet) {
 		Game game = packet.game;
 		
+		
 		// Forward the response to the other player.
 		// Note that the packet's game is null from now on since we don't need to
 		// send the game to the other player.
@@ -35,6 +36,9 @@ public class SaveResponsePacketHandler implements
 		// If the save was accepted, set state back to lobby
 		if (packet.accepted) {
 			session.setSessionType(SessionType.LOBBY);
+			
+			// Actually save the game
+			gameServer.getSaveGameManager().saveGame(game, session.getGameDescriptorId());
 		}
 	}
 }

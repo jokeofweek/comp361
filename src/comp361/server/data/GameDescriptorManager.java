@@ -252,4 +252,8 @@ public class GameDescriptorManager {
 		// Lawg dawg
 		server.getLogger().debug("Game " + id + " is over. Message: " + message);
 	}
+	
+	public GameDescriptor getGameDescriptor(int id) {
+		return gameDescriptors.get(id);
+	}
 }
