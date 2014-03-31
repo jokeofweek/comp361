@@ -13,10 +13,10 @@ import comp361.client.data.GameDescriptorManager;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.data.Ship;
 
-public class GamesTableModel extends AbstractTableModel implements Observer {
+public class LoadGamesTableModel extends AbstractTableModel implements Observer {
 
-	public static final int JOIN_COLUMN = 4;
-	private static final String[] headers =  {"Name", "Opponent", "Private?", "Ship Set", "Join"};
+	public static final int JOIN_COLUMN = 3;
+	private static final String[] headers =  {"Name", "Opponent", "Ship Set", "Load"};
 
 	private GameDescriptorManager manager;
 	/**
@@ -24,7 +24,7 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 	 */
 	public static List<Integer> descriptors;
 
-	public GamesTableModel(GameDescriptorManager manager) {
+	public LoadGamesTableModel(GameDescriptorManager manager) {
 		this.manager = manager;
 
 		refreshData(manager);
@@ -90,15 +90,9 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 			}
 			return "";
 		} else if (columnIndex == 2) {
-			if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
-				return "\u2713";
-			} else {
-				return "";
-			}
-		} else if (columnIndex == 3) {
 			return Ship.SHIP_INVENTORY_NAMES[descriptor.getShipInventory()];
-		} else if (columnIndex == 4) {
-			return (descriptor.isStarted() ? "Observe" : "Join");
+		} else if (columnIndex == 3) {
+			return "Load";
 		}
 
 		throw new IndexOutOfBoundsException();
@@ -113,7 +107,7 @@ public class GamesTableModel extends AbstractTableModel implements Observer {
 			@Override
 			public void run() {
 				// Create a list of the descriptors IDs and sort them
-				descriptors = new ArrayList<>(manager.getGameDescriptorIds());
+				descriptors = new ArrayList<Integer>(manager.getGameDescriptorIds());
 				Collections.sort(descriptors);
 
 				// Remove full games

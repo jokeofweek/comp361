@@ -24,6 +24,7 @@ import comp361.client.ui.SwagFactory;
 import comp361.client.ui.lobby.chat.ChatPanel;
 import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
+import comp361.client.ui.lobby.games.LoadGamesPanel;
 import comp361.client.ui.setup.NewGamePanel;
 import comp361.shared.Constants;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
@@ -44,8 +45,9 @@ public class LobbyPanel extends ClientPanel {
 	private JPanel chatContainer;
 	private ChatPanel chatPanel;
 
-	// Games panel
+	// Games & load games panel
 	private GamesPanel gamesPanel;
+	private LoadGamesPanel loadGamesPanel;
 
 	private PlayersPanel playersPanel;
 	private InviteOverlayPanel inviteOverlayPanel;
@@ -94,9 +96,17 @@ public class LobbyPanel extends ClientPanel {
 		JButton newGameButton = new JButton("New Game");
 		newGameButton.addActionListener(new NewGameActionListener());
 
+		JButton loadGameButton = new JButton("Load Game");
+		loadGameButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setContentPanel(loadGamesPanel);
+			}
+		});
+
 		JButton[] buttons = new JButton[] { chatButton, gamesButton,
 				new JButton("Statistics"), newGameButton,
-				new JButton("Load Game") };
+				loadGameButton };
 
 		JPanel buttonContainer = new JPanel(new GridLayout(1, 5,
 				COMPONENT_SPACING, 0));
@@ -124,6 +134,7 @@ public class LobbyPanel extends ClientPanel {
 		// Create the content panels
 		setupChatContainer();
 		setupGamesContainer();
+		setupLoadGameContainer();
 
 		// Start at chat
 		setContentPanel(chatContainer);
@@ -153,9 +164,13 @@ public class LobbyPanel extends ClientPanel {
 		gamesPanel = new GamesPanel(getGameClient());
 	}
 
+	private void setupLoadGameContainer() {
+		loadGamesPanel = new LoadGamesPanel(getGameClient());
+	}
+
 	/**
 	 * Updates the content panel to a new panel (eg. games view or chat view)
-	 * 
+	 *
 	 * @param panel
 	 *            The panel to use as content.
 	 */
@@ -185,6 +200,8 @@ public class LobbyPanel extends ClientPanel {
 				gamesPanel.getTableModel());
 		gamesPanel.getTableModel().refreshData(
 				getGameClient().getGameDescriptorManager());
+		loadGamesPanel.getTableModel().refreshData(
+				getGameClient().getGameDescriptorManager());
 	}
 
 	@Override
@@ -196,6 +213,8 @@ public class LobbyPanel extends ClientPanel {
 		// Same thing for the game descriptor manager
 		getGameClient().getGameDescriptorManager().deleteObserver(
 				gamesPanel.getTableModel());
+		getGameClient().getGameDescriptorManager().deleteObserver(
+			loadGamesPanel.getTableModel());
 	}
 
 	@Override
@@ -206,7 +225,7 @@ public class LobbyPanel extends ClientPanel {
 			JOptionPane.showMessageDialog(null, arg);
 		} else if (arg instanceof GameDescriptorPlayerUpdatePacket) {
 			GameDescriptorPlayerUpdatePacket packet = (GameDescriptorPlayerUpdatePacket)arg;
-			
+
 			// If we were the player joining, then switch to game setup view
 			if (packet.name.equals(getGameClient().getPlayerName())) {
 				if (packet.joined) {

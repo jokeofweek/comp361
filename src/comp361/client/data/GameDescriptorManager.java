@@ -31,7 +31,7 @@ public class GameDescriptorManager extends Observable {
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	public Collection<GameDescriptor> getGameDescriptors() {
 		return gameDescriptors.values();
 	}
@@ -46,7 +46,7 @@ public class GameDescriptorManager extends Observable {
 
 	/**
 	 * Helper method for inserting a player without notifying observers.
-	 * 
+	 *
 	 * @param player
 	 *            The player to add.
 	 */
@@ -58,7 +58,7 @@ public class GameDescriptorManager extends Observable {
 	 * Updates the list of game descriptors according to a
 	 * {@link GameDescriptorListPacket}, effectively adding all descriptors at
 	 * once.
-	 * 
+	 *
 	 * @param packet
 	 */
 	public void updateGameDescriptorList(GameDescriptorListPacket packet) {
@@ -72,7 +72,7 @@ public class GameDescriptorManager extends Observable {
 	/**
 	 * Updates a game descriptor based on a
 	 * {@link GameDescriptorPlayerUpdatePacket}
-	 * 
+	 *
 	 * @param packet
 	 *            the packet in question
 	 */
@@ -96,7 +96,7 @@ public class GameDescriptorManager extends Observable {
 	/**
 	 * Updates a game descriptor based on a
 	 * {@link GameDescriptorReadyUpdatePacket}
-	 * 
+	 *
 	 * @param packet
 	 *            the packet in question
 	 */
@@ -110,7 +110,7 @@ public class GameDescriptorManager extends Observable {
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	public void updateGameDescriptor(GameDescriptorStartPacket packet) {
 		gameDescriptors.get(packet.id).setStarted(true);
 		setChanged();
@@ -119,7 +119,7 @@ public class GameDescriptorManager extends Observable {
 
 	/**
 	 * Updates a game's seed. The game's ready players set is cleared.
-	 * 
+	 *
 	 * @param packet
 	 */
 	public void updateGameSeed(int id, long seed) {
