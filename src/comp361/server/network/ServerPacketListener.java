@@ -16,6 +16,7 @@ import comp361.server.network.handlers.LoginPacketHandler;
 import comp361.server.network.handlers.MessagePacketHandler;
 import comp361.server.network.handlers.NewGameDescriptorPacketHandler;
 import comp361.server.network.handlers.RegisterPacketHandler;
+import comp361.server.network.handlers.RequestSavePacketHandler;
 import comp361.server.network.handlers.ServerPacketHandler;
 import comp361.server.network.handlers.SetupMessagePacketHandler;
 import comp361.server.network.handlers.UpdateReadyPacketHandler;
@@ -32,6 +33,7 @@ import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
+import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
 /**
@@ -118,6 +120,7 @@ public class ServerPacketListener extends Listener {
 		handlers.put(GameMovePacket.class, new GameMovePacketHandler());
 		handlers.put(InGameMessagePacket.class, new InGameMessagePacketHandler());
 		handlers.put(GameOverPacket.class, new GameOverPacketHandler());
+		handlers.put(RequestSavePacket.class, new RequestSavePacketHandler());
 		return handlers;
 	}
 

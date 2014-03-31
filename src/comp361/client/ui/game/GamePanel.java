@@ -127,7 +127,7 @@ public class GamePanel extends ClientPanel {
 		topPanel.add(gameInfoPanel, BorderLayout.NORTH);
 		
 		// Container for the ship info
-		infoPanel = new ShipInfoPanel(client, context);
+		infoPanel = new ShipInfoPanel(client, context, getClientWindow());
 		topPanel.add(infoPanel, BorderLayout.CENTER);
 
 		Dimension d = new Dimension(Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE), 2*(Constants.SCREEN_HEIGHT / 3));

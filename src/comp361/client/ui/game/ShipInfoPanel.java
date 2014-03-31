@@ -17,26 +17,30 @@ import javax.swing.SwingConstants;
 
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
+import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.Constants;
 import comp361.shared.data.ArmorType;
 import comp361.shared.data.CannonType;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
+import comp361.shared.packets.shared.RequestSavePacket;
 
 public class ShipInfoPanel extends JPanel implements Observer {
 
 	private SelectionContext context;
 	private GameClient client;
+	private ClientWindow window;
+	
 	private final int WIDTH = Constants.SCREEN_WIDTH - (Constants.MAP_WIDTH * Constants.TILE_SIZE);
 	
-	public ShipInfoPanel(GameClient client, SelectionContext context) {
+	public ShipInfoPanel(GameClient client, SelectionContext context, ClientWindow window) {
 		super();
 		
 		this.client = client;
 		this.context = context;
+		this.window = window;
 		
-				
 		refreshData();
 	}
 	
@@ -203,6 +207,11 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			add(label);
 		}
 		
+		JButton saveButton = new JButton("Request Save");
+		SwagFactory.style(saveButton);
+		saveButton.addActionListener(new SaveActionListener());
+		add(saveButton, BorderLayout.SOUTH);
+		
 		revalidate();
 		repaint();
 	}
@@ -222,6 +231,17 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			context.setType(type);
+		}
+	}
+	
+	private class SaveActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			window.setPanel(new WaitingForSavePanel(client, window, window.getPanel()));
+			// Send the save packet
+			RequestSavePacket packet = new RequestSavePacket();
+			packet.requester = client.getPlayerName();
+			client.getClient().sendTCP(packet);
 		}
 	}
 	

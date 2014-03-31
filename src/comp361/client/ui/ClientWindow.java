@@ -64,6 +64,10 @@ public class ClientWindow extends JFrame {
 		return gameClient;
 	}
 	
+	public ClientPanel getPanel() {
+		return panel;
+	}
+	
 	public void setPanel(final ClientPanel panel) {
 		// Add the new panel as a listener
 		final ClientWindow self = this;

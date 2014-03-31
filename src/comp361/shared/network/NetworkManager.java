@@ -48,6 +48,7 @@ import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
+import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
 public class NetworkManager {
@@ -113,6 +114,7 @@ public class NetworkManager {
 		kryo.register(GameOverPacket.class);
 		kryo.register(GameDescriptorRemovedPacket.class);
 		kryo.register(UpdatePlayerStatisticsPacket.class);
+		kryo.register(RequestSavePacket.class);
 	}
 
 	private NetworkManager() {
