@@ -42,6 +42,7 @@ import comp361.shared.packets.server.LoginError;
 import comp361.shared.packets.server.PlayerListPacket;
 import comp361.shared.packets.server.PlayerUpdatePacket;
 import comp361.shared.packets.server.RegisterError;
+import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.server.UpdatePlayerStatisticsPacket;
 import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -117,6 +118,7 @@ public class NetworkManager {
 		kryo.register(UpdatePlayerStatisticsPacket.class);
 		kryo.register(RequestSavePacket.class);
 		kryo.register(SaveResponsePacket.class);
+		kryo.register(SavedGameContainer.class);
 	}
 
 	private NetworkManager() {

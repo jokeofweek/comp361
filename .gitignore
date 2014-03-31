@@ -12,4 +12,5 @@ tmp/**/*
 
 # data files
 data/server/accounts/*.properties*
+data/server/saves/*.game*
 /bin

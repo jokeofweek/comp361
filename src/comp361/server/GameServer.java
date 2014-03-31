@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import comp361.server.data.AccountManager;
 import comp361.server.data.GameDescriptorManager;
+import comp361.server.data.SaveGameManager;
 import comp361.server.data.store.AccountDataStore;
 import comp361.server.logger.Logger;
 import comp361.server.network.ServerPacketListener;
@@ -21,6 +22,7 @@ public class GameServer {
 	private AccountManager accountManager;
 	private AccountDataStore accountDataStore;
 	private GameDescriptorManager gameDescriptorManager;
+	private SaveGameManager saveGameManager;
 
 	/**
 	 * Gets a server application up and running.
