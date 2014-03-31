@@ -14,7 +14,6 @@ public class GameManager extends Observable {
 
 	private GameClient client;
 	private Game game;
-	private boolean isTurn;
 	
 	public GameManager(GameClient client) {
 		this.client = client;
@@ -22,7 +21,6 @@ public class GameManager extends Observable {
 	
 	public void setGame(Game game) {
 		this.game = game;
-		this.isTurn = game.getP1().equals(client.getPlayerName());
 		
 		notifyObservers();
 		setChanged();
@@ -37,12 +35,12 @@ public class GameManager extends Observable {
 	}
 	
 	public boolean isTurn() {
-		return isTurn;
+		return (isPlayer1() && game.isP1Turn()) || (!isPlayer1() && !game.isP1Turn());
 	}
 	
 	public void applyMove(GameMovePacket packet, boolean isOwn) {
 		// If it's not your turn, do nothing
-		if (isOwn && !isTurn) {
+		if (isOwn && !isTurn()) {
 			return;
 		}
 		
@@ -51,9 +49,6 @@ public class GameManager extends Observable {
 		// If it was your own move, send to server
 		if (isOwn) {
 			client.getClient().sendTCP(packet);
-			isTurn = false;
-		} else {
-			isTurn = true;
 		}
 				
 		setChanged();

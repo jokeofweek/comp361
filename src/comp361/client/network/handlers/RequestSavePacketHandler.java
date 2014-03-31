@@ -20,8 +20,6 @@ public class RequestSavePacketHandler implements ClientPacketHandler<RequestSave
 		if (result == JOptionPane.YES_OPTION) {
 			response.accepted = true;
 			response.game = gameClient.getGameManager().getGame();
-			response.isP1Turn = (gameClient.getGameManager().isPlayer1() && gameClient.getGameManager().isTurn()) ||
-					(!gameClient.getGameManager().isPlayer1() && !gameClient.getGameManager().isTurn());
 			
 			// Publish message
 			gameClient.publishMessage(response);

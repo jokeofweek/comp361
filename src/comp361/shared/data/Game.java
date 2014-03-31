@@ -16,6 +16,7 @@ import comp361.shared.packets.shared.GameMovePacket;
 public class Game {
 	private String p1;
 	private String p2;
+	private boolean isP1Turn;
 	
 	private Field field;
 	private List<Ship> ships;
@@ -71,6 +72,8 @@ public class Game {
 				ships.add(s);
 			}
 		}
+		
+		this.isP1Turn = true;
 	}
 
 	/**
@@ -99,6 +102,13 @@ public class Game {
 	 */
 	public List<Ship> getShips() {
 		return this.ships;
+	}
+	
+	/**
+	 * @return true if it is player 1's turn, else false
+	 */
+	public boolean isP1Turn() {
+		return isP1Turn;
 	}
 
 	/**
@@ -441,6 +451,9 @@ public class Game {
 			ship.turnTo(packet.contextPoint, events);
 		}
 
+		// Switch the move
+		isP1Turn = !isP1Turn;
+		
 		System.out.println("Move applied. Events: ");
 		for (GameEvent e : events) {
 			System.out.println(e.getPoint() + " - " + e.getCause() + " - " + e.getEffect());
