@@ -41,6 +41,7 @@ import comp361.shared.data.Direction;
 import comp361.shared.data.Game;
 import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameMovePacket;
+import comp361.shared.packets.shared.SaveResponsePacket;
 
 public class GameFieldPanel extends JPanel implements Observer {
 

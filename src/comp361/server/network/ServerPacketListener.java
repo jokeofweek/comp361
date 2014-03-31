@@ -17,6 +17,7 @@ import comp361.server.network.handlers.MessagePacketHandler;
 import comp361.server.network.handlers.NewGameDescriptorPacketHandler;
 import comp361.server.network.handlers.RegisterPacketHandler;
 import comp361.server.network.handlers.RequestSavePacketHandler;
+import comp361.server.network.handlers.SaveResponsePacketHandler;
 import comp361.server.network.handlers.ServerPacketHandler;
 import comp361.server.network.handlers.SetupMessagePacketHandler;
 import comp361.server.network.handlers.UpdateReadyPacketHandler;
@@ -34,6 +35,7 @@ import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.RequestSavePacket;
+import comp361.shared.packets.shared.SaveResponsePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
 /**
@@ -118,9 +120,11 @@ public class ServerPacketListener extends Listener {
 	private Map<Class, ServerPacketHandler> setupGamePacketHandlers() {
 		Map<Class, ServerPacketHandler> handlers = new HashMap<Class, ServerPacketHandler>();
 		handlers.put(GameMovePacket.class, new GameMovePacketHandler());
-		handlers.put(InGameMessagePacket.class, new InGameMessagePacketHandler());
+		handlers.put(InGameMessagePacket.class,
+				new InGameMessagePacketHandler());
 		handlers.put(GameOverPacket.class, new GameOverPacketHandler());
 		handlers.put(RequestSavePacket.class, new RequestSavePacketHandler());
+		handlers.put(SaveResponsePacket.class, new SaveResponsePacketHandler());
 		return handlers;
 	}
 
@@ -156,18 +160,20 @@ public class ServerPacketListener extends Listener {
 	@Override
 	public void idle(Connection connection) {
 		super.idle(connection);
-		// gameServer.getLogger().debug("Connection " + connection.getID() + " idle.");
-		
+		// gameServer.getLogger().debug("Connection " + connection.getID() +
+		// " idle.");
+
 	}
-	
+
 	@Override
 	public void disconnected(Connection connection) {
 		super.disconnected(connection);
-		
+
 		// Properly disconnect the session
 		((Session) connection).disconnect();
-		
-		gameServer.getLogger().debug("Connection " + connection.getID() + " disconnected.");
+
+		gameServer.getLogger().debug(
+				"Connection " + connection.getID() + " disconnected.");
 	}
 
 }

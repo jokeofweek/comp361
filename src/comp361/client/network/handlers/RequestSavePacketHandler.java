@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import comp361.client.GameClient;
 import comp361.shared.packets.shared.RequestSavePacket;
+import comp361.shared.packets.shared.SaveResponsePacket;
 
 public class RequestSavePacketHandler implements ClientPacketHandler<RequestSavePacket> {
 
@@ -15,11 +16,21 @@ public class RequestSavePacketHandler implements ClientPacketHandler<RequestSave
 				"Battleships",
 				JOptionPane.YES_NO_OPTION);
 		
+		SaveResponsePacket response = new SaveResponsePacket();
 		if (result == JOptionPane.YES_OPTION) {
+			response.accepted = true;
+			response.game = gameClient.getGameManager().getGame();
+			response.isP1Turn = (gameClient.getGameManager().isPlayer1() && gameClient.getGameManager().isTurn()) ||
+					(!gameClient.getGameManager().isPlayer1() && !gameClient.getGameManager().isTurn());
 			
+			// Publish message
+			gameClient.publishMessage(response);
 		} else {
-			
+			response.accepted = false;
 		}
+
+		
+		gameClient.getClient().sendTCP(response);
 		
 	}
 

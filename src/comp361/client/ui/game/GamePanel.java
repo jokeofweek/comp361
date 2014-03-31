@@ -45,6 +45,7 @@ import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.InGameMessagePacket;
 import comp361.shared.packets.shared.MessagePacket;
+import comp361.shared.packets.shared.SaveResponsePacket;
 
 public class GamePanel extends ClientPanel {
 	
@@ -300,6 +301,12 @@ public class GamePanel extends ClientPanel {
 			return;
 		} else if (object instanceof InGameMessagePacket) {
 			publishChatMessage((MessagePacket)object);
+			return;
+		} else if (object instanceof SaveResponsePacket) {
+			// Switch back to lobby
+			if (((SaveResponsePacket)object).accepted) {
+				getClientWindow().setPanel(new LobbyPanel(getGameClient(), getClientWindow()));
+			}
 			return;
 		}
 		
