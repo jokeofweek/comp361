@@ -184,7 +184,7 @@ public class LobbyPanel extends ClientPanel {
 	}
 
 	private void setupLoadGameContainer() {
-		loadGamesPanel = new LoadGamesPanel(getGameClient());
+		loadGamesPanel = new LoadGamesPanel(getGameClient(), getClientWindow());
 	}
 
 	/**

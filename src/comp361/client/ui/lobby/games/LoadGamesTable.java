@@ -7,18 +7,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import comp361.client.GameClient;
+import comp361.client.ui.ClientPanel;
+import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.game.WaitForPanel;
+import comp361.client.ui.lobby.LobbyPanel;
 import comp361.client.ui.util.ButtonColumn;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.JoinGamePacket;
 import comp361.shared.packets.server.SavedGameContainer;
+import comp361.shared.packets.shared.SavedGameInvitePacket;
 
 public class LoadGamesTable extends JTable {
 
 	private LoadGamesTableModel model;
 	private static final int ROW_HEIGHT = SwagFactory.BUTTON_HEIGHT;
 
-	public LoadGamesTable(final GameClient client, final LoadGamesTableModel model) {
+	public LoadGamesTable(final GameClient client, final ClientWindow window, final LoadGamesTableModel model) {
 		super(null, model.getHeaders());
 		setModel(model);
 
@@ -54,31 +59,20 @@ public class LoadGamesTable extends JTable {
 		        	}
 		        }
 		        
-		        /*GameDescriptor descriptor = model.getGameDescriptor(modelRow);
-		        if (!descriptor.isStarted()) {
-		        	boolean canJoin = false;
-		        	// Prompt for password if there is a game password
-		        	if (descriptor.getPassword() != null && !descriptor.getPassword().isEmpty()) {
-		        		String input = JOptionPane.showInputDialog(null, "Please enter the game password:");
-		        		if (input.equals(descriptor.getPassword())) {
-		        			canJoin = true;
-		        		} else {
-		        			JOptionPane.showMessageDialog(null, "You entered an incorrect password.");
-		        		}
-		        	} else {
-		        		canJoin = true;
-		        	}
-
-		        	// Send the packet if we got the password right.
-		        	if (canJoin) {
-		        		JoinGamePacket packet = new JoinGamePacket();
-		        		packet.id = descriptor.getId();
-		        		client.getClient().sendTCP(packet);
-		        	}
-		        } else {
-		        	// TODO Handle case where you want to observe a game.
-		        }
-*/
+		        // Get the current panel
+		        ClientPanel panel = window.getPanel();
+		        window.setPanel(new WaitForPanel(client, window, panel, new WaitForPanel.Callback() {
+					
+					@Override
+					public boolean receivePacket(Object object) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				}));
+		        // Send the packet
+		        SavedGameInvitePacket packet = new SavedGameInvitePacket();
+		        packet.container = container;
+		        client.getClient().sendTCP(packet);
 			}
 		}, LoadGamesTableModel.JOIN_COLUMN);
 	}
