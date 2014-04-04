@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import comp361.client.GameClient;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.shared.SavedGameInvitePacket;
+import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
 
 public class SavedGameInvitePacketHandler implements
 		ClientPacketHandler<SavedGameInvitePacket> {
@@ -15,7 +16,13 @@ public class SavedGameInvitePacketHandler implements
 				desc.getPlayers()[1] : desc.getPlayers()[0];
 				
 		int response = JOptionPane.showConfirmDialog(null, otherPlayer + " has invited you to continue the game '" + 
-				desc.getName() + "'. Do you accept?", "Battleships", JOptionPane.YES_NO_OPTION);	
+				desc.getName() + "'. Do you accept?", "Battleships", JOptionPane.YES_NO_OPTION);
+		
+		// Send the response packet
+		SavedGameInviteResponsePacket responsePacket = new SavedGameInviteResponsePacket();
+		responsePacket.container = packet.container;
+		responsePacket.accepted = (response == JOptionPane.YES_OPTION);
+		gameClient.getClient().sendTCP(responsePacket);
 				
 	}
 }

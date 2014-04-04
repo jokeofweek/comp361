@@ -54,6 +54,7 @@ import comp361.shared.packets.shared.SavedGameInvitePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SaveResponsePacket;
+import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
 public class NetworkManager {
@@ -125,6 +126,7 @@ public class NetworkManager {
 		kryo.register(RequestSavedGamesPacket.class);
 		kryo.register(SavedGamesListPacket.class);
 		kryo.register(SavedGameInvitePacket.class);
+		kryo.register(SavedGameInviteResponsePacket.class);
 	}
 
 	private NetworkManager() {

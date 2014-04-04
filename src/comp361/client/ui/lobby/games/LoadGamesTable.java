@@ -17,6 +17,7 @@ import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.JoinGamePacket;
 import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.shared.SavedGameInvitePacket;
+import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
 
 public class LoadGamesTable extends JTable {
 
@@ -41,7 +42,7 @@ public class LoadGamesTable extends JTable {
 		        SavedGameContainer container = model.getContainer(modelRow);
 		        
 		        // Ensure the player from the saved game is online and isn't already in a game
-		        String otherPlayer = container.descriptor.getPlayers()[0].equals(client.getPlayerName()) ?
+		        final String otherPlayer = container.descriptor.getPlayers()[0].equals(client.getPlayerName()) ?
 		        		container.descriptor.getPlayers()[1] : container.descriptor.getPlayers()[0];
 		        
 		        if (client.getPlayerManager().getPlayer(otherPlayer) == null) {
@@ -65,7 +66,12 @@ public class LoadGamesTable extends JTable {
 					
 					@Override
 					public boolean receivePacket(Object object) {
-						// TODO Auto-generated method stub
+						if (object instanceof SavedGameInviteResponsePacket) {
+							if (!((SavedGameInviteResponsePacket)object).accepted) {
+								JOptionPane.showMessageDialog(null, otherPlayer + " denied your invitation.");
+								return true;
+							}
+						}
 						return false;
 					}
 				}));

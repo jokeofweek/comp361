@@ -47,6 +47,7 @@ import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SaveResponsePacket;
 import comp361.shared.packets.shared.SavedGameInvitePacket;
+import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
 /**
@@ -97,6 +98,7 @@ public class ClientPacketListener extends Listener {
 		handlers.put(UpdatePlayerStatisticsPacket.class, new UpdatePlayerStatisticsPacketHandler());
 		handlers.put(RequestSavePacket.class, new RequestSavePacketHandler());
 		handlers.put(SavedGameInvitePacket.class, new SavedGameInvitePacketHandler());
+		handlers.put(SavedGameInviteResponsePacket.class, genericHandler);
 		return handlers;
 	}
 
