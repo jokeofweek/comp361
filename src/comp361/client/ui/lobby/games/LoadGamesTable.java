@@ -10,11 +10,13 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.game.GamePanel;
 import comp361.client.ui.game.WaitForPanel;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.client.ui.util.ButtonColumn;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.JoinGamePacket;
+import comp361.shared.packets.server.GameStartPacket;
 import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.shared.SavedGameInvitePacket;
 import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
@@ -39,7 +41,7 @@ public class LoadGamesTable extends JTable {
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
 
 		        // Get the game descriptor
-		        SavedGameContainer container = model.getContainer(modelRow);
+		        final SavedGameContainer container = model.getContainer(modelRow);
 		        
 		        // Ensure the player from the saved game is online and isn't already in a game
 		        final String otherPlayer = container.descriptor.getPlayers()[0].equals(client.getPlayerName()) ?
@@ -64,6 +66,14 @@ public class LoadGamesTable extends JTable {
 		        ClientPanel panel = window.getPanel();
 		        window.setPanel(new WaitForPanel(client, window, panel, new WaitForPanel.Callback() {
 					
+		        	@Override
+		        	public void enter() {
+		        		// Send the invitation packet
+				        SavedGameInvitePacket packet = new SavedGameInvitePacket();
+				        packet.container = container;
+				        client.getClient().sendTCP(packet);
+		        	}
+		        	
 					@Override
 					public boolean receivePacket(Object object) {
 						if (object instanceof SavedGameInviteResponsePacket) {
@@ -71,14 +81,13 @@ public class LoadGamesTable extends JTable {
 								JOptionPane.showMessageDialog(null, otherPlayer + " denied your invitation.");
 								return true;
 							}
+						} else if (object instanceof GameStartPacket) {
+							// Switch screens
+							window.setPanel(new GamePanel(client, window));
 						}
 						return false;
 					}
 				}));
-		        // Send the packet
-		        SavedGameInvitePacket packet = new SavedGameInvitePacket();
-		        packet.container = container;
-		        client.getClient().sendTCP(packet);
 			}
 		}, LoadGamesTableModel.JOIN_COLUMN);
 	}

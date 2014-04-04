@@ -18,8 +18,8 @@ import comp361.shared.packets.server.SavedGameContainer;
 
 public class LoadGamesTableModel extends AbstractTableModel implements Observer {
 
-	public static final int JOIN_COLUMN = 3;
-	private static final String[] headers =  {"Name", "Opponent", "Ship Set", "Load"};
+	public static final int JOIN_COLUMN = 4;
+	private static final String[] headers =  {"Name", "Date Saved", "Opponent", "Ship Set", "Load"};
 	private GameClient client;
 	
 	/**
@@ -76,15 +76,17 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 		if (columnIndex == 0) {
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
+			return containers.get(rowIndex).saveDate.toString();
+		} else if (columnIndex == 2) {
 			for (String player : descriptor.getPlayers()) {
 				if (player != null && !player.equals(client.getPlayerName())) {
 					return player;
 				}
 			}
 			return "";
-		} else if (columnIndex == 2) {
-			return Ship.SHIP_INVENTORY_NAMES[descriptor.getShipInventory()];
 		} else if (columnIndex == 3) {
+			return Ship.SHIP_INVENTORY_NAMES[descriptor.getShipInventory()];
+		} else if (columnIndex == 4) {
 			return "Load";
 		}
 
@@ -97,11 +99,12 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 			@Override
 			public void run() {
 				containers = savedGames;
+				// Sort containers based on save date.
 				Collections.sort(containers, new Comparator<SavedGameContainer>() {
 					@Override
 					public int compare(SavedGameContainer o1,
 							SavedGameContainer o2) {
-						return o1.descriptor.getName().compareTo(o2.descriptor.getName());
+						return o2.saveDate.compareTo(o1.saveDate);
 					}
 				});
 				fireTableDataChanged();

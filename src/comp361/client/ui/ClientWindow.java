@@ -76,7 +76,7 @@ public class ClientWindow extends JFrame {
 			public void run() {
 				// Remove the old panel as a listener
 				if (self.panel != null) {
-					gameClient.deleteObserver(panel);
+					gameClient.deleteObserver(self.panel);
 					self.panel.exit();
 				}
 				

@@ -23,6 +23,7 @@ import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
+import comp361.client.ui.game.GamePanel;
 import comp361.client.ui.game.WaitForPanel;
 import comp361.client.ui.game.WaitForPanel.Callback;
 import comp361.client.ui.lobby.chat.ChatPanel;
@@ -33,6 +34,7 @@ import comp361.client.ui.setup.NewGamePanel;
 import comp361.shared.Constants;
 import comp361.shared.packets.client.RequestSavedGamesPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
+import comp361.shared.packets.server.GameStartPacket;
 import comp361.shared.packets.server.GenericError;
 import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.server.SavedGamesListPacket;
@@ -110,6 +112,12 @@ public class LobbyPanel extends ClientPanel {
 			public void actionPerformed(ActionEvent e) {
 				getClientWindow().setPanel(new WaitForPanel(getGameClient(), getClientWindow(), self, new Callback() {
 					@Override
+					public void enter() {
+						// Request the saved games
+						getGameClient().getClient().sendTCP(new RequestSavedGamesPacket());
+					}
+					
+					@Override
 					public boolean receivePacket(Object object) {
 						if (object instanceof SavedGamesListPacket) {
 							loadGamesPanel.getTableModel().refreshData(((SavedGamesListPacket)object).containers);
@@ -119,7 +127,6 @@ public class LobbyPanel extends ClientPanel {
 						return false;
 					}
 				}));
-				getGameClient().getClient().sendTCP(new RequestSavedGamesPacket());
 			}
 		});
 
@@ -240,6 +247,11 @@ public class LobbyPanel extends ClientPanel {
 			chatPanel.publishChatMessage((MessagePacket) arg);
 		} else if (arg instanceof GenericError) {
 			JOptionPane.showMessageDialog(null, arg);
+		} else if (arg instanceof GameStartPacket) {
+			// Switch screens
+			getClientWindow().setPanel(
+					new GamePanel(getGameClient(), getClientWindow()));
+			return;
 		} else if (arg instanceof GameDescriptorPlayerUpdatePacket) {
 			GameDescriptorPlayerUpdatePacket packet = (GameDescriptorPlayerUpdatePacket)arg;
 

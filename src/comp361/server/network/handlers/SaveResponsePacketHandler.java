@@ -28,6 +28,7 @@ public class SaveResponsePacketHandler implements
 					gameServer.getServer().sendToTCP(s.getID(), packet);
 					if (packet.accepted) {
 						s.setSessionType(SessionType.LOBBY);
+						s.setGameDescriptorId(-1);
 					}
 				}
 			}
@@ -35,10 +36,14 @@ public class SaveResponsePacketHandler implements
 		
 		// If the save was accepted, set state back to lobby
 		if (packet.accepted) {
-			session.setSessionType(SessionType.LOBBY);
-			
 			// Actually save the game
-			gameServer.getSaveGameManager().saveGame(game, session.getGameDescriptorId());
+			gameServer.getSaveGameManager().saveGame(game, id);
+			
+			// Remove the game descriptor
+			gameServer.getGameDescriptorManager().removeGameDescriptor(id, gameServer);
+
+			session.setSessionType(SessionType.LOBBY);
+			session.setGameDescriptorId(-1);
 		}
 	}
 }

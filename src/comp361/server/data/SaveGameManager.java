@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -36,6 +37,7 @@ public class SaveGameManager {
 		String nonce = "" + new Random().nextInt(10000);
 		String fileName = time + "_" + game.getP1() + "_" + game.getP2() + "_" + nonce + ".game";
 		container.fileName = fileName;
+		container.saveDate = new Date();
 		
 		Kryo k = new Kryo();
 		Output out = null;

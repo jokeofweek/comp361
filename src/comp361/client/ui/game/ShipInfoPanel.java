@@ -243,6 +243,14 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			window.setPanel(new WaitForPanel(client, window, window.getPanel(), new Callback() {
 				@Override
+				public void enter() {
+					// Send the save packet
+					RequestSavePacket packet = new RequestSavePacket();
+					packet.requester = client.getPlayerName();
+					client.getClient().sendTCP(packet);
+				}
+				
+				@Override
 				public boolean receivePacket(Object object) {
 					// Switch either to lobby or back to game if the save was accepted
 					if (object instanceof SaveResponsePacket) {
@@ -255,10 +263,6 @@ public class ShipInfoPanel extends JPanel implements Observer {
 					return false;
 				}
 			}));
-			// Send the save packet
-			RequestSavePacket packet = new RequestSavePacket();
-			packet.requester = client.getPlayerName();
-			client.getClient().sendTCP(packet);
 		}
 	}
 	

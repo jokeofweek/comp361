@@ -35,10 +35,20 @@ public class WaitForPanel extends ClientPanel {
 	
 	public static interface Callback {
 		/**
+		 * When the screen shows.
+		 */
+		public void enter();
+		
+		/**
 		 * @param object the packet received.
 		 * @return true if we should switch back to old panel.
 		 */
 		public boolean receivePacket(Object object);
+	}
+	
+	@Override
+	public void enter() {
+		action.enter();
 	}
 	
 	

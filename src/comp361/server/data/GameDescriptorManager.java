@@ -253,13 +253,18 @@ public class GameDescriptorManager {
 		}
 		
 		// Remove the game descriptor
+		removeGameDescriptor(id, server);
+		
+		// Lawg dawg
+		server.getLogger().debug("Game " + id + " is over. Message: " + message);
+	}
+	
+	public void removeGameDescriptor(int id, GameServer server) {
+
 		gameDescriptors.remove(id);
 		GameDescriptorRemovedPacket packet = new GameDescriptorRemovedPacket();
 		packet.id = id;
 		server.getServer().sendToAllTCP(packet);
-		
-		// Lawg dawg
-		server.getLogger().debug("Game " + id + " is over. Message: " + message);
 	}
 	
 	public GameDescriptor getGameDescriptor(int id) {

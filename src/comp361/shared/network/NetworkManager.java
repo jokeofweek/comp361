@@ -2,6 +2,7 @@ package comp361.shared.network;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -50,10 +51,10 @@ import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.InGameMessagePacket;
-import comp361.shared.packets.shared.SavedGameInvitePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SaveResponsePacket;
+import comp361.shared.packets.shared.SavedGameInvitePacket;
 import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
 import comp361.shared.packets.shared.SetupMessagePacket;
 
@@ -98,6 +99,7 @@ public class NetworkManager {
 		kryo.register(HashMap.class);
 		kryo.register(HashSet.class);
 		kryo.register(String[].class);
+		kryo.register(Date.class);
 		kryo.register(int[].class);
 		kryo.register(int[][].class);
 		kryo.register(NewGameDescriptorPacket.class);
