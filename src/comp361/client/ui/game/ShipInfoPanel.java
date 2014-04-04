@@ -17,10 +17,8 @@ import javax.swing.SwingConstants;
 
 import comp361.client.GameClient;
 import comp361.client.data.SelectionContext;
-import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
-import comp361.client.ui.game.WaitForPanel.Callback;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.Constants;
 import comp361.shared.data.ArmorType;
@@ -241,7 +239,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 	private class SaveActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			window.setPanel(new WaitForPanel(client, window, window.getPanel(), new Callback() {
+			window.setPanel(new WaitForPanel(client, window, window.getPanel()) {
 				@Override
 				public void enter() {
 					// Send the save packet
@@ -262,7 +260,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 					}
 					return false;
 				}
-			}));
+			});
 		}
 	}
 	

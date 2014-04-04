@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 
 import javax.swing.BorderFactory;
@@ -25,7 +23,6 @@ import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.game.GamePanel;
 import comp361.client.ui.game.WaitForPanel;
-import comp361.client.ui.game.WaitForPanel.Callback;
 import comp361.client.ui.lobby.chat.ChatPanel;
 import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
@@ -36,7 +33,6 @@ import comp361.shared.packets.client.RequestSavedGamesPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GameStartPacket;
 import comp361.shared.packets.server.GenericError;
-import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.server.SavedGamesListPacket;
 import comp361.shared.packets.shared.MessagePacket;
 
@@ -110,7 +106,7 @@ public class LobbyPanel extends ClientPanel {
 		loadGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getClientWindow().setPanel(new WaitForPanel(getGameClient(), getClientWindow(), self, new Callback() {
+				getClientWindow().setPanel(new WaitForPanel(getGameClient(), getClientWindow(), self) {
 					@Override
 					public void enter() {
 						// Request the saved games
@@ -126,7 +122,7 @@ public class LobbyPanel extends ClientPanel {
 						}
 						return false;
 					}
-				}));
+				});
 			}
 		});
 

@@ -18,43 +18,27 @@ import comp361.client.ui.ClientWindow;
 import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.packets.shared.SaveResponsePacket;
 
-public class WaitForPanel extends ClientPanel {
+public abstract class WaitForPanel extends ClientPanel {
 
 	private ClientPanel panel;
-	private Callback action;
 	
-	public WaitForPanel(GameClient client, final ClientWindow window, final ClientPanel panel, final Callback action) {
+	public WaitForPanel(GameClient client, final ClientWindow window, final ClientPanel panel) {
 		super(client, window, new BorderLayout());
 		this.panel = panel;
-		this.action = action;
 		
 		JLabel label = new JLabel("Waiting for response...");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		add(label);
 	}
 	
-	public static interface Callback {
-		/**
-		 * When the screen shows.
-		 */
-		public void enter();
-		
-		/**
-		 * @param object the packet received.
-		 * @return true if we should switch back to old panel.
-		 */
-		public boolean receivePacket(Object object);
-	}
-	
 	@Override
-	public void enter() {
-		action.enter();
-	}
+	public abstract void enter();
+	public abstract boolean receivePacket(Object arg);
 	
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		if (this.action.receivePacket(arg)) {
+		if (this.receivePacket(arg)) {
 			getClientWindow().setPanel(panel);
 		}
 	}

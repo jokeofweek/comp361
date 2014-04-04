@@ -12,10 +12,8 @@ import comp361.client.ui.ClientWindow;
 import comp361.client.ui.SwagFactory;
 import comp361.client.ui.game.GamePanel;
 import comp361.client.ui.game.WaitForPanel;
-import comp361.client.ui.lobby.LobbyPanel;
 import comp361.client.ui.util.ButtonColumn;
 import comp361.shared.data.GameDescriptor;
-import comp361.shared.packets.client.JoinGamePacket;
 import comp361.shared.packets.server.GameStartPacket;
 import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.shared.SavedGameInvitePacket;
@@ -64,7 +62,7 @@ public class LoadGamesTable extends JTable {
 		        
 		        // Get the current panel
 		        ClientPanel panel = window.getPanel();
-		        window.setPanel(new WaitForPanel(client, window, panel, new WaitForPanel.Callback() {
+		        window.setPanel(new WaitForPanel(client, window, panel) {
 					
 		        	@Override
 		        	public void enter() {
@@ -87,7 +85,7 @@ public class LoadGamesTable extends JTable {
 						}
 						return false;
 					}
-				}));
+				});
 			}
 		}, LoadGamesTableModel.JOIN_COLUMN);
 	}
