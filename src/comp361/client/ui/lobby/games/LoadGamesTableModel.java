@@ -10,6 +10,7 @@ import java.util.Observer;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
+import comp361.client.GameClient;
 import comp361.client.data.GameDescriptorManager;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.data.Ship;
@@ -19,13 +20,15 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 
 	public static final int JOIN_COLUMN = 3;
 	private static final String[] headers =  {"Name", "Opponent", "Ship Set", "Load"};
-
+	private GameClient client;
+	
 	/**
 	 * This is a list of the descriptors IDs.
 	 */
 	public static List<SavedGameContainer> containers;
 
-	public LoadGamesTableModel() {
+	public LoadGamesTableModel(GameClient client) {
+		this.client = client;
 		containers = new ArrayList<SavedGameContainer>();
 	}
 
@@ -74,7 +77,7 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
 			for (String player : descriptor.getPlayers()) {
-				if (player != null) {
+				if (player != null && !player.equals(client.getPlayerName())) {
 					return player;
 				}
 			}
