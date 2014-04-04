@@ -49,6 +49,15 @@ public class GameDescriptorManager {
 	}
 	
 	/**
+	 * This loads in a descriptor from a saved game.
+	 * @param descriptor
+	 */
+	public void loadDescriptor(GameDescriptor descriptor) {
+		descriptor.setId(currentId++);
+		gameDescriptors.put(descriptor.getId(), descriptor);
+	}
+	
+	/**
 	 * Updates a player's starting positions for a game descriptor
  	 * @param id The ID of the game descriptor.
 	 * @param player The player's name

@@ -39,8 +39,13 @@ public class GameDescriptor {
 		this.maxPlayers = maxPlayers;
 	}
 	
+	
 	public int getId() {
 		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public String getName() {

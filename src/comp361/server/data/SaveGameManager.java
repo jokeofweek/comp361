@@ -102,4 +102,13 @@ public class SaveGameManager {
 		}
 		return container;
 	}
+	
+	/**
+	 * Fetches the container for a given file.
+	 * @param fileName The filename of the save game.
+	 * @return The container containing all the save information.
+	 */
+	public SavedGameContainer loadGame(String fileName) {
+		return loadGameContainer(fileName);
+	}
 }

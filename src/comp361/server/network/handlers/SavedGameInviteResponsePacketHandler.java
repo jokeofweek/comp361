@@ -6,6 +6,8 @@ import comp361.server.GameServer;
 import comp361.server.session.Session;
 import comp361.server.session.SessionType;
 import comp361.shared.data.GameDescriptor;
+import comp361.shared.packets.server.GameDescriptorCreatedPacket;
+import comp361.shared.packets.server.SavedGameContainer;
 import comp361.shared.packets.shared.SavedGameInviteResponsePacket;
 
 public class SavedGameInviteResponsePacketHandler implements
@@ -31,7 +33,17 @@ public class SavedGameInviteResponsePacketHandler implements
 				}
 			}
 		} else {
-			// Handle actually loading!!
+			// Handle actually loading. We need to reload the container
+			// to get the game information since we discarded it.
+			SavedGameContainer container = gameServer.getSaveGameManager().loadGame(packet.container.fileName);
+			
+			// Update the descriptor with a new ID.
+			gameServer.getGameDescriptorManager().loadDescriptor(container.descriptor);
+			
+			// Send a game descriptor created packet to everyone
+			GameDescriptorCreatedPacket createdPacket = new GameDescriptorCreatedPacket();
+			createdPacket.descriptor = container.descriptor;
+			gameServer.getServer().sendToAllTCP(createdPacket);
 		}
 
 	}
