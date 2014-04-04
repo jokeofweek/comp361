@@ -58,6 +58,10 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 	public boolean isCellEditable(int row, int col) {
 		return col == JOIN_COLUMN;
 	}
+	
+	public SavedGameContainer getContainer(int row) {
+		return containers.get(row);
+	}
 
 
 	@Override
@@ -69,16 +73,6 @@ public class LoadGamesTableModel extends AbstractTableModel implements Observer 
 		if (columnIndex == 0) {
 			return descriptor.getName();
 		} else if (columnIndex == 1) {
-			// Caclulate number of players
-//			String[] players = descriptor.getPlayers();
-//			int count = 0;
-//			for (int i = 0; i < players.length; i++) {
-//				if (players[i] != null) {
-//					count++;
-//				}
-//			}
-//			return count + " / " + descriptor.getMaxPlayers();
-			// Return the name of the player in the game
 			for (String player : descriptor.getPlayers()) {
 				if (player != null) {
 					return player;

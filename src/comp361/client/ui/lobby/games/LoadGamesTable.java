@@ -11,6 +11,7 @@ import comp361.client.ui.SwagFactory;
 import comp361.client.ui.util.ButtonColumn;
 import comp361.shared.data.GameDescriptor;
 import comp361.shared.packets.client.JoinGamePacket;
+import comp361.shared.packets.server.SavedGameContainer;
 
 public class LoadGamesTable extends JTable {
 
@@ -32,6 +33,27 @@ public class LoadGamesTable extends JTable {
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
 
 		        // Get the game descriptor
+		        SavedGameContainer container = model.getContainer(modelRow);
+		        
+		        // Ensure the player from the saved game is online and isn't already in a game
+		        String otherPlayer = container.descriptor.getPlayers()[0].equals(client.getPlayerName()) ?
+		        		container.descriptor.getPlayers()[1] : container.descriptor.getPlayers()[0];
+		        
+		        if (client.getPlayerManager().getPlayer(otherPlayer) == null) {
+		        	JOptionPane.showMessageDialog(null, otherPlayer + " is not online right now!");
+		        	return;
+		        }
+
+		        // Iterate through all game descriptors, making sure the player isn't already in a game
+		        for (GameDescriptor descriptor : client.getGameDescriptorManager().getGameDescriptors()) {
+		        	for (String player : descriptor.getPlayers()) {
+		        		if (player != null && otherPlayer.equals(player)) {
+		        			JOptionPane.showMessageDialog(null, otherPlayer + " is already in a game!");
+				        	return;
+		        		}
+		        	}
+		        }
+		        
 		        /*GameDescriptor descriptor = model.getGameDescriptor(modelRow);
 		        if (!descriptor.isStarted()) {
 		        	boolean canJoin = false;

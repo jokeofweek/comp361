@@ -50,6 +50,7 @@ import comp361.shared.packets.shared.ChangeSeedPacket;
 import comp361.shared.packets.shared.GameMovePacket;
 import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.InGameMessagePacket;
+import comp361.shared.packets.shared.SavedGameInvitePacket;
 import comp361.shared.packets.shared.MessagePacket;
 import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SaveResponsePacket;
@@ -123,6 +124,7 @@ public class NetworkManager {
 		kryo.register(SavedGameContainer.class);
 		kryo.register(RequestSavedGamesPacket.class);
 		kryo.register(SavedGamesListPacket.class);
+		kryo.register(SavedGameInvitePacket.class);
 	}
 
 	private NetworkManager() {
