@@ -14,46 +14,46 @@ public class GameManager extends Observable {
 
 	private GameClient client;
 	private Game game;
-	
+
 	public GameManager(GameClient client) {
 		this.client = client;
 	}
-	
+
 	public void setGame(Game game) {
 		this.game = game;
-		
+
 		notifyObservers();
 		setChanged();
 	}
-	
+
 	public Game getGame() {
 		return game;
 	}
-	
+
 	public boolean isPlayer1() {
 		return game.getP1().equals(client.getPlayerName());
 	}
-	
+
 	public boolean isTurn() {
 		return (isPlayer1() && game.isP1Turn()) || (!isPlayer1() && !game.isP1Turn());
 	}
-	
+
 	public void applyMove(GameMovePacket packet, boolean isOwn) {
 		// If it's not your turn, do nothing
 		if (isOwn && !isTurn()) {
 			return;
 		}
-		
-		List<GameEvent> events = game.applyMove(packet);
+
+		List<GameEvent> events = game.applyMove(packet, isOwn);
 
 		// If it was your own move, send to server
 		if (isOwn) {
 			client.getClient().sendTCP(packet);
 		}
-				
+
 		setChanged();
 		notifyObservers(events);
-		
+
 		// Test if the game is over!
 		String winner = game.getWinner();
 		if (winner != null) {
@@ -74,10 +74,10 @@ public class GameManager extends Observable {
 			client.publishMessage(overPacket);
 		}
 	}
-	
+
 	public void gameOver(GameOverPacket packet) {
 		System.out.println("Game is over!");
 		// TODO handle game over
 	}
-	
+
 }

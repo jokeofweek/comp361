@@ -41,7 +41,6 @@ import comp361.shared.data.Direction;
 import comp361.shared.data.Game;
 import comp361.shared.data.Ship;
 import comp361.shared.packets.shared.GameMovePacket;
-import comp361.shared.packets.shared.SaveResponsePacket;
 
 public class GameFieldPanel extends JPanel implements Observer {
 
@@ -335,11 +334,37 @@ public class GameFieldPanel extends JPanel implements Observer {
 				SoundManager sm = SoundManager.getInstance();
 				e.setPlayedSound(true);
 
-				if (e.getEffect() == Effect.HIT_WATER) {
+				Effect effect = e.getEffect();
+				Cause cause = e.getCause();
+
+				if (effect == Effect.HIT_WATER) {
 					sm.play("hit-water");
 				} else {
-					if (e.getCause() == Cause.CANNON) {
-						sm.play("cannon");
+					if (effect != null) {
+						switch (effect) {
+						case SHIP_SUNK:
+							sm.play("ship-sunk");
+							break;
+						case BASE_HIT:
+						case BASE_DESTROYED:
+							sm.play("base");
+							break;
+						}
+					}
+
+					if (cause != null) {
+						switch (cause) {
+						case CANNON:
+							sm.play("cannon");
+							break;
+						case TORPEDO:
+							sm.play("torpedo");
+							break;
+						case MINE:
+						case KAMIKAZE:
+							sm.play("mine");
+							break;
+						}
 					}
 				}
 			}

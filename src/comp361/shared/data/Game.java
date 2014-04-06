@@ -9,6 +9,7 @@ import java.util.Set;
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
+import comp361.client.resources.SoundManager;
 import comp361.client.ui.setup.CoralReefGenerator;
 import comp361.shared.Constants;
 import comp361.shared.packets.shared.GameMovePacket;
@@ -17,7 +18,7 @@ public class Game {
 	private String p1;
 	private String p2;
 	private boolean isP1Turn;
-	
+
 	private Field field;
 	private List<Ship> ships;
 
@@ -27,7 +28,7 @@ public class Game {
 
 	/**
 	 * Creates a new game
-	 * 
+	 *
 	 * @param p1
 	 *            The first player to play the game
 	 * @param p2
@@ -64,7 +65,7 @@ public class Game {
 				}
 			}
 		}
-		
+
 		for (int p = 0; p < positions.length; p++) {
 			for (int i = 0; i < Ship.SHIP_INVENTORIES[shipInventory].length; i++) {
 				Ship s = Ship.SHIP_INVENTORIES[shipInventory][i].clone(this, (p == 0) ? getP1() : getP2());
@@ -72,7 +73,7 @@ public class Game {
 				ships.add(s);
 			}
 		}
-		
+
 		this.isP1Turn = true;
 	}
 
@@ -103,7 +104,7 @@ public class Game {
 	public List<Ship> getShips() {
 		return this.ships;
 	}
-	
+
 	/**
 	 * @return true if it is player 1's turn, else false
 	 */
@@ -118,7 +119,7 @@ public class Game {
 	 * @return The point up to which the ship can move to, or null if it can't move.
 	 */
 	public Point getFurthestPosition(Ship ship, Line line) {
-		
+
 		// Iterate through all points, trying to find the furthest possible move
 		Point last = null;
 		for (Point p : line.getPoints()) {
@@ -133,7 +134,7 @@ public class Game {
 					}
 				}
 			}
-			
+
 			last = p;
 			// If we can move to it, but we aren't a mine layer and there are adjacnet mines, we need to explode!
 			if (!ship.isMineLayer() && !field.getAdjacentMines(p).isEmpty()) {
@@ -237,7 +238,7 @@ public class Game {
 
 	/**
 	 * Places the ship along the base
-	 * 
+	 *
 	 * @param s
 	 *            The ship to be placed
 	 * @param index
@@ -250,7 +251,7 @@ public class Game {
 
 	/**
 	 * Explodes the mine at position p
-	 * 
+	 *
 	 * @param minePoint
 	 *            The position of the mine to explode
 	 * @param events The list of events to append the mine explosion event to.
@@ -346,7 +347,7 @@ public class Game {
 
 	/**
 	 * Gets the id of a ship for a {@link GameMovePacket}.
-	 * 
+	 *
 	 * @param s
 	 * @return
 	 */
@@ -356,7 +357,7 @@ public class Game {
 
 	/**
 	 * Get the set of points representing the base for a player.
-	 * 
+	 *
 	 * @param player
 	 *            The player's name
 	 * @return The set of points for that player's base.
@@ -383,7 +384,7 @@ public class Game {
 	/**
 	 * Tests if at least one part of the ship is touching the owner's base, and
 	 * thus it can be repaired.
-	 * 
+	 *
 	 * @param s
 	 *            The ship in question.
 	 * @return True if the ship is touching the base and has damaged squared
@@ -396,11 +397,11 @@ public class Game {
 				break;
 			}
 		}
-		
+
 		if (!hasDamage) {
 			return false;
 		}
-		
+
 		// Get the base points
 		Set<Point> basePoints = getBasePoints(s.getOwner());
 
@@ -416,16 +417,16 @@ public class Game {
 		}
 		return false;
 	}
-	
+
 
 	/**
 	 * Plays a move on a game.
 	 * @param packet The packet representing the move.
 	 * @return a list of events
 	 */
-	public List<GameEvent >applyMove(GameMovePacket packet) {
+	public List<GameEvent >applyMove(GameMovePacket packet, boolean isOwn) {
 		Ship ship = ships.get(packet.ship);
-		
+
 		List<GameEvent> events = new ArrayList<>();
 
 		if (packet.moveType == MoveType.MOVE) {
@@ -447,22 +448,25 @@ public class Game {
 			ship.getGame().getField().setCellType(packet.contextPoint, CellType.MINE);
 		} else if (packet.moveType == MoveType.TOGGLE_LONG_RANGE_RADAR) {
 			ship.setLongRangeRadarEnabled(!ship.isLongRangeRadarEnabled());
+			if (isOwn) {
+				SoundManager.getInstance().play("radar");
+			}
 		} else if (packet.moveType == MoveType.TURN){
 			ship.turnTo(packet.contextPoint, events);
 		}
 
 		// Switch the move
 		isP1Turn = !isP1Turn;
-		
+
 		System.out.println("Move applied. Events: ");
 		for (GameEvent e : events) {
 			System.out.println(e.getPoint() + " - " + e.getCause() + " - " + e.getEffect());
 		}
 		System.out.println();
-		
+
 		return events;
 	}
-	
+
 	/**
 	 * @return the winner of the game if there is one, else null.
 	 */
@@ -478,7 +482,7 @@ public class Game {
 				}
 			}
 		}
-		
+
 		if (activeP1 == 0) {
 			return p2;
 		} else if (activeP2 == 0) {
