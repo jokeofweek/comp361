@@ -819,12 +819,9 @@ public class Ship {
 			int dx = 0;
 			int dy = 0;
 			
-			if (endPoint == null) {
+			if (endPoint != null) {
 				dx = endPoint.x - this.position.x;
 				dy = endPoint.y - this.position.y;
-			}
-
-			if (endPoint != null) {
 				setPosition(endPoint);
 			}
 			// Test if we didn't make it all the way. If there was a collision, add it as an event.
