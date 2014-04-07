@@ -51,7 +51,7 @@ public class Statistics {
 	 */
 	public void initialiseStatisticExample()
 	{
-		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ration" };
+		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ratio" };
 		Object[] data = { "Lieutenant", 14, 11, 45, 102, 2.267 };
 		
 		for(int i = 0; i < descriptions.length; i++)
@@ -65,7 +65,7 @@ public class Statistics {
 	 */
 	public void initialiseOtherStatistics()
 	{
-		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ration" };
+		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ratio" };
 		Object[] data = { "Landlubber", 1, 0, 2, 1, 0.005 };
 		
 		for(int i = 0; i < descriptions.length; i++)
@@ -79,7 +79,7 @@ public class Statistics {
 	 */
 	public void initialiseEvenOtherStatistics()
 	{
-		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ration" };
+		String[] descriptions = { "Rank", "Games Played", "Games Won", "Ships Sunk", "Enemy Ships Sunk", "K/D Ratio" };
 		Object[] data = { "NOOB", 0, 0, 0, 0, 0 };
 		
 		for(int i = 0; i < descriptions.length; i++)

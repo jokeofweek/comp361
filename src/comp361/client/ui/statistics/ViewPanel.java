@@ -1,4 +1,4 @@
-package statisticsUI;
+package comp361.client.ui.statistics;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
