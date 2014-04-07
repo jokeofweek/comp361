@@ -11,33 +11,37 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import comp361.client.GameClient;
 import comp361.client.data.PlayerManager;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.data.Player;
 
 public class ViewPanel extends JPanel implements ItemListener, Observer
 {
-	JPanel aCards;
-	StatisticsPanel aMain;
-	DefaultComboBoxModel<String> model;
+	private JPanel aCards;
+	private GameClient client;
+	private StatisticsPanel aMain;
+	private DefaultComboBoxModel<String> model;
 	
 	/**
 	 * @param main the owner
 	 * @param players the player manager responsible for managing the players around
 	 * 
 	 */
-	public ViewPanel(Player main, PlayerManager players)
+	public ViewPanel(GameClient client)
 	{
+		
+		this.client = client;
 		//Set the layout
 		this.setLayout(new BorderLayout());
 		
 		//Make the combo box and its base array
 		JPanel comboBoxPane = new JPanel();
-		String[] comboBoxItems = new String[players.getPlayers().size()];
+		String[] comboBoxItems = new String[client.getPlayerManager().getPlayers().size()];
 		
 		//Fill the base array
 		int i = 0;
-		for(String string : players.getPlayers())
+		for(String string : client.getPlayerManager().getPlayers())
 		{
 			comboBoxItems[i] = string;
 			i++;
@@ -52,9 +56,6 @@ public class ViewPanel extends JPanel implements ItemListener, Observer
 		cb.addItemListener(this);
 		comboBoxPane.add(cb);
 		
-		//Make the main player panel
-		aMain = new StatisticsPanel(main);
-		
 		//Make the cards
 		aCards = new JPanel();
 		
@@ -64,7 +65,7 @@ public class ViewPanel extends JPanel implements ItemListener, Observer
 		//Fill the combobox
 		for(String string : comboBoxItems)
 		{
-			StatisticsPanel panel = new StatisticsPanel(players.getMap().get(string));
+			StatisticsPanel panel = new StatisticsPanel(this.client);
 			aCards.add(panel, string);
 			
 		}
@@ -110,7 +111,7 @@ public class ViewPanel extends JPanel implements ItemListener, Observer
 			i++;
 			model.addElement(string);
 			
-			StatisticsPanel panel = new StatisticsPanel(manager.getMap().get(string));
+			StatisticsPanel panel = new StatisticsPanel(this.client);
 			aCards.add(panel, string);
 		}
 		

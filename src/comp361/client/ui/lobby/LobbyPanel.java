@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import com.sun.org.glassfish.external.statistics.impl.StatsImpl;
+
 import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
@@ -28,7 +30,9 @@ import comp361.client.ui.lobby.chat.PlayersPanel;
 import comp361.client.ui.lobby.games.GamesPanel;
 import comp361.client.ui.lobby.games.LoadGamesPanel;
 import comp361.client.ui.setup.NewGamePanel;
+import comp361.client.ui.statistics.StatisticsPanel;
 import comp361.shared.Constants;
+import comp361.shared.data.Player;
 import comp361.shared.packets.client.RequestSavedGamesPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GameStartPacket;
@@ -56,6 +60,9 @@ public class LobbyPanel extends ClientPanel {
 
 	private PlayersPanel playersPanel;
 	private InviteOverlayPanel inviteOverlayPanel;
+	
+	//statistics panel
+	private StatisticsPanel statPanel;
 
 	public LobbyPanel(GameClient gameClient, ClientWindow clientWindow) {
 		super(gameClient, clientWindow, new BorderLayout());
@@ -125,10 +132,9 @@ public class LobbyPanel extends ClientPanel {
 				});
 			}
 		});
-
+		
 		JButton[] buttons = new JButton[] { chatButton, gamesButton,
-				new JButton("Statistics"), newGameButton,
-				loadGameButton };
+				 newGameButton, loadGameButton };
 
 		JPanel buttonContainer = new JPanel(new GridLayout(1, 5,
 				COMPONENT_SPACING, 0));

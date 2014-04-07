@@ -9,29 +9,30 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import comp361.client.GameClient;
 import comp361.client.ui.SwagFactory;
 import comp361.shared.data.Player;
 
 public class StatisticsPanel extends JPanel
 {
-	private Player aMain;
+	private GameClient client;
 	private JTable aMainTable;
 	private StatisticsTableModel aMainPlayerModel;
 	
-	public StatisticsPanel(Player pMain)
+	public StatisticsPanel(GameClient client)
 	{
-		aMain = pMain;
+		client = client;
 		
 		this.setLayout(new BorderLayout());
 		
-		JLabel title = new JLabel("Statistics for: " + aMain.getName());
+		JLabel title = new JLabel("Statistics for: " + client.getPlayerName());
 		SwagFactory.style(title);
 		
 		add(title, BorderLayout.PAGE_START);
 		
 		aMainPlayerModel = new StatisticsTableModel();
 		
-		addPlayer(aMain);
+		addPlayer(client.getPlayerManager().getPlayer(client.getPlayerName()));
 
 		//Set up the look for the main player table
 		aMainTable = new JTable(aMainPlayerModel);

@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import comp361.client.GameClient;
 import comp361.client.data.PlayerManager;
 import comp361.shared.data.Player;
 
@@ -17,7 +18,7 @@ public class StatisticsExampleFrame extends JFrame
 {
 	private JPanel container;
 	
-	public StatisticsExampleFrame() throws IOException 
+	public StatisticsExampleFrame(GameClient client) throws IOException 
 	{
 		container = new JPanel(new BorderLayout());
 		
@@ -31,7 +32,7 @@ public class StatisticsExampleFrame extends JFrame
 		players.addPlayer(bob);
 		players.addPlayer(rob);
 		
-		ViewPanel panel = new ViewPanel(bob, players);
+		ViewPanel panel = new ViewPanel(client);
 		players.addObserver(panel);
 		
 		container.add(panel, BorderLayout.CENTER);
@@ -58,27 +59,27 @@ public class StatisticsExampleFrame extends JFrame
 		pack();
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try 
-				{	
-//					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					new StatisticsExampleFrame();
-				} 
-				catch (IOException e) 
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				try 
+//				{	
+////					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//					//new StatisticsExampleFrame();
+//				} 
+//				catch (IOException e) 
+//				{
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				catch (Exception e)
+//				{
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 
 }
