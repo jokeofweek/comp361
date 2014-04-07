@@ -7,7 +7,7 @@
   <path id="classpath">
         <pathelement location="${lib}/commons-lang3-3.2.1.jar" />
         <pathelement location="${lib}/kryonet-2.21-all.jar" />
-        <pathelement location="jl1.0.1.jar" />
+        <pathelement location="${lib}/jl1.0.1.jar" />
   </path>
   
   <target name="build" depends="clean">
@@ -22,7 +22,7 @@
       <classpath>
         <pathelement location="${lib}/commons-lang3-3.2.1.jar" />
         <pathelement location="${lib}/kryonet-2.21-all.jar" />
-        <pathelement location="jl1.0.1.jar" />
+        <pathelement location="${lib}/jl1.0.1.jar" />
         <pathelement path="${build}" />
       </classpath>
     </java>
