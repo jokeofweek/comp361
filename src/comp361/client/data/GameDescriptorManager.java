@@ -78,7 +78,9 @@ public class GameDescriptorManager extends Observable {
 	 */
 	public void updateGameDescriptor(GameDescriptorPlayerUpdatePacket packet) {
 		if (packet.joined) {
-			gameDescriptors.get(packet.id).addPlayer(packet.name);
+			if (gameDescriptors.get(packet.id)!= null) {
+				gameDescriptors.get(packet.id).addPlayer(packet.name);
+			}
 		} else {
 			if (gameDescriptors.get(packet.id) != null) {
 				gameDescriptors.get(packet.id).removePlayer(packet.name);
