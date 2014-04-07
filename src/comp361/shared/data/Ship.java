@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import comp361.client.data.event.Cause;
 import comp361.client.data.event.Effect;
 import comp361.client.data.event.GameEvent;
@@ -812,8 +814,16 @@ public class Ship {
 
 		} else {
 			Point endPoint = game.getFurthestPosition(this, l);
-			int dx = endPoint.x - this.position.x;
-			int dy = endPoint.y - this.position.y;
+			JOptionPane.showMessageDialog(null,endPoint);
+			
+			// If there is no end point, then we instantly hit an obstacle.
+			int dx = 0;
+			int dy = 0;
+			
+			if (endPoint == null) {
+				dx = endPoint.x - this.position.x;
+				dy = endPoint.y - this.position.y;
+			}
 
 			if (endPoint != null) {
 				setPosition(endPoint);
