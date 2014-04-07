@@ -814,7 +814,6 @@ public class Ship {
 
 		} else {
 			Point endPoint = game.getFurthestPosition(this, l);
-			JOptionPane.showMessageDialog(null,endPoint);
 			
 			// If there is no end point, then we instantly hit an obstacle.
 			int dx = 0;
