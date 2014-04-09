@@ -54,7 +54,7 @@ public class Ship {
 	private static final Ship[] MINI_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE, Ship.MINE_LAYER_TEMPLATE };
 
 
-	public static final String[] SHIP_INVENTORY_NAMES = {"Default", "1 Torpedo Ship", "3 Ships"};
+	public static final String[] SHIP_INVENTORY_NAMES = {"Default", "1 Torpedo Ship", "4 Ships"};
 	public static final Ship[][] SHIP_INVENTORIES = {Ship.DEFAULT_INVENTORY, Ship.ACCELERATED_INVENTORY, Ship.MINI_INVENTORY};
 
 

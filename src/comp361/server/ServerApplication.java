@@ -8,7 +8,7 @@ import comp361.shared.Constants;
 public class ServerApplication {
 
 	public static void main(String[] args) {
-		Log.set(Log.LEVEL_DEBUG);
+		Log.set(Log.LEVEL_WARN);
 		new GameServer(new StandardLogger(), Constants.PORT, new PropertyAccountDataStore());
 	}
 
