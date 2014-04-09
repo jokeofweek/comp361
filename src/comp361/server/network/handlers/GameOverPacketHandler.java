@@ -24,7 +24,7 @@ public class GameOverPacketHandler implements ServerPacketHandler<GameOverPacket
 			}
 		}
 		
-		gameServer.getGameDescriptorManager().endGame(id, gameServer, false, loser, null, false, false);
+		gameServer.getGameDescriptorManager().endGame(id, gameServer, false, loser, packet.message, false, packet.serverForward);
 		
 	}
 }

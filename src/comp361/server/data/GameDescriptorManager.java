@@ -231,6 +231,7 @@ public class GameDescriptorManager {
 								s.getAccount().getPlayer().getStatistics().getLosses() + 1);
 						
 					} else {
+
 						s.sendTCP(winPacket);
 						if (draw) {
 							s.getAccount().getPlayer().getStatistics().setDraws(

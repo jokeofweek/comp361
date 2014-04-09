@@ -12,6 +12,7 @@ import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -23,8 +24,10 @@ import comp361.client.ui.lobby.LobbyPanel;
 import comp361.shared.Constants;
 import comp361.shared.data.ArmorType;
 import comp361.shared.data.CannonType;
+import comp361.shared.data.GameResult;
 import comp361.shared.data.MoveType;
 import comp361.shared.packets.shared.GameMovePacket;
+import comp361.shared.packets.shared.GameOverPacket;
 import comp361.shared.packets.shared.RequestSavePacket;
 import comp361.shared.packets.shared.SaveResponsePacket;
 
@@ -209,10 +212,16 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			add(label);
 		}
 		
+		JPanel buttons = new JPanel(new GridLayout(2, 1));
+		JButton forfeitButton = new JButton("Forfeit");
+		SwagFactory.style(forfeitButton);
+		forfeitButton.addActionListener(new ForfeitActionListener());
+		buttons.add(forfeitButton);
 		JButton saveButton = new JButton("Request Save");
 		SwagFactory.style(saveButton);
 		saveButton.addActionListener(new SaveActionListener());
-		add(saveButton, BorderLayout.SOUTH);
+		buttons.add(saveButton);
+		add(buttons, BorderLayout.SOUTH);
 		
 		revalidate();
 		repaint();
@@ -233,6 +242,23 @@ public class ShipInfoPanel extends JPanel implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			context.setType(type);
+		}
+	}
+	
+	private class ForfeitActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to forfeit? This will count as a loss for you.", "Battleships", JOptionPane.YES_NO_OPTION);
+			if (selection == JOptionPane.YES_OPTION) {
+
+				GameOverPacket overPacket = new GameOverPacket();
+				overPacket.message = client.getPlayerName() + " has forfeit the game.";
+				overPacket.fromDisconnect = false;
+				overPacket.result = GameResult.LOSS;
+				overPacket.serverForward = true;
+				client.getClient().sendTCP(overPacket);
+			}
+			
 		}
 	}
 	
