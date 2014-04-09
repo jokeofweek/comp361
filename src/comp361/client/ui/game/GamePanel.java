@@ -281,6 +281,8 @@ public class GamePanel extends ClientPanel {
 	}
 	
 	private void updateTurnLabel() {
+		turnLabel.setForeground(getGameClient().getGameManager().isTurn() ? Color.green.darker().darker() :
+				Color.red.darker().darker());
 		turnLabel.setText(getGameClient().getGameManager().isTurn() ? "Your turn" : "Enemy's turn");
 	}
 	
