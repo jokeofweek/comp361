@@ -74,7 +74,9 @@ public class PlayerManager extends Observable {
 	 * @param stats The stats.
 	 */
 	public void updateStatistics(String player, Statistics stats) {
-		this.players.get(player).setStatistics(stats);
+		Player p = this.players.get(player);
+		if (p == null) return;
+		p.setStatistics(stats);
 		setChanged();
 		notifyObservers();
 	}

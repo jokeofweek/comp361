@@ -66,7 +66,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			// Build the ship label container
 			JPanel labelContainer = new JPanel(new GridLayout(0, 1, 0, 0));
 			
-			JLabel shipNameLabel = new JLabel(context.getShip().getName());
+			JLabel shipNameLabel = new JLabel("<html><center><u>" + context.getShip().getName() + "</u> selected</center></html>");
 			shipNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			labelContainer.add(shipNameLabel);
 
@@ -204,7 +204,7 @@ public class ShipInfoPanel extends JPanel implements Observer {
 			
 			add(buttonContainer);
 		} else {
-			JLabel label = new JLabel("No selected ship");
+			JLabel label = new JLabel("<html><center>No ship selected.<br>Please click on a ship<br>to select it.</center></html>");
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			add(label);
 		}
