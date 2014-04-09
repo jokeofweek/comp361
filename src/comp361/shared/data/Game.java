@@ -458,12 +458,6 @@ public class Game {
 		// Switch the move
 		isP1Turn = !isP1Turn;
 
-		System.out.println("Move applied. Events: ");
-		for (GameEvent e : events) {
-			System.out.println(e.getPoint() + " - " + e.getCause() + " - " + e.getEffect());
-		}
-		System.out.println();
-
 		return events;
 	}
 
