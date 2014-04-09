@@ -51,10 +51,11 @@ public class Ship {
 		Ship.MINE_LAYER_TEMPLATE, Ship.RADAR_BOAT_TEMPLATE,
 		Ship.KAMIKAZE_BOAT_TEMPLATE };
 	private static final Ship[] ACCELERATED_INVENTORY = { Ship.TORPEDO_TEMPLATE };
+	private static final Ship[] MINI_INVENTORY = { Ship.CRUISER_TEMPLATE, Ship.DESTROYER_TEMPLATE, Ship.TORPEDO_TEMPLATE };
 
 
-	public static final String[] SHIP_INVENTORY_NAMES = {"Default", "1 Torpedo Ship"};
-	public static final Ship[][] SHIP_INVENTORIES = {Ship.DEFAULT_INVENTORY, Ship.ACCELERATED_INVENTORY};
+	public static final String[] SHIP_INVENTORY_NAMES = {"Default", "1 Torpedo Ship", "3 Ships"};
+	public static final Ship[][] SHIP_INVENTORIES = {Ship.DEFAULT_INVENTORY, Ship.ACCELERATED_INVENTORY, Ship.MINI_INVENTORY};
 
 
 	private static final int TORPEDO_RANGE = 10;
