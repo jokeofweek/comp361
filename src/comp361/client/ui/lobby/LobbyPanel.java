@@ -17,8 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.sun.org.glassfish.external.statistics.impl.StatsImpl;
-
 import comp361.client.GameClient;
 import comp361.client.ui.ClientPanel;
 import comp361.client.ui.ClientWindow;
@@ -32,7 +30,6 @@ import comp361.client.ui.lobby.games.LoadGamesPanel;
 import comp361.client.ui.setup.NewGamePanel;
 import comp361.client.ui.statistics.StatisticsPanel;
 import comp361.shared.Constants;
-import comp361.shared.data.Player;
 import comp361.shared.packets.client.RequestSavedGamesPacket;
 import comp361.shared.packets.server.GameDescriptorPlayerUpdatePacket;
 import comp361.shared.packets.server.GameStartPacket;
