@@ -1,1 +1,3 @@
-COMP 361 Project!
+# Battleships
+
+![](http://i.imgur.com/XgfKfXb.png)
